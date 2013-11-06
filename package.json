@@ -1,0 +1,19 @@
+{
+  "name": "nko4-frontend-bahia",
+  "version": "0.0.0",
+  "description": "Frontend Bahia",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nko4/frontend-bahia.git"
+  },
+  "dependencies": {
+    "nko": "*"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
