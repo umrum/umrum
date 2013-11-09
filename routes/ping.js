@@ -2,6 +2,6 @@
 
 var app = require('../config/app');
 
-app.get('/counter', function(req, res) {
+app.get('/ping', function(req, res) {
     res.send();
 });

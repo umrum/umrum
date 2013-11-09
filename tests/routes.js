@@ -16,13 +16,13 @@ describe('Tests the index route', function(){
     });
 });
 
-describe('Tests the counter route', function(){
+describe('Tests the ping route', function(){
 
     it('should return 200 status code', function(done){
-        require('../routes/counter.js');
+        require('../routes/ping.js');
 
         request(app)
-            .get('/counter')
+            .get('/ping')
             .expect(200)
             .end(done);
     });
