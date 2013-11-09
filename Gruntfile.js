@@ -61,9 +61,6 @@ module.exports = function(grunt) {
         ]
       }
     },
-    qunit: {
-      files: ['test/**/*.html']
-    },
     less: {
       production: {
         options: {
@@ -82,7 +79,7 @@ module.exports = function(grunt) {
       },
       lib_test: {
         files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'qunit']
+        tasks: ['jshint:lib_test']
       },
       less: {
         files: ['src/css/*.less'],
@@ -98,7 +95,6 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
