@@ -9,4 +9,7 @@
             return v.toString(16);
         });
     };
+
+    lib.host = win.location.host.replace(/^www\./i, '');
+    lib.path = win.location.pathname.replace(/([^\/])/i, '/$1');
 })(window);
