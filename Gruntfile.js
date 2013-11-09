@@ -57,7 +57,7 @@ module.exports = function(grunt) {
             'server.js',
             'routes/*.js',
             'config/*.js',
-            'test/**/*.js'
+            'tests/**/*.js'
         ]
       }
     },
@@ -70,6 +70,14 @@ module.exports = function(grunt) {
         files: {
           "assets/css/main.css": "src/css/main.less"
         }
+      }
+    },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['tests/**/*.js']
       }
     },
     watch: {
@@ -98,9 +106,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'less', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'less', 'concat', 'uglify']);
   grunt.registerTask('minjs', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('unittest', ['jshint', 'mochaTest']);
 
 };

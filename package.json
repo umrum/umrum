@@ -25,7 +25,10 @@
     "grunt-contrib-jshint": "~0.7.1",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-contrib-less": "~0.8.1",
-    "nodemon": "~0.7.10"
+    "grunt-mocha-test": "~0.7.0",
+    "nodemon": "~0.7.10",
+    "mocha": "~1.14.0",
+    "supertest": "~0.8.1"
   },
   "author": "",
   "license": "BSD"

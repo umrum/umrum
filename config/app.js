@@ -22,8 +22,7 @@ app.use(express.logger());
 
 nunjucks.configure(env.views, {
     autoescape: true,
-    express: app,
-    watch: true
+    express: app
 });
 
 app.listen(env.port, function(err) {
