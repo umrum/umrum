@@ -15,3 +15,15 @@ describe('Tests the index route', function(){
             .end(done);
     });
 });
+
+describe('Tests the counter route', function(){
+
+    it('should return 200 status code', function(done){
+        require('../routes/counter.js');
+
+        request(app)
+            .get('/counter')
+            .expect(200)
+            .end(done);
+    });
+});
