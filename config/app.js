@@ -14,11 +14,10 @@ var app = express(),
 app.use(express.compress(), {
     maxAge: oneDay
 });
-app.locals.assets = '/assets/';
+app.locals.assetsURL = env.assetsURL;
 app.set('views', env.views);
-// app.set('view engine', 'html');
 app.engine('html', nunjucks.render);
-app.use(app.locals.assets, express.static(env.assets));
+app.use(app.locals.assetsURL, express.static(env.assetsPath));
 app.use(express.logger());
 
 nunjucks.configure(env.views, {
