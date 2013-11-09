@@ -13,7 +13,8 @@
   "dependencies": {
     "nko": "*",
     "nunjucks": "~1.0.0",
-    "express": "~3.4.4"
+    "express": "~3.4.4",
+    "redis": "~0.9.0"
   },
   "engines": {
     "node": "0.10.x"

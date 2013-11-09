@@ -1,9 +1,10 @@
 /* global require, describe, it */
 
+var redisclient = require('../config/redisclient');
 var app = require('../config/app');
 var env = require('../config/env');
-var assert = require('assert');
 var nunjucks = require('nunjucks');
+var assert = require('assert');
 
 describe('Tests the app module', function(){
 
@@ -17,6 +18,10 @@ describe('Tests the app module', function(){
 
     it('should return the correct engine', function() {
         assert.equal(app.engines['.html'], nunjucks.render);
+    });
+
+    it('should return the correct variable for redis', function() {
+        assert.deepEqual(app.settings.redis, redisclient);
     });
 
 });

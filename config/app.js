@@ -6,6 +6,7 @@
 
 var express = require('express');
 var env = require('./env');
+var redis = require('./redisclient');
 var nunjucks = require('nunjucks');
 
 var app = express(),
@@ -16,6 +17,7 @@ app.use(express.compress(), {
 });
 app.locals.assetsURL = env.assetsURL;
 app.set('views', env.views);
+app.set('redis', redis);
 app.engine('html', nunjucks.render);
 app.use(app.locals.assetsURL, express.static(env.assetsPath));
 app.use(express.logger());
