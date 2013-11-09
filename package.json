@@ -23,7 +23,8 @@
     "grunt-contrib-qunit": "~0.3.0",
     "grunt-contrib-jshint": "~0.7.1",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-less": "~0.8.1"
+    "grunt-contrib-less": "~0.8.1",
+    "nodemon": "~0.7.10"
   },
   "author": "",
   "license": "BSD"
