@@ -158,7 +158,9 @@
 
   // Project.Section.Jumbotron.particleAnimation();
 
-  Project.Section.HomeCharts.init();
+  if ( $('.page-home').length ) {
+    Project.Section.HomeCharts.init();
+  }
 
 
 }(this, this.document, this.jQuery));
