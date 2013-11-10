@@ -73,7 +73,9 @@ module.exports = function(grunt) {
           cleancss: true
         },
         files: {
-          'assets/css/main.css': ['src/less/bootstrap.less']
+          'assets/css/main.css': ['src/less/bootstrap.less'],
+          'assets/css/site.css': ['src/less/site.less'],
+          'assets/css/admin.css': ['src/less/admin.less']
         }
       }
     },
@@ -83,14 +85,18 @@ module.exports = function(grunt) {
           browsers: ['last 2 versions', '> 10%', 'ie 8']
         },
         files: {
-          'assets/css/main.css': ['assets/css/main.css']
+          'assets/css/main.css': ['assets/css/main.css'],
+          'assets/css/site.css': ['assets/css/site.css'],
+          'assets/css/admin.css': ['assets/css/admin.css']
         }
       }
     },
     csso: {
       dist: {
         files : {
-          'assets/css/main.min.css': ['assets/css/main.css']
+          'assets/css/main.min.css': ['assets/css/main.css'],
+          'assets/css/site.min.css': ['assets/css/site.css'],
+          'assets/css/admin.min.css': ['assets/css/admin.css']
         }
       }
     },
