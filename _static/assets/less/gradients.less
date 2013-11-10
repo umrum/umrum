@@ -1,0 +1,200 @@
+
+// five tone diagonal gradient mixin
+
+// credits: http://codepen.io/tumanova/details/tkvmi
+
+.five-tone-diagonal-gradient(@first-color, @first-color-position,
+  @second-color, @second-color-position, @third-color, @third-color-position,
+  @fourth-color, @fourth-color-position, @fifth-color, @fifth-color-position) {
+    /* Old browsers */
+    background: @first-color;
+    /* FF3.6+ */
+    background: -moz-linear-gradient(-45deg,  @first-color @first-color-position,
+      @second-color @second-color-position, @third-color @third-color-position,
+      @fourth-color @fourth-color-position, @fifth-color @fifth-color-position);
+    /* Chrome,Safari4+ */
+    background: -webkit-gradient(linear, left top, right bottom,
+      color-stop(@first-color-position,@first-color),
+      color-stop(@second-color-position,@second-color),
+      color-stop(@third-color-position,@third-color),
+      color-stop(@fourth-color-position,@fourth-color),
+      color-stop(@fifth-color-position,@fifth-color));
+    /* Chrome10+,Safari5.1+ */
+    background: -webkit-linear-gradient(-45deg, @first-color @first-color-position,
+      @second-color @second-color-position,@third-color @third-color-position,
+      @fourth-color @fourth-color-position,@fifth-color @fifth-color-position);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(-45deg, @first-color @first-color-position,
+      @second-color @second-color-position,@third-color @third-color-position,
+      @fourth-color @fourth-color-position,@fifth-color @fifth-color-position);
+    /* IE10+ */
+    background: -ms-linear-gradient(-45deg, @first-color @first-color-position,
+      @second-color @second-color-position,@third-color @third-color-position,
+      @fourth-color @fourth-color-position,@fifth-color @fifth-color-position);
+    /* W3C */
+    background: linear-gradient(135deg, @first-color @first-color-position,
+      @second-color @second-color-position,@third-color @third-color-position,
+      @fourth-color @fourth-color-position,@fifth-color @fifth-color-position);
+}
+
+// gradients
+
+.gradient-sand-babe {
+  .five-tone-diagonal-gradient
+    (#b3cae5, 12%, #dbdde4, 46%, #e4e3e4, 70%, #f7ddbb, 94%, #efcab2, 100%);
+}
+
+.gradient-pale-elm {
+  .five-tone-diagonal-gradient
+    (#bccacc, 0%, #c7d8d6, 26%, #d9ebe0, 54%, #ebf9e3, 78%, #f4f8d0, 100%);
+}
+
+.gradient-beach-towel {
+  .five-tone-diagonal-gradient
+    (#5e7fb1, 0%, #dce8f7, 61%, #eff1f4, 72%, #fce1a8, 88%, #f7ec86, 100%);
+}
+
+.gradient-sky-blush {
+  .five-tone-diagonal-gradient
+    (#8fb8ee, 0%, #cbe2f4, 40%, #dbe5eb, 63%, #f9d3b8, 83%, #e0b2a3, 100%);
+}
+
+.gradient-pastel-daylight {
+  .five-tone-diagonal-gradient
+    (#a2e0f9, 6%, #cef5fc, 39%, #eafaeb, 70%, #fefcd3, 88%, #fdf4ba, 100%);
+}
+
+.gradient-blue-peach {
+  .five-tone-diagonal-gradient
+    (#6bafd2, 0%, #a4c8dc, 38%, #d6cbca, 58%, #eabc96, 79%, #db8876, 100%);
+}
+
+.gradient-kentucky-dawn {
+  .five-tone-diagonal-gradient
+    (#b4ced8, 17%, #d7e5d4, 51%, #e2e8c9, 72%, #f1e5b9, 87%, #edd7ac, 100%);
+}
+
+.gradient-coyier-magic {
+  .five-tone-diagonal-gradient
+    (#29153e, 5%, #657489, 38%, #bfb6aa, 66%, #ead79d, 87%, #f2ebda, 100%);
+}
+
+.gradient-indigo-magic {
+  .five-tone-diagonal-gradient
+    (#20202f, 0%, #273550, 16%, #416081, 41%, #adacb2, 78%, #eac3a2, 100%);
+}
+
+.gradient-brownie {
+   .five-tone-diagonal-gradient
+    (#555351, 0%, #555351, 5%, #8d7b6c, 40%, #cc9d7a, 70%, #fff9aa, 100%);
+}
+
+.gradient-lady-night {
+  .five-tone-diagonal-gradient
+    (#171c33, 0%, #525f83, 42%, #848896, 63%, #bb9d78, 78%, #f6e183, 100%);
+}
+
+.gradient-bruised-grape {
+  .five-tone-diagonal-gradient
+    (#ffe3c8, 0%, #efad9e, 45%, #c79797, 65%, #a78a92, 85%, #857d8d, 100%);
+}
+
+.gradient-violet-blush {
+  .five-tone-diagonal-gradient
+    (#6f749e, 0%, #9a8daf, 31%, #d0a8b9, 58%, #f8bbb1, 80%, #fde6b1, 100%);
+}
+
+.gradient-mauve-hour {
+  .five-tone-diagonal-gradient
+    (#536a97, 11%, #8087ad, 35%, #bca391, 72%, #bd968a, 96%, #a38b8a, 100%);
+}
+
+.gradient-magic-hour {
+  .five-tone-diagonal-gradient
+    (#325176, 1%, #7b9ea7, 42%, #9baf93, 67%, #dbaf81, 85%, #fbdf73, 100%);
+}
+
+.gradient-lavender-skies {
+  .five-tone-diagonal-gradient
+    (#727288, 6%, #8e889b, 29%, #d3c2bd, 70%, #f9d89a, 89%, #f8c785, 100%);
+}
+
+.gradient-slate-sunrise {
+  .five-tone-diagonal-gradient
+    (#506e90, 0%, #7695aa, 37%, #a7bdb8, 56%, #e2e2b8, 79%, #fdf998, 100%);
+}
+
+.gradient-grape-soda {
+  .five-tone-diagonal-gradient
+    (#634b5f, 0%, #868080, 34%, #b7b29b, 58%, #dfd6a4, 80%, #e9f3a2, 100%);
+}
+
+.gradient-purple-sunset {
+  .five-tone-diagonal-gradient
+    (#7e74b2, 9%, #b3a2c2, 36%, #e2cdbe, 66%, #f6cf97, 85%, #f4a77a, 100%);
+}
+
+.gradient-dolphin {
+  .five-tone-diagonal-gradient
+    (#34a4ca, 0%, #59d7dd, 28%, #a8f2f0, 59%, #d0f8ef, 84%, #d6f6e1, 100%);
+}
+
+.gradient-field-day {
+  .five-tone-diagonal-gradient
+    (#7696cd, 0%, #8fb2e4, 15%, #b0cff0, 33%, #d7e5ec, 69%, #dee0e7, 92%);
+}
+
+.gradient-seafoam-sun {
+  .five-tone-diagonal-gradient
+    (#8dd6c3, 6%, #c5e5e2, 40%, #eafaeb, 70%, #f9f7ca, 88%, #fceea1, 100%);
+}
+
+.gradient-brilliant-sky {
+  .five-tone-diagonal-gradient
+    (#4e72c7, 0%, #6d9ed7, 34%, #a4c8d5, 67%, #b4d9e1, 84%, #c4d9d6, 100%);
+}
+
+.gradient-tequila-sunset {
+  .five-tone-diagonal-gradient
+    (#47565f, 0%, #5b625a, 15%, #947461, 38%, #f98056, 70%, #f7ec86, 100%);
+}
+
+.gradient-pixy-dust {
+  .five-tone-diagonal-gradient
+    (#95b3bf, 0%, #c6cdd3, 35%, #e5d8d9, 64%, #f1e1d9, 85%, #f3e1cd, 100%);
+}
+
+.gradient-baseball-field {
+  .five-tone-diagonal-gradient
+    (#4c86ab, 0%, #95a5bc, 39%, #bfcdc9, 70%, #dcd6c9, 91%, #edd9c7, 100%);
+}
+
+.gradient-miami-strip {
+  .five-tone-diagonal-gradient
+    (#0f124a, 0%, #1b2360, 16%, #515b80, 42%, #758391, 58%, #e5e3b0, 100%);
+}
+
+.gradient-mountain-time {
+  .five-tone-diagonal-gradient
+    (#889db6, 0%, #a5b8ce, 20%, #c1cfdd, 42%, #dee1e4, 81%, #d5d1cf, 100%);
+}
+
+.gradient-candy-day {
+  .five-tone-diagonal-gradient
+    (#74bddb, 0%, #a8d1eb, 32%, #cddbf5, 56%, #e4e6fb, 73%, #f6f4f8, 100%);
+}
+
+.gradient-rainbow-pudding {
+  .five-tone-diagonal-gradient
+    (#a7d3cb, 0%, #bcc1c4, 32%, #e5cab3, 59%, #fee6c5, 89%, #fdecd0, 100%);
+}
+
+.gradient-sutro {
+  .five-tone-diagonal-gradient
+    (#325571, 0%, #8e9fa4, 38%, #decab2, 66%, #f2d580, 78%, #ffa642, 100%);
+}
+
+.gradient-berry-juice {
+  .five-tone-diagonal-gradient
+    (#c5d4d7, 6%, #d6b98d, 34%, #c99262, 57%, #8c5962, 80%, #43577e, 100%);
+}

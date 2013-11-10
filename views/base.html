@@ -1,14 +1,97 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>UMRUM | Ultimate Magic Real User Monitoring</title>
-    <link rel="stylesheet" type="text/css" href="{{assetsURL}}css/main.css" />
+  <meta charset="utf-8">
+  <title>UMRUM | Ultimate Magic Real User Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta http-equiv="cleartype" content="on">
+  <meta name="format-detection" content="telephone=no">
+
+  <meta name="description" content="">
+  <meta name="robots" content="index, follow">
+
+  <meta name="author" content="Front-end Bahia">
+
+  <link href="http://fonts.googleapis.com/css?family=Viga|PT+Sans:400,700|Titillium+Web:400,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{{assetsURL}}css/main.min.css">
+
+  <script src="{{assetsURL}}js/init.min.js"></script>
+
 </head>
+
 <body>
-    <div class="site-content">
-        {% block content %}
-        {% endblock %}
-    </div>
+
+    <div class="wrap">
+
+      {% block header %}
+        <header class="navbar  navbar-inverse  navbar-fixed-top" role="banner">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand  umrum-logo" href="#">Umrum</a>
+            </div>
+            <nav class="navbar-collapse  collapse  navbar-right">
+              <ul class="nav  navbar-nav  upper">
+                <li><a href="/">Home</a></li>
+                <li><a href="/getting-started">Getting started</a></li>
+                <li><a href="/documentation">Docs</a></li>
+                <li><a href="/support">Support</a></li>
+                <li><a href="/signin">Sign in</a></li>
+              </ul>
+              <div class="navbar-right">
+                <a href="/signup" class="btn  btn-primary  navbar-btn"><i class="fa  fa-lg  fa-fw  fa-github"></i>Sign up</a>
+              </div>
+            </nav> <!--/.navbar-collapse -->
+          </div> <!-- /container -->
+        </header>
+      {% endblock %}
+
+      {% block content %}
+      {% endblock %}
+
+    </div> <!-- /wrap -->
+
+    {% block footer %}
+    <footer class="page-section  page-section-footer">
+      <div class="container">
+        <div class="page-section-footer-main  clearfix">
+          <p class="page-section-footer-signature"><a class="umrum-logo" href="/">Umrum</a> &copy 2013 - Made with <i class="fa  fa-coffee"></i> in <a class="notransform" href="http://en.wikipedia.org/wiki/Salvador,_Bahia" target="blank">Salvador</a></p>
+          <ul class="page-section-footer-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/getting-started">Getting started</a></li>
+            <li><a href="/documentation">Docs</a></li>
+            <li><a href="/support">Support</a></li>
+          </ul>
+        </div>
+        <div class="page-section-footer-aux">
+          <ul class="page-section-footer-social">
+            <li><a class="fa  fa-facebook" href="#"></a></li>
+            <li><a class="fa  fa-twitter" href="#"></a></li>
+            <li><a class="fa  fa-google-plus" href="#"></a></li>
+            <li><a class="fa  fa-linkedin" href="#"></a></li>
+          </ul>
+          <ul class="page-section-footer-legal">
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/terms-of-service">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+    {% endblock %}
+
+  {% block scripts %}
+  <script src="{{assetsURL}}js/chart.min.js"></script>
+  <script src="{{assetsURL}}js/main.min.js"></script>
+  <script src="http://platform.twitter.com/widgets.js"></script>
+  {% endblock %}
+
 </body>
 </html>
