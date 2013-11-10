@@ -12,7 +12,7 @@
     });
 
     lib.host = win.location.host.replace(/^www\./i, '');
-    lib.path = win.location.pathname.replace(/([^\/])/i, '/$1');
+    lib.path = win.location.pathname.replace(/^([^\/])/i, '/$1');
 
     var ping_server = function(){
       var img = doc.createElement('img');
