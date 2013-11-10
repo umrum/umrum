@@ -127,8 +127,53 @@ a {
   padding: 0 0 150px;
 }
 
-.page {
-  padding-top: 50px;
+
+/* ==========================================================================
+   Modules
+   ========================================================================== */
+
+/* Social
+   ================================================= */
+
+.umrum-social {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+@media (min-width: @screen-tablet) {
+  .umrum-social {
+    text-align: left;
+  }
+}
+
+.umrum-social-buttons {
+  display: inline-block;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.umrum-social-buttons li {
+  display: inline-block;
+  line-height: 1;
+  padding: 5px 8px;
+}
+
+@media (min-width: @screen-tablet) {
+  .umrum-social-buttons li:first-child {
+    padding-left: 0;
+  }
+}
+
+.github-btn {
+  border: 0;
+  overflow: hidden;
+  width: 100px;
+}
+
+.umrum-social-buttons .twitter-share-button {
+  width: 98px !important;
 }
 
 
@@ -181,7 +226,6 @@ a {
   }
 }
 
-
 .navbar-right {
 
   // margin-left: 20px;
@@ -194,8 +238,16 @@ a {
 
 
 /* ==========================================================================
-   Sections
+   Pages
    ========================================================================== */
+
+.page {
+  padding-top: 50px;
+}
+
+.page-home {
+  padding-top: 0;
+}
 
 .page-section {
   padding: 40px 0;
@@ -203,6 +255,49 @@ a {
 
 .page-section h1 {
   margin-bottom: 40px;
+}
+
+
+/* Intro
+   ================================================= */
+
+.page-home-intro {
+  position: relative;
+
+  background-image: linear-gradient(45deg, rgba(194, 233, 221, 0.5) 1%, rgba(104, 119, 132, 0.5) 100%), linear-gradient(-45deg, #494d71 0%, rgba(217, 230, 185, 0.5) 80%);
+}
+  .page-home-intro-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+    .square(100%);
+  }
+
+@media (min-width: @screen-tablet) {
+  .page-home-intro .umrum-social {
+    margin-bottom: 10px;
+  }
+}
+
+
+/* Overview
+   ================================================= */
+
+.page-section-overview-item {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  text-align: center;
+
+  h2 {
+    color: @brand-primary;
+  }
+
+  .fa {
+    font-size: 6em;
+    color: @brand-inverse-dark;
+  }
 }
 
 
