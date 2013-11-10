@@ -108,10 +108,11 @@ a {
    ================================================= */
 
 .btn {
-  border: none;
+  // border: none;
   text-transform: uppercase;
   .transition(all 0.2s ease-out);
 }
+
 
 /* Scaffolding
    ================================================= */
@@ -142,3 +143,117 @@ a {
 .page-section h1 {
   margin-bottom: 40px;
 }
+
+
+/* Footer
+   ================================================= */
+
+.page-section-footer {
+  height: 150px;
+
+  text-transform: uppercase;
+
+  background: @brand-inverse-darker;
+
+  ul {
+    margin: 0;
+    padding: 0;
+
+    list-style-position: inside;
+    list-style: none;
+  }
+
+  a {
+    color: #777;
+    .font-size(12);
+    .transition(all 0.3s ease-out);
+
+    &:hover {
+      text-decoration: none;
+
+      color: #ccc;
+    }
+  }
+}
+  .page-section-footer-main {
+
+  }
+  .page-section-footer-signature {
+    margin: 0;
+    padding: 5px 8px;
+
+    display: block;
+    float: left;
+
+    color: #777;
+    .font-size(12);
+    text-transform: none;
+
+    a {
+      text-transform: uppercase;
+    }
+  }
+  .page-section-footer-nav {
+
+    li {
+    }
+
+    a {
+      padding: 5px 8px;
+
+      display: block;
+    }
+
+    @media screen and (min-width: @screen-tablet) {
+      float: right;
+
+      li {
+        display: inline-block;
+      }
+    }
+  }
+  .page-section-footer-aux {
+    border-top: 1px solid #515151;
+  }
+  .page-section-footer-social {
+    float: left;
+
+    li {
+      margin-top: 8px;
+
+      display: inline-block;
+
+      &:first-child {
+        margin-left: 5px;
+      }
+    }
+
+    a {
+      padding: 0 4px;
+
+      display: block;
+
+      font-size: 1em;
+    }
+  }
+  .page-section-footer-legal {
+
+    li {
+    }
+
+    a {
+      padding: 5px 8px;
+
+      display: block;
+
+      .font-size(10);
+    }
+
+    @media screen and (min-width: @screen-tablet) {
+      float: right;
+
+      li {
+        display: inline-block;
+      }
+    }
+  }
