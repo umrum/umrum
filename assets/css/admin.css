@@ -1,1 +1,126 @@
-body.umrum-admin{margin-top:50px}#wrapper{padding-left:0}#page-wrapper{width:100%;padding:5px 15px}.messages-dropdown .dropdown-menu .message-preview .avatar,.messages-dropdown .dropdown-menu .message-preview .name,.messages-dropdown .dropdown-menu .message-preview .message,.messages-dropdown .dropdown-menu .message-preview .time{display:block}.messages-dropdown .dropdown-menu .message-preview .avatar{float:left;margin-right:15px}.messages-dropdown .dropdown-menu .message-preview .name{font-weight:700}.messages-dropdown .dropdown-menu .message-preview .message{font-size:12px}.messages-dropdown .dropdown-menu .message-preview .time{font-size:12px}.announcement-heading{font-size:50px;margin:0}.announcement-text{margin:0}table.tablesorter thead{cursor:pointer}table.tablesorter thead tr th:hover{background-color:#f5f5f5}.flot-chart{display:block;height:400px}.flot-chart-content{width:100%;height:100%}@media (min-width:768px){#wrapper{padding-left:225px}#page-wrapper{padding:15px 25px}.side-nav{margin-left:-225px;left:225px;width:225px;position:fixed;top:50px;height:100%;border-radius:0;border:0;background-color:#222;overflow-y:auto}.side-nav>li.dropdown>ul.dropdown-menu{position:relative;min-width:225px;margin:0;padding:0;border:0;border-radius:0;background-color:transparent;box-shadow:none;-webkit-box-shadow:none}.side-nav>li.dropdown>ul.dropdown-menu>li>a{color:#999;padding:15px 15px 15px 25px}.side-nav>li.dropdown>ul.dropdown-menu>li>a:hover,.side-nav>li.dropdown>ul.dropdown-menu>li>a.active,.side-nav>li.dropdown>ul.dropdown-menu>li>a:focus{color:#fff;background-color:#080808}.side-nav>li>a{width:225px}.umrum-admin .navbar-inverse .navbar-nav>li>a:hover,.umrum-admin .navbar-inverse .navbar-nav>li>a:focus{background-color:#080808}.messages-dropdown .dropdown-menu{min-width:300px}.messages-dropdown .dropdown-menu li a{white-space:normal}}
+body.umrum-admin {
+  margin-top: 50px;
+}
+
+#wrapper {
+  padding-left: 0;
+}
+
+#page-wrapper {
+  width: 100%;
+  padding: 5px 15px;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .avatar,
+.messages-dropdown .dropdown-menu .message-preview .name,
+.messages-dropdown .dropdown-menu .message-preview .message,
+.messages-dropdown .dropdown-menu .message-preview .time {
+  display: block;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .avatar {
+  float: left;
+  margin-right: 15px;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .name {
+  font-weight: 700;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .message {
+  font-size: 12px;
+}
+
+.messages-dropdown .dropdown-menu .message-preview .time {
+  font-size: 12px;
+}
+
+.announcement-heading {
+  font-size: 50px;
+  margin: 0;
+}
+
+.announcement-text {
+  margin: 0;
+}
+
+table.tablesorter thead {
+  cursor: pointer;
+}
+
+table.tablesorter thead tr th:hover {
+  background-color: #f5f5f5;
+}
+
+.flot-chart {
+  display: block;
+  height: 400px;
+}
+
+.flot-chart-content {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width:768px) {
+  #wrapper {
+    padding-left: 225px;
+  }
+
+  #page-wrapper {
+    padding: 15px 25px;
+  }
+
+  .side-nav {
+    margin-left: -225px;
+    left: 225px;
+    width: 225px;
+    position: fixed;
+    top: 50px;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    background-color: #222;
+    overflow-y: auto;
+  }
+
+  .side-nav>li.dropdown>ul.dropdown-menu {
+    position: relative;
+    min-width: 225px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .side-nav>li.dropdown>ul.dropdown-menu>li>a {
+    color: #999;
+    padding: 15px 15px 15px 25px;
+  }
+
+  .side-nav>li.dropdown>ul.dropdown-menu>li>a:hover,
+  .side-nav>li.dropdown>ul.dropdown-menu>li>a.active,
+  .side-nav>li.dropdown>ul.dropdown-menu>li>a:focus {
+    color: #fff;
+    background-color: #080808;
+  }
+
+  .side-nav>li>a {
+    width: 225px;
+  }
+
+  .umrum-admin .navbar-inverse .navbar-nav>li>a:hover,
+  .umrum-admin .navbar-inverse .navbar-nav>li>a:focus {
+    background-color: #080808;
+  }
+
+  .messages-dropdown .dropdown-menu {
+    min-width: 300px;
+  }
+
+  .messages-dropdown .dropdown-menu li a {
+    white-space: normal;
+  }
+}
