@@ -18,11 +18,15 @@
 // Brand colors
 // -------------------------
 
-@brand-primary:         #428bca;
-@brand-success:         #5cb85c;
+@brand-primary:         #1abc9c;
+@brand-success:         #2ecc71;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
-@brand-info:            #5bc0de;
+@brand-info:            #2980B9;
+@brand-inverse:         #34495e;
+
+@brand-inverse-dark:    darken(@brand-inverse, 5%);
+@brand-inverse-darker:  darken(@brand-inverse, 10%);
 
 // Scaffolding
 // -------------------------
@@ -139,6 +143,10 @@
 @btn-info-color:                 #fff;
 @btn-info-bg:                    @brand-info;
 @btn-info-border:                darken(@btn-info-bg, 5%);
+
+@btn-inverse-color:              #fff;
+@btn-inverse-bg:                 @brand-inverse;
+@btn-inverse-border:             darken(@btn-inverse-bg, 5%);
 
 @btn-link-disabled-color:        @gray-light;
 
