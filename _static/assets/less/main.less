@@ -52,11 +52,17 @@ body {
   .box-sizing(border-box);
 }
 
+.umrum-logo {
+  font-family: 'Viga', sans-serif;
+  text-transform: uppercase;
+}
+
 
 /* Typography
    ================================================= */
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Titillium Web', sans-serif;
 }
 h1 {
   .font-size(28);
@@ -70,6 +76,9 @@ h3 {
 }
 h4 {
   .font-size(18);
+}
+.contrast {
+  color: #fff;
 }
 
 
@@ -91,6 +100,7 @@ img {
 
 a {
   text-decoration: none;
+  .transition(all .3s ease);
 
   &:hover {
 
@@ -191,6 +201,11 @@ a {
 .navbar-inverse {
   background: fade(@brand-inverse-darker, 90%);
   border: none;
+
+  .navbar-brand {
+    color: #fff;
+    font-size: 1.8em;
+  }
 }
 
 .navbar-inverse .navbar-nav > li > a {
@@ -257,11 +272,18 @@ a {
   margin-bottom: 40px;
 }
 
+.page-section-title {
+  padding-bottom: 25px;
+
+  font-size: 2.4em;
+}
+
 
 /* Intro
    ================================================= */
 
 .page-home-intro {
+  padding-top: 110px;
   position: relative;
 
   background-image: linear-gradient(45deg, rgba(194, 233, 221, 0.5) 1%, rgba(104, 119, 132, 0.5) 100%), linear-gradient(-45deg, #494d71 0%, rgba(217, 230, 185, 0.5) 80%);
@@ -281,6 +303,55 @@ a {
   }
 }
 
+
+/* Show off
+   ================================================= */
+
+.page-section-showoff {
+}
+
+
+/* Call out
+   ================================================= */
+
+.page-section-callout {
+  background-color: @brand-primary;
+
+  p {
+    font-size: 2em;
+  }
+}
+
+
+/* Our team
+   ================================================= */
+
+
+.page-section-team {
+
+}
+
+.page-section-team-item {
+  padding: 15px 0 0;
+
+  text-align: center;
+
+  h3 {
+    font-size: 1em;
+  }
+
+  img {
+    max-width: 130px;
+  }
+
+  a {
+    padding-left: 10px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
 
 /* Overview
    ================================================= */
@@ -344,6 +415,10 @@ a {
     color: #777;
     .font-size(12);
     text-transform: none;
+
+    .umrum-logo {
+      font-size: 1.2em;
+    }
 
     a {
       text-transform: uppercase;
