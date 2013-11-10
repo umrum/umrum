@@ -187,6 +187,22 @@ a {
 }
 
 
+/* Chart
+   ================================================= */
+
+.chart {
+  // max-width: 580px;
+}
+
+.page-home .chart {
+  height: 300px;
+}
+
+.page-home .chart canvas {
+  // height: 250px;
+}
+
+
 /* ==========================================================================
    Header
    ========================================================================== */
@@ -269,13 +285,12 @@ a {
 }
 
 .page-section h1 {
-  margin-bottom: 40px;
 }
 
 .page-section-title {
   padding-bottom: 25px;
 
-  font-size: 2.4em;
+  font-size: 2.8em;
 }
 
 
@@ -292,9 +307,13 @@ a {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 10;
+    // z-index: 10;
 
     .square(100%);
+  }
+
+  .page-home-intro-btns {
+    padding-top: 20px;
   }
 
 @media (min-width: @screen-tablet) {
@@ -303,11 +322,51 @@ a {
   }
 }
 
+@media (max-width: @screen-tablet) {
+
+  .page-home-intro {
+    text-align: center;
+  }
+  .page-home-intro-btns {
+    text-align: center;
+
+    .btn {
+      font-size: .6em;
+    }
+
+  }
+}
+
+
+/* Overview
+   ================================================= */
+
+.page-section-overview-item {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  text-align: center;
+
+  h2 {
+    color: @brand-primary;
+  }
+
+  .fa {
+    font-size: 6em;
+    color: @brand-inverse-dark;
+  }
+}
+
 
 /* Show off
    ================================================= */
 
 .page-section-showoff {
+}
+
+@media screen and (min-width: @screen-tablet) {
+  .go-right {
+    float: right;
+  }
 }
 
 
@@ -350,24 +409,6 @@ a {
     &:hover {
       text-decoration: none;
     }
-  }
-}
-
-/* Overview
-   ================================================= */
-
-.page-section-overview-item {
-  margin-top: 30px;
-  margin-bottom: 40px;
-  text-align: center;
-
-  h2 {
-    color: @brand-primary;
-  }
-
-  .fa {
-    font-size: 6em;
-    color: @brand-inverse-dark;
   }
 }
 

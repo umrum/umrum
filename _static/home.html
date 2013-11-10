@@ -46,9 +46,10 @@
             <li><a href="#">Getting started</a></li>
             <li><a href="#">Docs</a></li>
             <li><a href="#">Support</a></li>
+            <li><a href="#">Sign in</a></li>
           </ul>
           <div class="navbar-right">
-            <a href="#" class="btn  btn-primary  navbar-btn">Sign in</a>
+            <a href="#" class="btn  btn-primary  navbar-btn"><i class="fa  fa-lg  fa-fw  fa-github"></i>Sign up</a>
           </div>
         </nav> <!--/.navbar-collapse -->
       </div> <!-- /container -->
@@ -58,22 +59,22 @@
     <main class="page  page-home" role="main">
 
       <div class="jumbotron  page-home-intro">
-        <!-- <canvas class="page-home-intro-bg" id="canvas-particles"></canvas> -->
+        <canvas class="page-home-intro-bg" id="canvas-particles"></canvas>
         <div class="container">
           <div class="row">
             <div class="col-md-8  col-sm-8">
               <h1>Ultimate Magic Realtime User Monitoring</h1>
               <p>Open source user monitoring service using NodeJS.</p>
               <p>Built for you. Managed by you.</p>
-              <p>
-                <a class="btn  btn-info  btn-lg" href="#" role="button">Sign up</a>
-                <a class="btn  btn-primary  btn-lg" href="#" role="button">Learn more</a>
+              <p class="page-home-intro-btns">
+                <a class="btn  btn-primary  btn-lg" href="#" role="button"><i class="fa  fa-lg  fa-fw  fa-github"></i>Sign up</a>
+                <a class="btn  btn-info  btn-lg" href="#" role="button">Learn more</a>
               </p>
             </div>
             <div class="col-md-4  col-sm-4">
-              <div id="p1" style="height: 300px;">
+              <!-- <div id="p1" style="height: 300px;">
                 <canvas id="c1"></canvas>
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -150,8 +151,10 @@
               <h2 class="page-section-title">Real time</h2>
               <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
             </div>
-            <div class="col-sm-4  pull-right">
-              chart
+            <div class="col-sm-6  go-right">
+              <div class="chart" id="chart1-parent">
+                <canvas id="chart1"></canvas>
+              </div>
             </div>
           </div>
 
@@ -166,10 +169,12 @@
         <div class="container">
 
           <div class="row">
-            <div class="col-sm-4">
-              chart
+            <div class="col-sm-6">
+              <div class="chart" id="chart2-parent">
+                <canvas id="chart2"></canvas>
+              </div>
             </div>
-            <div class="col-sm-6  pull-right">
+            <div class="col-sm-6  go-right">
               <h2 class="page-section-title">Real time</h2>
               <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
             </div>
@@ -265,79 +270,15 @@
 
 
   <script src="assets/js/libs/jquery-1.10.2.js"></script>
+  <script src="assets/js/plugins/jquery.debouncedresize.js"></script>
   <script src="assets/js/plugins/chartjs-regaddi.js"></script>
+  <script src="assets/js/app/landing-page.js"></script>
   <script src="http://platform.twitter.com/widgets.js"></script>
   <script>
-  var canvas = document.getElementById('canvas-particles');
-  var ctx = canvas.getContext('2d');
-  var particles = [];
-  var particleCount = 20;
 
-  for(var i=0; i<particleCount;i++)
-    particles.push(new particle());
-
-  function particle() {
-    this.x = Math.random() * canvas.width;
-    this.y = canvas.height + Math.random() * 300;
-    this.speed = 2 + Math.random() * 5;
-    this.radius = Math.random() * 3;
-    this.opacity = (Math.random() * 100) / 1000;
-  }
-
-  function loop() {
-    requestAnimationFrame(loop);
-    draw();
-  }
-
-  function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    ctx.globalCompositeOperation = 'lighter';
-    for(var i=0; i<particles.length; i++) {
-      var p = particles[i];
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(255,255,255,' + p.opacity + ')';
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2, false);
-      ctx.fill();
-      p.y -= p.speed;
-      if(p.y <= -10)
-        particles[i] = new particle();
-    }
-  }
-
-  // loop();
   </script>
   <script>
-  var c1 = document.getElementById("c1");
-  var parent = document.getElementById("p1");
-  c1.width = parent.offsetWidth - 40;
-  c1.height = parent.offsetHeight - 40;
 
-  var data1 = {
-    labels : ["M","T","W","T","F","S","S"],
-    datasets : [
-      {
-        fillColor : "rgba(255,255,255,.1)",
-        strokeColor : "rgba(255,255,255,1)",
-        pointColor : "#b66e5d",
-        pointStrokeColor : "rgba(255,255,255,1)",
-        data : [150,200,235,390,290,250,250]
-      }
-    ]
-  }
-
-  var options1 = {
-    scaleFontColor : "rgba(255,255,255,1)",
-    scaleLineColor : "rgba(255,255,255,1)",
-    scaleGridLineColor : "transparent",
-    bezierCurve : false,
-    scaleOverride : true,
-    scaleSteps : 5,
-    scaleStepWidth : 100,
-    scaleStartValue : 0
-  }
-
-  new Chart(c1.getContext("2d")).Line(data1,options1)
   </script>
 </body>
 </html>
