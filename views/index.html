@@ -1,14 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>UMRUM | Ultimate Magic Real User Monitoring</title>
-    <link rel="stylesheet" type="text/css" href="{{assetsURL}}css/main.css" />
-</head>
-<body>
-    <div class="site-content">
-        {# http://blog.nodeknockout.com/post/35364532732/protip-add-the-vote-ko-badge-to-your-app #}
-        <iframe src="http://nodeknockout.com/iframe/frontend-bahia" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    {# http://blog.nodeknockout.com/post/35364532732/protip-add-the-vote-ko-badge-to-your-app #}
+    <iframe src="http://nodeknockout.com/iframe/frontend-bahia" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>
+{% endblock %}
