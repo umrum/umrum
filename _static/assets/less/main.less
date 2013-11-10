@@ -133,6 +133,67 @@ a {
 
 
 /* ==========================================================================
+   Header
+   ========================================================================== */
+
+/* Navigation
+   ================================================= */
+
+.navbar {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.navbar-inverse {
+  background: fade(@brand-inverse-darker, 90%);
+  border: none;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: #ccc;
+  // .font-size(12);
+  .transition(all 0.3s ease-out);
+}
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  background: none;
+}
+
+@media screen and (min-width: @screen-tablet) {
+  .navbar-fixed-top {
+
+    .nav > li > a {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+}
+
+@media screen and (min-width: @screen-desktop) {
+  .navbar-fixed-top {
+
+    .nav > li > a {
+      padding-left: 15px;
+      padding-right: 15px;
+
+      // .font-size(12);
+    }
+  }
+}
+
+
+.navbar-right {
+
+  // margin-left: 20px;
+
+  &> .btn {
+    margin-left: 15px;
+    // .font-size(12);
+  }
+}
+
+
+/* ==========================================================================
    Sections
    ========================================================================== */
 
