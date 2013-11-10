@@ -11,19 +11,23 @@
         return v.toString(16);
     });
 
-    lib.host = win.location.host.replace(/^www\./i, '');
-    lib.path = win.location.pathname.replace(/^([^\/])/i, '/$1');
+    var _location = win.location;
+    lib.host = encodeURIComponent(_location.host.replace(/^www\./i, ''));
+    lib.path = encodeURIComponent(_location.pathname.replace(/^([^\/])/i, '/$1'));
+    lib.title = encodeURIComponent(doc.title);
 
     var ping_server = function(){
       var img = doc.createElement('img');
       img.src = [
         _server_ping,
         "?uid=",
-        encodeURIComponent(lib.uid),
+        lib.uid,
         "&host=",
-        encodeURIComponent(lib.host),
+        lib.host,
         "&path=",
-        encodeURIComponent(lib.path)
+        lib.path,
+        "&title=",
+        lib.title
       ].join('');
       img.height = img.width = 1;
       doc.body.appendChild(img);
