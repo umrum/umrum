@@ -73,6 +73,23 @@ module.exports = function(grunt) {
         }
       }
     },
+    autoprefixer: {
+      dist: {
+        options: {
+          browsers: ['last 2 versions', '> 10%', 'ie 8']
+        },
+        files: {
+          '_static/assets/css/main.css': '_static/assets/css/main.css'
+        }
+      }
+    },
+    csso: {
+      dist: {
+        files : {
+          '_static/assets/css/main.css': '_static/assets/css/main.css'
+        }
+      }
+    },
     mochaTest: {
       test: {
         options: {
@@ -107,10 +124,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-autoprefixer');
+  grunt.loadNpmTasks('grunt-csso');
+  //grunt.loadNpmTasks('grunt-imageoptim');
   grunt.loadNpmTasks('grunt-mocha-test');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'less', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'less', 'autoprefixer', 'csso', 'concat', 'uglify']);
   grunt.registerTask('minjs', ['jshint', 'concat', 'uglify']);
   grunt.registerTask('unittest', ['jshint', 'mochaTest']);
 
