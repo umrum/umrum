@@ -64,11 +64,12 @@ module.exports = function(grunt) {
     less: {
       production: {
         options: {
-          paths: ['src/css'],
+          // paths: ['src/css', '_static/assets/less'],
           cleancss: true
         },
         files: {
-          'assets/css/main.css': 'src/css/main.less'
+          'assets/css/main.css': 'src/css/main.less',
+          '_static/assets/css/main.css': '_static/assets/less/bootstrap.less'
         }
       }
     },
@@ -90,7 +91,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:lib_test']
       },
       less: {
-        files: ['src/css/*.less'],
+        files: ['src/css/*.less', '_static/assets/less/*.less'],
         tasks: ['less'],
       },
       js: {
