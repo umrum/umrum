@@ -64,11 +64,11 @@ module.exports = function(grunt) {
     less: {
       production: {
         options: {
-          paths: ["src/css"],
+          paths: ['src/css'],
           cleancss: true
         },
         files: {
-          "assets/css/main.css": "src/css/main.less"
+          'assets/css/main.css': 'src/css/main.less'
         }
       }
     },
