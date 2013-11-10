@@ -17,8 +17,10 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['src/js/*.js'],
-        dest: 'assets/js/main.js'
+        files: {
+          'assets/js/init.js': ['src/js/libs/modernizr-2.6.3.js'],
+          'assets/js/main.js': ['src/js/libs/jquery-1.10.2.js', 'src/js/plugins/*.js', 'assets/js/bootstrap/*.js', 'src/js/app/landing-page.js', 'src/js/app/admin.js']
+        }
       }
     },
     uglify: {
@@ -26,8 +28,11 @@ module.exports = function(grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        src: '<%= concat.dist.dest %>',
-        dest: 'assets/js/main.min.js'
+        files: {
+          'assets/js/init.min.js': ['assets/js/init.js'],
+          'assets/js/main.min.js': ['assets/js/main.js'],
+          'assets/js/chart.min.js': ['src/js/app/chart.js']
+        }
       }
     },
     jshint: {
@@ -68,8 +73,7 @@ module.exports = function(grunt) {
           cleancss: true
         },
         files: {
-          'assets/css/main.css': 'src/css/main.less',
-          '_static/assets/css/main.css': '_static/assets/less/bootstrap.less'
+          'assets/css/main.css': ['src/less/bootstrap.less']
         }
       }
     },
@@ -79,14 +83,14 @@ module.exports = function(grunt) {
           browsers: ['last 2 versions', '> 10%', 'ie 8']
         },
         files: {
-          '_static/assets/css/main.css': '_static/assets/css/main.css'
+          'assets/css/main.css': ['assets/css/main.css']
         }
       }
     },
     csso: {
       dist: {
         files : {
-          '_static/assets/css/main.css': '_static/assets/css/main.css'
+          'assets/css/main.min.css': ['assets/css/main.css']
         }
       }
     },
@@ -108,7 +112,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:lib_test']
       },
       less: {
-        files: ['src/css/*.less', '_static/assets/less/*.less'],
+        files: ['src/less/*.less'],
         tasks: ['less'],
       },
       js: {
