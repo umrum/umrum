@@ -4,14 +4,15 @@ var app = require('../config/app');
 var api = require('../ext/redis');
 
 app.get('/ping', function(req, res) {
-    var uid = req.query.uid;
-    var host = req.query.host;
-    var path = req.query.path;
+    var active_user = {
+        'uid': req.query.uid,
+        'host': req.query.host,
+        'path': req.query.path
+    };
 
-    api.registerPageView(uid, host, path);
-
+    api.registerPageView(active_user);
     setTimeout(function() {
-        api.removePageView(host, path);
+        api.removePageView(active_user);
     });
 
     res.send([uid, host, path].join(' - '));

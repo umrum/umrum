@@ -36,7 +36,7 @@ var getHostInfo = function(host) {
     }
 }
 
-var registerPageView = function(uid, host, path) {
+var registerPageView = function(active_user) {
     /*
     This function should increment the number of visitiors of host
     and adds the pam of this request (stores path) with expires:
@@ -44,14 +44,14 @@ var registerPageView = function(uid, host, path) {
     - host.currentVisits += 1  # with expire 10s
     - paths.incr(path)  # with expire 10s
     */
-    var pathHash = hashLib.encript(path);
-    redisclient.incr(host);
+    var pathHash = hashLib.encript(active_user.path);
+    redisclient.incr(active_user.host);
     // zincrby path 1 "path"
     redisclient.zincrby(pathHash, 1, "path");
 }
 
-var removePageView = function(host, path) {
-    redisclient.decr(host);
+var removePageView = function(active_user) {
+    redisclient.decr(active_user.host);
     redisclient.zincrby(pathHash, -1, "path");
 }
 
