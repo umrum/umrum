@@ -13,7 +13,7 @@ app.get('/ping', function(req, res) {
     api.registerPageView(active_user);
     setTimeout(function() {
         api.removePageView(active_user);
-    });
+    }, 10000);
 
-    res.send([uid, host, path].join(' - '));
+    res.json(active_user);
 });
