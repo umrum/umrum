@@ -4,7 +4,7 @@ var redisclient = require('../config/redisclient');
 
 var _MAX_TOPPAGES = 10;
 
-var _toppages_key(host) {
+var _toppages_key = function(host) {
     return 'toppages-'+host;
 }
 
@@ -60,9 +60,10 @@ var registerPageView = function(active_user) {
     }
     */
 
-    redisclient.hmset(active_user.uuid, active_user);
-    redisclient.hincrby(active_user.host, 'curr_visits', 1);
-    redisclient.zincrby(_toppages_key(active_user.host), 1, active_user.path);
+    console.log(active_user);
+    redisclient.hmset(active_user.uuid, active_user, console.log);
+    redisclient.hincrby(active_user.host, 'curr_visits', 1, console.log);
+    redisclient.zincrby(_toppages_key(active_user.host), 1, active_user.path, console.log);
 }
 
 var removePageView = function(active_user) {
