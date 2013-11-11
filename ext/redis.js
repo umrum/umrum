@@ -1,6 +1,6 @@
 /* global module, require */
 
-var redisclient = require('./config/redisclient');
+var redisclient = require('../config/redisclient');
 
 var getHostInfo = function(host) {
     /*
@@ -55,7 +55,7 @@ var removePageView = function(host, path) {
     redisclient.zincrby(pathHash, -1, "path");
 }
 
-module.exports {
+module.exports = {
     getHostInfo: getHostInfo,
     registerPageView: registerPageView,
     removePageView: removePageView
