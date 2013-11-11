@@ -1,6 +1,7 @@
 /* global require */
 
 var app = require('../config/app');
+var api = require('../ext/redis');
 
 app.get('/ping', function(req, res) {
     var uid = req.query.uid;
