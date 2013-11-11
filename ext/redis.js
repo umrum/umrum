@@ -21,7 +21,7 @@ var getHostInfo = function(host, callback) {
     }
     */
 
-    hostinfo = {}
+    hostinfo = {};
     redisclient.hget(host, 'curr_visits', function(err, result){
         if ( err ) throw err;
         if ( !result ) return hostinfo;
@@ -29,7 +29,7 @@ var getHostInfo = function(host, callback) {
         hostinfo.currentVisits = result;
         redisclient.zrevrangebyscore(
             _toppages_key(host),
-            '-inf', '+inf',
+            '+inf', '-inf',
             'WITHSCORES',
             'LIMIT', 0, _MAX_TOPPAGES,
             function(err, result) {
@@ -61,7 +61,7 @@ var registerPageView = function(active_user) {
     */
 
     console.log(active_user);
-    redisclient.hmset(active_user.uuid, active_user, console.log);
+    redisclient.hmset(active_user.uid, active_user, console.log);
     redisclient.hincrby(active_user.host, 'curr_visits', 1, console.log);
     redisclient.zincrby(_toppages_key(active_user.host), 1, active_user.path, console.log);
 }
@@ -79,7 +79,7 @@ var removePageView = function(active_user) {
     }
     */
 
-    redisclient.del(active_user.uuid);
+    redisclient.del(active_user.uid);
     redisclient.hincrby(active_user.host, 'curr_visits', -1);
     redisclient.zincrby(_toppages_key(active_user.host), -1, active_user.path);
 }
