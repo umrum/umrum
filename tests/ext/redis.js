@@ -232,4 +232,27 @@ describe('Tests the redis ext module', function(){
             mockRedisCli.verify();
         });
     });
+
+    describe('#removePageView', function(){
+        it('unique behavior', function() {
+            var active_user = {
+                'uid': 'unique user id',
+                'host': 'host.com',
+                'path': '/path1'
+            };
+
+            var mockRedisCli = sinon.mock(redisclient);
+            mockRedisCli.expects('del').once().withArgs(active_user.uid);
+            mockRedisCli.expects('hincrby').once().withArgs(
+                active_user.host, 'curr_visits', -1
+            );
+            mockRedisCli.expects('zincrby').once().withArgs(
+                'toppages-'+active_user.host, -1, active_user.path
+            );
+
+            _api().removePageView(active_user);
+
+            mockRedisCli.verify();
+        });
+    });
 });
