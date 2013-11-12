@@ -207,4 +207,29 @@ describe('Tests the redis ext module', function(){
             sinon.assert.calledWith(callback, err, expectedHostInfo);
         });
     });
+
+    describe('#registerPageView', function(){
+        it('unique behavior', function() {
+            var active_user = {
+                'uid': 'unique user id',
+                'host': 'host.com',
+                'path': '/path1'
+            };
+
+            var mockRedisCli = sinon.mock(redisclient);
+            mockRedisCli.expects('hmset').once().withArgs(
+                active_user.uid, active_user
+            );
+            mockRedisCli.expects('hincrby').once().withArgs(
+                active_user.host, 'curr_visits', 1
+            );
+            mockRedisCli.expects('zincrby').once().withArgs(
+                'toppages-'+active_user.host, 1, active_user.path
+            );
+
+            _api().registerPageView(active_user);
+
+            mockRedisCli.verify();
+        });
+    });
 });
