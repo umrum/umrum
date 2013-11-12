@@ -3,7 +3,7 @@
 var app = require('../config/app');
 var api = require('../ext/redis');
 
-app.get('/show/:host', function(req, res) {
+app.get('/dashboard/:host', function(req, res) {
     api.getHostInfo(req.params.host, function(info){
       res.json(info);
     });
