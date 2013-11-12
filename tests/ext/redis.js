@@ -1,33 +1,63 @@
-/* global require, describe, it */
+/* global require, describe, it, beforeEach, afterEach */
 
 var redisclient = require('../../config/redisclient');
 var sinon = require('sinon');
 
 describe('Tests the redis ext module', function(){
+    var mockRedisCli = null;
 
     var _api = function(){
         return require("../../ext/redis");
     };
 
-    describe('#getHosInfo', function(){
-        it('normal behavior', function() {
-            var host = 'testhost.com',
-                err = null,
-                currentVisits = '7',
-                topPages = ['/', '5', '/a', '2'],
-                callback = sinon.mock();
+    beforeEach(function(done){
+        mockRedisCli = sinon.mock(redisclient);
+        done();
+    });
 
+    afterEach(function(done){
+        mockRedisCli.restore();
+        done();
+    });
+
+    describe('#getHosInfo', function(){
+        var zrevrangeCallbackArgumentIndex = 7,
+            hgetCallbackArgumentIndex = 2,
+            host = 'testhost.com',
+            currentVisits = null,
+            topPages = null,
+            err = null,
+            callback = null;
+
+        var _calculate_hostInfo = function(){
             var expectedHostInfo = {
                 'currentVisits': currentVisits,
-                'topPages': []
+                'topPages': null
             };
-            for (var i=0; i<topPages.length; i+=2) {
-                expectedHostInfo.topPages.push([topPages[i], topPages[i+1]]);
+            if ( topPages ) {
+                expectedHostInfo.topPages = [];
+                for (var i=0; i<topPages.length; i+=2) {
+                    expectedHostInfo.topPages.push([topPages[i], topPages[i+1]]);
+                }
             }
+            return expectedHostInfo;
+        };
 
-            var mockRedisCli = sinon.mock(redisclient);
-            var zrevrangeCallbackArgumentIndex = 7;
-            var hgetCallbackArgumentIndex = 2;
+        beforeEach(function(done){
+            callback = sinon.mock();
+            done();
+        });
+
+        afterEach(function(done){
+            currentVisits = null;
+            topPages = null;
+            err = null;
+            done();
+        });
+
+        it('normal behavior', function() {
+            currentVisits = '7';
+            topPages = ['/', '5', '/a', '2'];
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -49,22 +79,10 @@ describe('Tests the redis ext module', function(){
 
             mockRedisCli.verify();
             sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, expectedHostInfo);
+            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
         });
 
         it('no results hget', function() {
-            var host = 'testhost.com',
-                err = null,
-                currentVisits = null,
-                callback = sinon.mock();
-
-            var expectedHostInfo = {
-                currentVisits: null,
-                topPages: null,
-            };
-
-            var mockRedisCli = sinon.mock(redisclient);
-            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli.expects("zrevrangebyscore").never();
             mockRedisCli
@@ -77,21 +95,11 @@ describe('Tests the redis ext module', function(){
 
             mockRedisCli.verify();
             sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, expectedHostInfo);
+            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
         });
 
         it('error in hget', function() {
-            var host = 'testhost.com',
-                err = {error: 'some error'},
-                callback = sinon.mock();
-
-            var expectedHostInfo = {
-                currentVisits: null,
-                topPages: null,
-            };
-
-            var mockRedisCli = sinon.mock(redisclient);
-            var hgetCallbackArgumentIndex = 2;
+            err = {error: 'some error'};
 
             mockRedisCli.expects("zrevrangebyscore").never();
             mockRedisCli
@@ -104,24 +112,11 @@ describe('Tests the redis ext module', function(){
 
             mockRedisCli.verify();
             sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, expectedHostInfo);
+            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
         });
 
         it('no result in zrevrangebyscore', function() {
-            var host = 'testhost.com',
-                err = null,
-                currentVisits = '7',
-                topPages = null,
-                callback = sinon.mock();
-
-            var expectedHostInfo = {
-                'currentVisits': currentVisits,
-                'topPages': null
-            };
-
-            var mockRedisCli = sinon.mock(redisclient);
-            var zrevrangeCallbackArgumentIndex = 7;
-            var hgetCallbackArgumentIndex = 2;
+            currentVisits = '7';
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -143,24 +138,12 @@ describe('Tests the redis ext module', function(){
 
             mockRedisCli.verify();
             sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, expectedHostInfo);
+            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
         });
 
         it('empty result in zrevrangebyscore', function() {
-            var host = 'testhost.com',
-                err = null,
-                currentVisits = '7',
-                topPages = [],
-                callback = sinon.mock();
-
-            var expectedHostInfo = {
-                'currentVisits': currentVisits,
-                'topPages': []
-            };
-
-            var mockRedisCli = sinon.mock(redisclient);
-            var zrevrangeCallbackArgumentIndex = 7;
-            var hgetCallbackArgumentIndex = 2;
+            currentVisits = '7';
+            topPages = [];
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -182,23 +165,12 @@ describe('Tests the redis ext module', function(){
 
             mockRedisCli.verify();
             sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, expectedHostInfo);
+            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
         });
 
         it('error in zrevrangebyscore', function() {
-            var host = 'testhost.com',
-                err = {error: 'some error'},
-                currentVisits = '7',
-                callback = sinon.mock();
-
-            var expectedHostInfo = {
-                'currentVisits': currentVisits,
-                'topPages': null
-            };
-
-            var mockRedisCli = sinon.mock(redisclient);
-            var zrevrangeCallbackArgumentIndex = 7;
-            var hgetCallbackArgumentIndex = 2;
+            err = {error: 'some error'};
+            currentVisits = '7';
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -220,7 +192,7 @@ describe('Tests the redis ext module', function(){
 
             mockRedisCli.verify();
             sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, expectedHostInfo);
+            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
         });
     });
 
@@ -232,7 +204,6 @@ describe('Tests the redis ext module', function(){
                 'path': '/path1'
             };
 
-            var mockRedisCli = sinon.mock(redisclient);
             mockRedisCli.expects('hmset').once().withArgs(
                 active_user.uid, active_user
             );
@@ -257,7 +228,6 @@ describe('Tests the redis ext module', function(){
                 'path': '/path1'
             };
 
-            var mockRedisCli = sinon.mock(redisclient);
             mockRedisCli.expects('del').once().withArgs(active_user.uid);
             mockRedisCli.expects('hincrby').once().withArgs(
                 active_user.host, 'curr_visits', -1
