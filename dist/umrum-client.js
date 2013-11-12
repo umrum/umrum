@@ -13,7 +13,9 @@
 
     var _location = win.location;
     lib.host = encodeURIComponent(_location.host.replace(/^www\./i, ''));
-    lib.path = encodeURIComponent(_location.pathname.replace(/^([^\/])/i, '/$1'));
+    lib.path = encodeURIComponent(
+        _location.pathname.replace(/^([^\/])/i, '/$1') + _location.hash
+    );
     lib.title = encodeURIComponent(doc.title);
 
     var ping_server = function(){
