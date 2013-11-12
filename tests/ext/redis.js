@@ -26,8 +26,8 @@ describe('Tests the redis ext module', function(){
             }
 
             var mockRedisCli = sinon.mock(redisclient);
-            var zrevrange_callback_argument_index = 7;
-            var hget_callback_argument_index = 2;
+            var zrevrangeCallbackArgumentIndex = 7;
+            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -37,12 +37,12 @@ describe('Tests the redis ext module', function(){
                     'WITHSCORES',
                     'LIMIT', 0, 10
                 )
-                .callsArgWith(zrevrange_callback_argument_index, null, topPages)
+                .callsArgWith(zrevrangeCallbackArgumentIndex, null, topPages)
             ;
             mockRedisCli
                 .expects("hget")
                 .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hget_callback_argument_index, null, currentVisits)
+                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
             ;
 
             _api().getHostInfo(host, callback);
@@ -64,13 +64,13 @@ describe('Tests the redis ext module', function(){
             };
 
             var mockRedisCli = sinon.mock(redisclient);
-            var hget_callback_argument_index = 2;
+            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli.expects("zrevrangebyscore").never();
             mockRedisCli
                 .expects("hget")
                 .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hget_callback_argument_index, null, currentVisits)
+                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
             ;
 
             _api().getHostInfo(host, callback);
@@ -91,13 +91,13 @@ describe('Tests the redis ext module', function(){
             };
 
             var mockRedisCli = sinon.mock(redisclient);
-            var hget_callback_argument_index = 2;
+            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli.expects("zrevrangebyscore").never();
             mockRedisCli
                 .expects("hget")
                 .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hget_callback_argument_index, err, null)
+                .callsArgWith(hgetCallbackArgumentIndex, err, null)
             ;
 
             _api().getHostInfo(host, callback);
@@ -120,8 +120,8 @@ describe('Tests the redis ext module', function(){
             };
 
             var mockRedisCli = sinon.mock(redisclient);
-            var zrevrange_callback_argument_index = 7;
-            var hget_callback_argument_index = 2;
+            var zrevrangeCallbackArgumentIndex = 7;
+            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -131,12 +131,12 @@ describe('Tests the redis ext module', function(){
                     'WITHSCORES',
                     'LIMIT', 0, 10
                 )
-                .callsArgWith(zrevrange_callback_argument_index, null, topPages)
+                .callsArgWith(zrevrangeCallbackArgumentIndex, null, topPages)
             ;
             mockRedisCli
                 .expects("hget")
                 .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hget_callback_argument_index, null, currentVisits)
+                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
             ;
 
             _api().getHostInfo(host, callback);
@@ -159,8 +159,8 @@ describe('Tests the redis ext module', function(){
             };
 
             var mockRedisCli = sinon.mock(redisclient);
-            var zrevrange_callback_argument_index = 7;
-            var hget_callback_argument_index = 2;
+            var zrevrangeCallbackArgumentIndex = 7;
+            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -170,12 +170,12 @@ describe('Tests the redis ext module', function(){
                     'WITHSCORES',
                     'LIMIT', 0, 10
                 )
-                .callsArgWith(zrevrange_callback_argument_index, null, topPages)
+                .callsArgWith(zrevrangeCallbackArgumentIndex, null, topPages)
             ;
             mockRedisCli
                 .expects("hget")
                 .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hget_callback_argument_index, null, currentVisits)
+                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
             ;
 
             _api().getHostInfo(host, callback);
@@ -197,8 +197,8 @@ describe('Tests the redis ext module', function(){
             };
 
             var mockRedisCli = sinon.mock(redisclient);
-            var zrevrange_callback_argument_index = 7;
-            var hget_callback_argument_index = 2;
+            var zrevrangeCallbackArgumentIndex = 7;
+            var hgetCallbackArgumentIndex = 2;
 
             mockRedisCli
                 .expects("zrevrangebyscore")
@@ -208,12 +208,12 @@ describe('Tests the redis ext module', function(){
                     'WITHSCORES',
                     'LIMIT', 0, 10
                 )
-                .callsArgWith(zrevrange_callback_argument_index, err, null)
+                .callsArgWith(zrevrangeCallbackArgumentIndex, err, null)
             ;
             mockRedisCli
                 .expects("hget")
                 .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hget_callback_argument_index, null, currentVisits)
+                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
             ;
 
             _api().getHostInfo(host, callback);
