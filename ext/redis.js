@@ -21,10 +21,12 @@ var getHostInfo = function(host, callback) {
     }
     */
 
-    hostinfo = {};
+    hostinfo = {
+        currentVisits: null,
+        topPages: null
+    };
     redisclient.hget(host, 'curr_visits', function(err, result){
-        if ( err ) throw err;
-        if ( !result ) callback(hostinfo);
+        if ( err || !result ) return callback(err, hostinfo);
 
         hostinfo.currentVisits = result;
         redisclient.zrevrangebyscore(
@@ -33,15 +35,14 @@ var getHostInfo = function(host, callback) {
             'WITHSCORES',
             'LIMIT', 0, _MAX_TOPPAGES,
             function(err, result) {
-                if ( err ) throw err;
-                if ( !result ) callback(hostinfo);
+                if ( err || !result ) return callback(err, hostinfo);
 
                 hostinfo.topPages = [];
                 for (var i=0; i<result.length; i+=2) {
                     hostinfo.topPages.push([result[i], result[i+1]]);
                 }
 
-                callback(hostinfo);
+                callback(err, hostinfo);
             }
         );
     });
