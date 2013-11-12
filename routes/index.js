@@ -1,27 +1,26 @@
 /* global require */
 
-var app = require('../config/app');
+var app = require('../config/app'),
+    passport = require('passport'),
+    auth = require('../config/middlewares/authorization'),
+    index = require('../app/controllers/index'),
+    user = require('../app/controllers/user')
+;
 
-app.get('/', function(req, res) {
-    res.render('index.html');
-});
+app.get('/', index.index );
+app.get('/getting-started', index.gettingStarted);
+app.get('/documentation', index.documentation);
+app.get('/support', index.support);
+app.get('/terms-of-service', index.termsOfService);
+app.get('/privacy-policy', index.privacyPolicy);
 
-app.get('/getting-started', function(req, res) {
-    res.render('getting-started.html');
-});
+app.get('/signin', user.signin);
 
-app.get('/documentation', function(req, res) {
-    res.render('documentation.html');
-});
+//Setting the github oauth routes
+app.get('/signup', passport.authenticate('github', {
+    failureRedirect: '/signin'
+}), user.signin);
 
-app.get('/support', function(req, res) {
-    res.render('support.html');
-});
-
-app.get('/terms-of-service', function(req, res) {
-    res.render('terms-of-service.html');
-});
-
-app.get('/privacy-policy', function(req, res) {
-    res.render('privacy-policy.html');
-});
+app.get('auth/github/callback', passport.authenticate('github', {
+    failureRedirect: '/signin'
+}), user.authCallback);

@@ -41,21 +41,6 @@ module.exports.session = function(req, res) {
 };
 
 /**
- * Show sign up form
- */
-module.exports.signup = function(req, res) {
-    res.render('login/signup.html');
-};
-
-/**
- * Show login form
- */
-module.exports.signin = function(req, res) {
-    res.render('login/signin.html');
-};
-
-
-/**
  * Find user by id
  */
 module.exports.user = function(req, res, next, id) {
