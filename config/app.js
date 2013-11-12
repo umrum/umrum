@@ -4,10 +4,20 @@
  *  Creates the express app and configure static folders
  */
 
-var express = require('express');
-var env = require('./env');
-var redis = require('./redisclient');
-var nunjucks = require('nunjucks');
+var express = require('express'),
+    env = require('./env'),
+    mongoose = require('mongoose'),
+    mongoStore = require('connect-mongo')(express),
+    redis = require('./redisclient'),
+    nunjucks = require('nunjucks')
+;
+
+// Makes connection asynchronously. Mongoose will queue up database
+// operations and release them when the connection is complete.
+var connection = env.MONGO_URI || 'mongodb://localhost/umrum';
+var db = mongoose.connect(connection, function (err, res) {
+    console.log ( err ? 'ERROR connecting to: ' + env.MONGO_URI + '. ' + err : 'Succeeded connected to: ' + env.MONGO_URI );
+});
 
 var app = express(),
     oneDay = 86400000;
