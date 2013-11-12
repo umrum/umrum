@@ -11,8 +11,8 @@ module.exports = {  //require('config');
     assetsURL: '/assets/',
     minifyOutput: true,
     MONGO_URI: 'mongodb://ds053858.mongolab.com:53858/umrum',
-    models_path: path.normalize(path.join(__dirname, '../app/models')),
-    controllers_path: path.normalize(path.join(__dirname, '../app/controllers')),
+    modelsPath: path.normalize(path.join(__dirname, '../app/models')),
+    controllersPath: path.normalize(path.join(__dirname, '../app/controllers')),
     github: {
         "clientID": "b8a5184274772740060a",
         "clientSecret": "f64d75f0859934c8eb2c80959186e3e705b3d5f1",

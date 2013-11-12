@@ -14,12 +14,10 @@ app.get('/support', index.support);
 app.get('/terms-of-service', index.termsOfService);
 app.get('/privacy-policy', index.privacyPolicy);
 
-app.get('/signin', user.signin);
-
 //Setting the github oauth routes
 app.get('/signup', passport.authenticate('github', {
     failureRedirect: '/signin'
-}), user.signin);
+}), index.index);
 
 app.get('auth/github/callback', passport.authenticate('github', {
     failureRedirect: '/signin'

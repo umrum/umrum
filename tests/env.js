@@ -19,7 +19,7 @@ describe('Tests the app module', function(){
     // });
 
     it('should return the correct views variable', function() {
-        assert.equal(env.views, path.normalize(path.join(__dirname, '../views/')));
+        assert.equal(env.views, path.normalize(path.join(__dirname, '../app/views/')));
     });
 
     it('should return the correct assetsPath variable', function() {
