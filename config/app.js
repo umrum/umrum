@@ -8,6 +8,7 @@ var express = require('express');
 var env = require('./env');
 var redis = require('./redisclient');
 var nunjucks = require('nunjucks');
+var fs = require('fs');
 
 var app = express(),
     oneDay = 86400000;
