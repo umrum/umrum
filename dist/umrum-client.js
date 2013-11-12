@@ -13,12 +13,13 @@
 
     var _location = win.location;
     lib.host = encodeURIComponent(_location.host.replace(/^www\./i, ''));
-    lib.path = encodeURIComponent(
-        _location.pathname.replace(/^([^\/])/i, '/$1') + _location.hash
-    );
-    lib.title = encodeURIComponent(doc.title);
 
     var ping_server = function(){
+        lib.path = encodeURIComponent(
+            _location.pathname.replace(/^([^\/])/i, '/$1') + _location.hash
+        );
+        lib.title = encodeURIComponent(doc.title);
+
         var imgId = "umrum-ping-img";
         var img = doc.getElementById(imgId);
         var _exists = img != null;
