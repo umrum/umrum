@@ -5,6 +5,9 @@ var api = require('../ext/redis');
 
 app.get('/dashboard/:host', function(req, res) {
     api.getHostInfo(req.params.host, function(info){
-      res.json(info);
+      res.render('admin-index.html', {
+        host: req.params.host,
+        data: info
+      });
     });
 });
