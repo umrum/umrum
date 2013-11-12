@@ -35,7 +35,7 @@ app.listen(env.port, function(err) {
     // if run as root, downgrade to the owner of this file
     if (process.platform.toLowerCase().indexOf('win') === -1) {
         if ( process.getuid() === 0 ) {
-            fs.stat(__filename, function(err, stats) {
+            require('fs').stat(__filename, function(err, stats) {
                 if (err) {
                     return console.error(err);
                 }
