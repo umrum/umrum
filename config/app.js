@@ -33,13 +33,15 @@ app.listen(env.port, function(err) {
     }
 
     // if run as root, downgrade to the owner of this file
-    if (process.getuid() === 0) {
-        require('fs').stat(__filename, function(err, stats) {
-            if (err) {
-                return console.error(err);
-            }
-            process.setuid(stats.uid);
-        });
+    if (process.platform.toLowerCase().indexOf('win') === -1) {
+        if ( process.getuid() === 0 ) {
+            fs.stat(__filename, function(err, stats) {
+                if (err) {
+                    return console.error(err);
+                }
+                process.setuid(stats.uid);
+            });
+        }
     }
     console.log('%s: Node server started on http://0.0.0.0:%d ...',
                 Date(Date.now() ), env.port);
