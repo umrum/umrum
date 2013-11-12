@@ -1,0 +1,112 @@
+// Core variables and mixins
+@import "variables.less";
+@import "mixins.less";
+
+@import "helpers.less";
+
+
+/* ==========================================================================
+   Variables
+   ========================================================================== */
+
+@font-weight-light:           300;
+@font-weight-normal:          400;
+@font-weight-semibold:        600;
+@font-weight-bold:            700;
+
+/* ==========================================================================
+   Mixins
+   ========================================================================== */
+
+/* Utilities
+   ========================================================================== */
+
+.font-size(@font-size: @font-size-base-num) {
+  @rem: (@font-size / 10);
+  font-size: (@font-size * 1px);
+  font-size: ~"@{rem}rem";
+}
+
+
+/* ==========================================================================
+   Generic styles
+   ========================================================================== */
+
+html {
+  font-size: 62.5%; // Needed to make 1em equal 10px
+
+  @media screen and (min-width: @screen-desktop) {
+    font-size: 70%;
+  }
+}
+
+body {
+  font-family: @font-family-sans-serif;
+  .font-size(14);
+  font-weight: @font-weight-light;
+
+  background: @body-bg;
+  color: @text-color;
+}
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+* {
+  .box-sizing(border-box);
+}
+
+.umrum-logo {
+  font-family: 'Viga', sans-serif;
+  text-transform: uppercase;
+}
+
+
+/* Typography
+   ================================================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Titillium Web', sans-serif;
+}
+h1 {
+  .font-size(28);
+}
+h2 {
+  .font-size(24);
+  font-weight: @font-weight-normal;
+}
+h3 {
+  .font-size(20);
+}
+h4 {
+  .font-size(18);
+}
+.contrast {
+  color: #fff;
+}
+
+
+/* Images
+   ================================================= */
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.lt-ie9 img {
+  width: auto;
+}
+
+
+/* Buttons
+   ================================================= */
+
+.btn {
+  // border: none;
+  text-transform: uppercase;
+  .transition(all 0.2s ease-out);
+}
