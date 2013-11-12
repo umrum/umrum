@@ -1,7 +1,19 @@
 /* global require */
 
 var app = require('../config/app');
+var api = require('../ext/redis');
 
 app.get('/ping', function(req, res) {
-    res.send();
+    var active_user = {
+        'uid': req.query.uid,
+        'host': req.query.host,
+        'path': req.query.path
+    };
+
+    api.registerPageView(active_user);
+    setTimeout(function() {
+        api.removePageView(active_user);
+    }, 10000);
+
+    res.json(active_user);
 });

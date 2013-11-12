@@ -254,93 +254,10 @@
   background: linear-gradient(135deg,#c5d4d7 6%,#d6b98d 34%,#c99262 57%,#8c5962 80%,#43577e 100%);
 }
 
-html {
-  font-size: 62.5%;
-}
-
-@media screen and (min-width:992px) {
-  html {
-    font-size: 70%;
-  }
-}
-
-body {
-  font-family: "PT Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 14px;
-  font-size: 1.4rem;
-  font-weight: 300;
-  background: #fff;
-  color: #34495e;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-* {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.umrum-logo {
-  font-family: Viga,sans-serif;
-  text-transform: uppercase;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Titillium Web',sans-serif;
-}
-
-h1 {
-  font-size: 28px;
-  font-size: 2.8rem;
-}
-
-h2 {
-  font-size: 24px;
-  font-size: 2.4rem;
-  font-weight: 400;
-}
-
-h3 {
-  font-size: 20px;
-  font-size: 2rem;
-}
-
-h4 {
-  font-size: 18px;
-  font-size: 1.8rem;
-}
-
-.contrast {
-  color: #fff;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-.lt-ie9 img {
-  width: auto;
-}
-
 a {
   text-decoration: none;
   -webkit-transition: all .3s ease;
   transition: all .3s ease;
-}
-
-.btn {
-  text-transform: uppercase;
-  -webkit-transition: all .2s ease-out;
-  transition: all .2s ease-out;
 }
 
 .wrap {
