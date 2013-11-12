@@ -17,21 +17,30 @@
     lib.title = encodeURIComponent(doc.title);
 
     var ping_server = function(){
-      var img = doc.createElement('img');
-      img.src = [
-        _server_ping,
-        "?uid=",
-        lib.uid,
-        "&host=",
-        lib.host,
-        "&path=",
-        lib.path,
-        "&title=",
-        lib.title
-      ].join('');
-      img.height = img.width = 1;
-      doc.body.appendChild(img);
-      setTimeout(ping_server, _server_ping_timeout);
+        var imgId = "umrum-ping-img";
+        var img = doc.getElementById(imgId);
+        var _exists = img != null;
+
+        if ( !_exists ) {
+            img = doc.createElement('img');
+            img.id = imgId;
+            img.height = img.width = 1;
+            doc.body.appendChild(img);
+        }
+        img.src = [
+            _server_ping,
+            "?uid=",
+            lib.uid,
+            "&host=",
+            lib.host,
+            "&path=",
+            lib.path,
+            "&title=",
+            lib.title,
+            "&t=",
+            (+new Date)
+        ].join('');
+        setTimeout(ping_server, _server_ping_timeout);
     };
     ping_server();
 })(window, document);
