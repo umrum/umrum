@@ -20,13 +20,15 @@
         );
         lib.title = encodeURIComponent(doc.title);
 
-        var imgId = "umrum-ping-img";
+        var imgId = "umrum_ping";
         var img = doc.getElementById(imgId);
         var _exists = img != null;
 
         if ( !_exists ) {
             img = doc.createElement('img');
             img.id = imgId;
+            img.style.position = 'absolute';
+            img.style.top = img.style.left = '-1px';
             img.height = img.width = 1;
             doc.body.appendChild(img);
         }
