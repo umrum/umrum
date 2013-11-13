@@ -10,7 +10,7 @@ module.exports = {  //require('config');
     assetsPath: path.normalize(path.join(__dirname, '../assets/')),
     assetsURL: '/assets/',
     minifyOutput: true,
-    MONGO_URI: 'mongodb://ds053858.mongolab.com:53858/umrum',
+    MONGO_URI: 'mongodb://umrum:UmR*m1pp@ds053858.mongolab.com:53858/umrum',
     modelsPath: path.normalize(path.join(__dirname, '../app/models')),
     controllersPath: path.normalize(path.join(__dirname, '../app/controllers')),
     github: {
