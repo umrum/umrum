@@ -1,6 +1,6 @@
 /* global require */
 
-var routes = ['index', 'ping', 'dashboard'];
+var routes = ['index', 'ping', 'dashboard', 'errors'];
 for (var i = routes.length - 1; i >= 0; i--) {
     require('./routes/' + routes[i]);
 }

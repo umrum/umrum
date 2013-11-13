@@ -4,11 +4,36 @@
  *  Creates the express app and configure static folders
  */
 
-var express = require('express');
-var env = require('./env');
-var redis = require('./redisclient');
-var nunjucks = require('nunjucks');
-var fs = require('fs');
+var express = require('express'),
+    fs = require('fs'),
+    env = require('./env'),
+    mongoose = require('mongoose'),
+    redis = require('./redisclient'),
+    nunjucks = require('nunjucks')
+;
+
+// Makes connection asynchronously. Mongoose will queue up database
+// operations and release them when the connection is complete.
+var connection = env.MONGO_URI || 'mongodb://localhost/umrum';
+mongoose.connect(connection, function (err) {
+    console.log ( err ? 'ERROR connecting to: ' + env.MONGO_URI + '. ' + err : 'Succeeded connected to: ' + env.MONGO_URI );
+});
+
+var autoload = function(path) {
+    fs.readdirSync(path).forEach(function(file) {
+        var newPath = path + '/' + file,
+            stat = fs.statSync(newPath)
+        ;
+        if (stat.isFile()) {
+            if (/(.*)\.(js|coffee)/.test(file)) {
+                require(newPath);
+            }
+        } else if (stat.isDirectory()) {
+            autoload(newPath);
+        }
+    });
+};
+autoload(env.modelsPath);
 
 var app = express(),
     oneDay = 86400000;
@@ -22,6 +47,7 @@ app.set('redis', redis);
 app.engine('html', nunjucks.render);
 app.use(app.locals.assetsURL, express.static(env.assetsPath));
 app.use(express.logger());
+app.use(app.router);
 
 nunjucks.configure(env.views, {
     autoescape: true,
@@ -30,7 +56,8 @@ nunjucks.configure(env.views, {
 
 app.listen(env.port, function(err) {
     if (err) {
-        console.error(err); process.exit(-1);
+        console.error(err);
+        process.exit(-1);
     }
 
     // if run as root, downgrade to the owner of this file
