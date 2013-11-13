@@ -1,12 +1,21 @@
 /* global require, process, __dirname, module */
 
 var path = require('path'),
-    isProduction = (process.env.NODE_ENV === 'production')
-;
+    _env = 'dev',
+    _port = 8000;
+
+if ( process.env.NODE_ENV ) {
+  _env = process.env.NODE_ENV;
+  _port = process.env.NODE_PORT || (_env === 'production' ? 80 : 8000);
+} else if ( process.env.OPENSHIFT_SECRET_TOKEN ) {
+  _env = 'production';
+  _port = process.env.OPENSHIFT_NODEJS_PORT;
+}
 
 module.exports = {  //require('config');
-    port: (isProduction ? 80 : 8000),
-    views: path.normalize(path.join(__dirname, '../app/views/')),
+    env: _env,
+    port: _port,
+    views: path.normalize(path.join(__dirname, '../views/')),
     assetsPath: path.normalize(path.join(__dirname, '../assets/')),
     assetsURL: '/assets/',
     minifyOutput: true,
