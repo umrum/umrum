@@ -4,7 +4,8 @@
   "description": "An open source Real User Monitoring in NodeJS",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "grunt unittest"
   },
   "repository": {
     "type": "git",
