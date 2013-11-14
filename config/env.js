@@ -15,7 +15,7 @@ if ( process.env.NODE_ENV ) {
 module.exports = {  //require('config');
     env: _env,
     port: _port,
-    views: path.normalize(path.join(__dirname, '../views/')),
+    views: path.normalize(path.join(__dirname, '../app/views/')),
     assetsPath: path.normalize(path.join(__dirname, '../assets/')),
     assetsURL: '/assets/',
     minifyOutput: true,
