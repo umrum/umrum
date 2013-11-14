@@ -1,7 +1,7 @@
-#UMRUM
-An open source Real User Monitoring - [![Build Status](https://travis-ci.org/frontendbahia/umrum.png?branch=master)](https://travis-ci.org/frontendbahia/umrum)
+# UMRUM [![Build Status](https://travis-ci.org/frontendbahia/umrum.png?branch=master)](https://travis-ci.org/frontendbahia/umrum)
+An open source Real User Monitoring built using NodeJS.
 
-###Install, configure and running
+### Install, configure and run
 
 ```
 $ git clone https://github.com/frontendbahia/umrum.git
@@ -10,14 +10,14 @@ $ npm install
 $ nodemon server.js -e js,html
 ```
 
-###Running grunt before commit
+### Running grunt before commit
 
 ```
 $ echo "grunt || exit 1" > .git/hooks/pre-commit
 $ chmod +x .git/hooks/pre-commit
 ```
 
-###Running unit tests
+### Running unit tests
 
 ```
 $ grunt unittest
