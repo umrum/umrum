@@ -1,5 +1,5 @@
 #UMRUM
-An open source Real User Monitoring
+An open source Real User Monitoring - [![Build Status](https://travis-ci.org/frontendbahia/umrum.png?branch=master)](https://travis-ci.org/frontendbahia/umrum)
 
 ###Install, configure and running
 
