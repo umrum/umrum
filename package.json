@@ -47,6 +47,6 @@
     "grunt-autoprefixer": "~0.4.0",
     "grunt-imageoptim": "~1.4.0"
   },
-  "author": "",
+  "author": "Frontend Bahia",
   "license": "BSD"
 }
