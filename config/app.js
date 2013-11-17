@@ -9,12 +9,14 @@ var express = require('express'),
     env = require('./env'),
     mongoose = require('mongoose'),
     redis = require('./redisclient'),
-    nunjucks = require('nunjucks')
+    nunjucks = require('nunjucks'),
+    passport = require('passport')
 ;
 
 // Makes connection asynchronously. Mongoose will queue up database
 // operations and release them when the connection is complete.
 var connection = env.MONGO_URI || 'mongodb://localhost/umrum';
+
 mongoose.connect(connection, function (err) {
     console.log ( err ? 'ERROR connecting to: ' + env.MONGO_URI + '. ' + err : 'Succeeded connected to: ' + env.MONGO_URI );
 });
@@ -47,12 +49,17 @@ app.set('redis', redis);
 app.engine('html', nunjucks.render);
 app.use(app.locals.assetsURL, express.static(env.assetsPath));
 app.use(express.logger());
+app.use(express.favicon());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 
 nunjucks.configure(env.views, {
     autoescape: true,
     express: app
 });
+
+require('./authentication')(passport, env);
 
 app.listen(env.port, function(err) {
     if (err) {
