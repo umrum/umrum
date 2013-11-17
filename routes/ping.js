@@ -1,7 +1,8 @@
 /* global require */
 
-var app = require('../config/app');
-var api = require('../ext/redis');
+var app = require('../config/app'),
+    api = require('../ext/redis')
+;
 
 app.get('/ping', function(req, res) {
     var active_user = {
