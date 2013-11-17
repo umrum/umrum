@@ -54,7 +54,7 @@ nunjucks.configure(env.views, {
     express: app
 });
 
-app.listen(env.port, function(err) {
+app.listen(env.port, env.ipaddr, function(err) {
     if (err) {
         console.error(err);
         process.exit(-1);
