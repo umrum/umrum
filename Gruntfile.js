@@ -60,8 +60,8 @@ module.exports = function(grunt) {
         src: [
             'src/js/*.js',
             'server.js',
-            'routes/*.js',
-            'config/*.js',
+            'app/routes/*.js',
+            'app/config/*.js',
             'tests/**/*.js'
         ]
       }

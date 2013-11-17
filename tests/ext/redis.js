@@ -1,13 +1,13 @@
 /* global require, describe, it, beforeEach, afterEach */
 
-var redisclient = require('../../config/redisclient');
+var redisclient = require('../../app/config/redisclient');
 var sinon = require('sinon');
 
 describe('Tests the redis ext module', function(){
     var mockRedisCli = null;
 
     var _api = function(){
-        return require("../../ext/redis");
+        return require("../../app/ext/redis");
     };
 
     beforeEach(function(done){

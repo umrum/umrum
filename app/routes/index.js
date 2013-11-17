@@ -1,7 +1,7 @@
 /* global require */
 
 var app = require('../config/app'),
-    index = require('../app/controllers/index')
+    index = require('../controllers/index')
 ;
 
 app.get('/', index.index );

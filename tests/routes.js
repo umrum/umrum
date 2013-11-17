@@ -1,12 +1,12 @@
 /* global require, describe, it */
 
-var app = require('../config/app');
+var app = require('../app/config/app');
 var request = require('supertest');
 
 describe('Tests the index route', function(){
 
     it('should return 200 status code', function(done){
-        require('../routes/index.js');
+        require('../app/routes/index.js');
 
         request(app)
             .get('/')
@@ -19,7 +19,7 @@ describe('Tests the index route', function(){
 describe('Tests the ping route', function(){
 
     it('should return 200 status code', function(done){
-        require('../routes/ping.js');
+        require('../app/routes/ping.js');
 
         request(app)
             .get('/ping')
@@ -31,7 +31,7 @@ describe('Tests the ping route', function(){
 describe('Tests the errors route', function(){
 
     it('should return 404 status code', function(done){
-        require('../routes/errors.js');
+        require('../app/routes/errors.js');
 
         request(app)
             .get('/not-found')

@@ -1,6 +1,6 @@
 /* global require, process, module */
 
-var User = require('../app/models/user'),
+var User = require('../models/user'),
     GitHubStrategy = require('passport-github').Strategy
 ;
 

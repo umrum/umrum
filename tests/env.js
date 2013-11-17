@@ -1,6 +1,6 @@
 /* global require, describe, it, __dirname */
 
-var env = require('../config/env');
+var env = require('../app/config/env');
 var assert = require('assert');
 var path = require('path');
 

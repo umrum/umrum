@@ -1,8 +1,8 @@
 /* global require, describe, it */
 
-var redisclient = require('../config/redisclient');
-var app = require('../config/app');
-var env = require('../config/env');
+var redisclient = require('../app/config/redisclient');
+var app = require('../app/config/app');
+var env = require('../app/config/env');
 var nunjucks = require('nunjucks');
 var assert = require('assert');
 
