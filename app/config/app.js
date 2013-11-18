@@ -15,10 +15,12 @@ var express = require('express'),
 
 // Makes connection asynchronously. Mongoose will queue up database
 // operations and release them when the connection is complete.
-var connection = env.MONGO_URI || 'mongodb://localhost/umrum';
-
-mongoose.connect(connection, function (err) {
-    console.log ( err ? 'ERROR connecting to: ' + env.MONGO_URI + '. ' + err : 'Succeeded connected to: ' + env.MONGO_URI );
+mongoose.connect(env.MONGO_URI, function (err) {
+    if ( err ) {
+        console.error('ERROR connecting to MongoDB: ' + env.MONGO_URI, err);
+        return;
+    }
+    console.log ('MongoDB successfully connected to: ' + env.MONGO_URI);
 });
 
 var autoload = function(path) {
@@ -78,8 +80,8 @@ app.listen(env.port, env.ipaddr, function(err) {
             });
         }
     }
-    console.log('%s: Node server started on http://0.0.0.0:%d ...',
-                Date(Date.now() ), env.port);
+    console.log('%s: Node server started on http://%s:%d ...',
+                Date(Date.now() ), env.ipaddr, env.port);
 });
 
 module.exports = app;
