@@ -8,7 +8,7 @@ var assert = require('assert'),
     app = null
 ;
 
-describe('Tests the app module', function(){
+describe('Tests the server module', function(){
 
     before(function(done) {
         app = server.app;
