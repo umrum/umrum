@@ -9,7 +9,9 @@ var express = require('express'),
     env = require('./app/config/env'),
     mongoose = require('mongoose'),
     redis = require('./app/config/redisclient'),
-    nunjucks = require('nunjucks')
+    nunjucks = require('nunjucks'),
+    passport = require('passport'),
+    authConfig = require('./app/config/authentication')
 ;
 
 // Makes connection asynchronously. Mongoose will queue up database
@@ -51,6 +53,11 @@ app.engine('html', nunjucks.render);
 app.use(app.locals.assetsURL, express.static(env.assetsPath));
 app.use(express.logger());
 app.use(express.favicon());
+
+app.use(passport.initialize());
+app.use(passport.session());
+authConfig(passport, env);
+
 app.use(app.router);
 
 nunjucks.configure(env.views, {
@@ -79,7 +86,9 @@ app.listen(env.port, env.ipaddr, function(err) {
                 Date(Date.now() ), env.ipaddr, env.port);
 });
 
-var routes = ['index', 'ping', 'dashboard', 'authentication', 'errors'];
+require('./app/routes/authentication')(app, passport);
+
+var routes = ['index', 'ping', 'dashboard', 'errors'];
 for (var i = routes.length - 1; i >= 0; i--) {
     require('./app/routes/' + routes[i])(app, env);
 }
