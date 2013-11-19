@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "pretest": "export MONGO_URI=\"mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test\"",
     "test": "grunt unittest"
   },
   "repository": {

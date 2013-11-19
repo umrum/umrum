@@ -3,3 +3,5 @@ node_js:
   - 0.10
 before_script:
   - npm install -g grunt-cli
+env:
+  - NODE_ENV="test" MONGO_URI="mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test"
