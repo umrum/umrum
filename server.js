@@ -65,7 +65,7 @@ nunjucks.configure(env.views, {
     express: app
 });
 
-app.listen(env.port, env.ipaddr, function(err) {
+var server = app.listen(env.port, env.ipaddr, function(err) {
     if (err) {
         console.error(err);
         process.exit(-1);
@@ -93,4 +93,7 @@ for (var i = routes.length - 1; i >= 0; i--) {
     require('./app/routes/' + routes[i])(app, env);
 }
 
-module.exports.app = app;
+module.exports = {
+    'app': app,
+    'instance': server
+};

@@ -1,12 +1,24 @@
-/* global require, describe, it */
+/* global require, describe, it, before, after */
 
-var redisclient = require('../app/config/redisclient');
-var app = require('../server').app;
-var env = require('../app/config/env');
-var nunjucks = require('nunjucks');
-var assert = require('assert');
+var assert = require('assert'),
+    nunjucks = require('nunjucks'),
+    server = require('../server'),
+    env = require('../app/config/env'),
+    redisclient = require('../app/config/redisclient'),
+    app = null
+;
 
 describe('Tests the app module', function(){
+
+    before(function(done) {
+        app = server.app;
+        done();
+    });
+
+    after(function(done) {
+        server.instance.close();
+        done();
+    });
 
     it('should return the correct assets variable from local', function() {
         assert.equal(app.locals.assetsURL, env.assetsURL);
