@@ -102,11 +102,3 @@ module.exports = (function(){
     return api;
 })();
 
-
-// Counter visualization
-// redisclient = require('../config/redis');
-// redisclient.subscribe('realtime');
-
-// subscribe.on("message", function(channel, message) {
-//     client.send(message);
-// });
