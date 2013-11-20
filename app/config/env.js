@@ -20,7 +20,7 @@ if ( process.env.OPENSHIFT_SECRET_TOKEN ) {
   _redisOptions.auth_pass = process.env.REDIS_PASSWORD;
 }
 
-module.exports = {  //require('config');
+module.exports = {
     env: _env,
     port: _port,
     ipaddr: _ipaddr,
