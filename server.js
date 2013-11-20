@@ -88,7 +88,7 @@ require('./app/routes/authentication')(app, passport);
 
 var routes = ['index', 'ping', 'dashboard', 'errors'];
 for (var i = routes.length - 1; i >= 0; i--) {
-    require('./app/routes/' + routes[i])(app, env);
+    require('./app/routes/' + routes[i])(app);
 }
 
 module.exports = {
