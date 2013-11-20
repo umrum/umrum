@@ -36,7 +36,7 @@ describe('Tests the redisclient module', function(){
         var _mock_fake_client = sinon.mock(_redisCreatedClient);
         _mock_fake_client.expects('on').once();
 
-        require('../app/config/redisclient');
+        require('../app/config/redisclient').init();
 
         mockRedis.verify();
         _mock_fake_client.verify();

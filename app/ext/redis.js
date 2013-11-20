@@ -1,6 +1,7 @@
 /* global module, require */
 
-var redisclient = require('../config/redisclient');
+var env = require('../config/env');
+var redisclient = require('../config/redisclient').init(env);
 
 var _MAX_TOPPAGES = 10;
 
