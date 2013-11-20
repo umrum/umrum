@@ -87,7 +87,6 @@ var _lazy_api = {
 
 module.exports = (function(){
     var api = {};
-    var redisclient_loaded = false;
 
     for ( method in _lazy_api ) {
         api[method] = (function(method){
