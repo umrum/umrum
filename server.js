@@ -8,7 +8,6 @@ var express = require('express'),
     fs = require('fs'),
     env = require('./app/config/env'),
     mongoose = require('mongoose'),
-    redis = require('./app/config/redisclient'),
     nunjucks = require('nunjucks'),
     passport = require('passport'),
     authConfig = require('./app/config/authentication')
@@ -48,7 +47,6 @@ app.use(express.compress(), {
 });
 app.locals.assetsURL = env.assetsURL;
 app.set('views', env.views);
-app.set('redis', redis);
 app.engine('html', nunjucks.render);
 app.use(app.locals.assetsURL, express.static(env.assetsPath));
 app.use(express.logger());
