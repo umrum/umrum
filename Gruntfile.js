@@ -19,7 +19,13 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'assets/js/init.js': ['src/js/libs/modernizr-2.6.3.js'],
-          'assets/js/main.js': ['src/js/libs/jquery-1.10.2.js', 'src/js/plugins/*.js', 'src/js/app/bootstrap.js', 'src/js/app/landing-page.js', 'src/js/app/admin.js']
+          'assets/js/main.js': [
+            'src/js/libs/jquery-1.10.2.js',
+            'src/js/plugins/*.js',
+            'src/js/app/bootstrap.js',
+            'src/js/app/landing-page.js',
+            'src/js/app/admin.js'
+          ]
         }
       }
     },
@@ -30,8 +36,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'assets/js/init.min.js': ['assets/js/init.js'],
-          'assets/js/main.min.js': ['assets/js/main.js'],
-          'assets/js/chart.min.js': ['src/js/app/chart.js']
+          'assets/js/main.min.js': ['assets/js/main.js', 'src/js/app/chart.js'],
         }
       }
     },
