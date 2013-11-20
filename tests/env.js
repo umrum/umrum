@@ -4,19 +4,11 @@ var env = require('../app/config/env');
 var assert = require('assert');
 var path = require('path');
 
-describe('Tests the app module', function(){
+describe('Tests the env module', function(){
 
     it('should return the correct port variable for develop NODE_ENV', function() {
         assert.equal(env.port, 8000);
     });
-
-    // it('should return the correct port variable for production NODE_ENV', function() {
-    //     process.env.NODE_ENV = 'production';
-
-    //     assert.equal(env.port, 80);
-
-    //     process.env.NODE_ENV = 'test';
-    // });
 
     it('should return the correct views variable', function() {
         assert.equal(env.views, path.normalize(path.join(__dirname, '../app/views/')));
