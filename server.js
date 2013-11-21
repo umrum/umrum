@@ -84,6 +84,8 @@ var server = app.listen(env.port, env.ipaddr, function(err) {
                 Date(Date.now() ), env.ipaddr, env.port);
 });
 
+var io = require('socket.io').listen(server);
+
 require('./app/routes/authentication')(app, passport);
 
 var routes = ['index', 'ping', 'dashboard', 'errors'];
@@ -93,5 +95,6 @@ for (var i = routes.length - 1; i >= 0; i--) {
 
 module.exports = {
     'app': app,
-    'instance': server
+    'instance': server,
+    'io': io
 };
