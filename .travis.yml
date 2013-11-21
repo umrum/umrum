@@ -7,4 +7,6 @@ env:
   - NODE_ENV="test" MONGO_URI="mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test"
 after_success:
   - echo -e "Host umrum.frontendbahia.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - scp deploy@umrum.frontendbahia.com:/home/deploy/.ssh/id_rsa ./id_deploy
+  - ssh-add ./id_deploy
   - ./deploy servermania
