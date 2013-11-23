@@ -11,8 +11,8 @@ $ grunt server
 ```
 
 ### Dependencies
-- MongoDB: it's necessary to define env variable `MONGO_URI` before run the app or tests (or run a local mongodb);
-- Redis: it's necessary to run a local instance of Redis before start app;
+- MongoDB: it's necessary to define env variable `MONGO_URI` before running the app or tests (or run a local mongodb);
+- Redis: it's necessary to run a local instance of Redis before starting the app;
 
 ### Running Grunt before commit
 
