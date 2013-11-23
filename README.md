@@ -7,14 +7,14 @@ An open source Real User Monitoring built using NodeJS.
 $ git clone https://github.com/frontendbahia/umrum.git
 $ cd umrum
 $ npm install
-$ nodemon server.js -e js,html
+$ grunt server
 ```
 
 ### Dependencies
 - MongoDB: it's necessary to define env variable `MONGO_URI` before run the app or tests (or run a local mongodb);
 - Redis: it's necessary to run a local instance of Redis before start app;
 
-### Running grunt before commit
+### Running Grunt before commit
 
 ```
 $ echo "grunt || exit 1" > .git/hooks/pre-commit

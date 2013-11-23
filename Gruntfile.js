@@ -125,6 +125,17 @@ module.exports = function(grunt) {
         files: ['src/js/*.js'],
         tasks: ['minjs']
       }
+    },
+    nodemon: {
+      dev: {
+        options: {
+          file: 'server.js',
+          args: ['-e js,html'],
+          env: {
+            PORT: '8000'
+          }
+        }
+      }
     }
   });
 
@@ -138,10 +149,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-csso');
   //grunt.loadNpmTasks('grunt-imageoptim');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-nodemon');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'mochaTest', 'less', 'autoprefixer', 'csso', 'concat', 'uglify']);
   grunt.registerTask('minjs', ['jshint', 'concat', 'uglify']);
   grunt.registerTask('unittest', ['jshint', 'mochaTest']);
+  grunt.registerTask('server', ['nodemon']);
 
 };
