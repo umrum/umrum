@@ -337,7 +337,7 @@ a {
 .navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav>.active>a:hover,
 .navbar-inverse .navbar-nav>.active>a:focus {
-  background: 0;
+  background: 0 0;
 }
 
 @media screen and (min-width:768px) {
