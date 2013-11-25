@@ -15,6 +15,11 @@ var _env = process.env.NODE_ENV || 'dev',
             clientSecret: "c739cf034cc3f5df44b580ae74a7f3cf1f6cd4fb",
             callbackURL: "http://localhost:8000/auth/github/callback"
         },
+        test: {
+            clientID: "68aa1727f546bc551012",
+            clientSecret: "c739cf034cc3f5df44b580ae74a7f3cf1f6cd4fb",
+            callbackURL: "http://localhost:8000/auth/github/callback"
+        },
         production: {
             clientID: "b8a5184274772740060a",
             clientSecret: "f64d75f0859934c8eb2c80959186e3e705b3d5f1",
