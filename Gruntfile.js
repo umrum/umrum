@@ -1,4 +1,5 @@
-/*global module:false*/
+/* global module:false */
+
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -100,12 +101,15 @@ module.exports = function(grunt) {
         }
       }
     },
-    mochaTest: {
-      test: {
-        options: {
-          reporter: 'spec'
-        },
-        src: ['tests/**/*.js']
+    mochacli: {
+      files: 'tests/',
+      options: {
+        reporter: 'spec',
+        recursive: true,
+        env: {
+          NODE_PORT: '8000',
+          MONGO_URI: 'mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test'
+        }
       }
     },
     watch: {
@@ -132,7 +136,8 @@ module.exports = function(grunt) {
           file: 'server.js',
           args: ['-e js,html'],
           env: {
-            PORT: '8000'
+            NODE_PORT: '8000',
+            MONGO_URI: 'mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test'
           }
         }
       }
@@ -148,13 +153,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-csso');
   //grunt.loadNpmTasks('grunt-imageoptim');
-  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-nodemon');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'less', 'autoprefixer', 'csso', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'mochacli', 'less', 'autoprefixer', 'csso', 'concat', 'uglify']);
   grunt.registerTask('minjs', ['jshint', 'concat', 'uglify']);
-  grunt.registerTask('unittest', ['jshint', 'mochaTest']);
+  grunt.registerTask('unittest', ['jshint', 'mochacli']);
   grunt.registerTask('server', ['nodemon']);
-
 };
