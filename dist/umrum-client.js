@@ -1,9 +1,9 @@
 /* UMRUM client library */
 
 (function(win, doc, undefined){
-    var _server_ping = 'http://frontend-bahia.2013.nodeknockout.com/ping';
+    var _server_ping = 'http://umrum.frontendbahia.com/ping';
     var _server_ping_timeout = 10000;
-    var lib = win['umrum'] =  win['umrum'] || {};
+    var lib = win['umrum'] = win['umrum'] || {};
 
     //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript#answer-2117523
     lib.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
