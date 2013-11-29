@@ -1,6 +1,6 @@
 /* UMRUM client library */
 
-(function(win, doc){
+(function(win, doc, undefined){
     var _server_ping = 'http://frontend-bahia.2013.nodeknockout.com/ping';
     var _server_ping_timeout = 10000;
     var lib = win['umrum'] =  win['umrum'] || {};
