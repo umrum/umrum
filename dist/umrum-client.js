@@ -1,9 +1,9 @@
 /* UMRUM client library */
 
 (function(win, doc, undefined){
-    var _server_ping = 'http://umrum.frontendbahia.com/ping';
-    var _server_ping_timeout = 10000;
-    var lib = win['umrum'] = win['umrum'] || {};
+    var _server_ping = 'http://umrum.frontendbahia.com/ping',
+        _server_ping_timeout = 10000,
+        lib = win['umrum'] = win['umrum'] || {};
 
     //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript#answer-2117523
     lib.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -14,15 +14,15 @@
     var _location = win.location;
     lib.host = encodeURIComponent(_location.host.replace(/^www\./i, ''));
 
-    var ping_server = function(){
+    var ping_server = function() {
         lib.path = encodeURIComponent(
             _location.pathname.replace(/^([^\/])/i, '/$1') + _location.hash
         );
         lib.title = encodeURIComponent(doc.title);
 
-        var imgId = "umrum_ping";
-        var img = doc.getElementById(imgId);
-        var _exists = img != null;
+        var imgId = "umrum_ping",
+            img = doc.getElementById(imgId),
+            _exists = img != null;
 
         if ( !_exists ) {
             img = doc.createElement('img');
