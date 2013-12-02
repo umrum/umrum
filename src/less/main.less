@@ -95,12 +95,14 @@ a {
 .github-btn {
   border: 0;
   overflow: hidden;
-  width: 100px;
+  width: 85px;
 }
 
 .umrum-social-buttons .twitter-share-button {
-  width: 98px !important;
+  width: 85px !important;
 }
+
+// @media (min-width: )
 
 
 /* Chart
@@ -197,7 +199,13 @@ a {
 }
 
 .page-section {
-  padding: 40px 0;
+  padding: 20px 0;
+}
+
+@media screen and (min-width: @screen-tablet) {
+  .page-section {
+    padding-top: 40px;
+  }
 }
 
 .page-section h1 {
@@ -214,8 +222,10 @@ a {
    ================================================= */
 
 .page-home-intro {
-  padding-top: 110px;
+  padding-top: 80px;
   position: relative;
+
+  font-size: 1.2em;
 
   background-image: linear-gradient(45deg, rgba(194, 233, 221, 0.5) 1%, rgba(104, 119, 132, 0.5) 100%), linear-gradient(-45deg, #494d71 0%, rgba(217, 230, 185, 0.5) 80%);
 }
@@ -230,9 +240,17 @@ a {
 
   .page-home-intro-btns {
     padding-top: 20px;
+
+    .btn {
+      margin-bottom: 5px;
+    }
   }
 
 @media (min-width: @screen-tablet) {
+  .page-home-intro {
+    padding-top: 110px;
+  }
+
   .page-home-intro .umrum-social {
     margin-bottom: 10px;
   }
@@ -258,7 +276,7 @@ a {
    ================================================= */
 
 .page-section-overview-item {
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 40px;
   text-align: center;
 
@@ -269,6 +287,13 @@ a {
   .fa {
     font-size: 6em;
     color: @brand-inverse-dark;
+  }
+}
+
+@media screen and (min-width: @screen-tablet) {
+  .page-section-overview-item {
+    margin-top: 30px;
+    margin-bottom: 40px;
   }
 }
 
@@ -291,9 +316,32 @@ a {
 
 .page-section-callout {
   background-color: @brand-primary;
+  text-align: center;
 
   p {
+    float: left;
     font-size: 2em;
+  }
+
+  .btn {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (min-width: @screen-lg-desktop) {
+  .page-section-callout {
+
+    p {
+      text-align: left;
+    }
+
+    .btn {
+      margin-top: 0;
+
+      float: right;
+    }
   }
 }
 
@@ -333,7 +381,7 @@ a {
    ================================================= */
 
 .page-section-footer {
-  height: 150px;
+  min-height: 150px;
 
   text-transform: uppercase;
 
@@ -367,7 +415,6 @@ a {
     padding: 5px 8px;
 
     display: block;
-    float: left;
 
     color: #777;
     .font-size(12);
@@ -379,6 +426,10 @@ a {
 
     a {
       text-transform: uppercase;
+    }
+
+    @media screen and (min-width: 660px) {
+      float: left;
     }
   }
   .page-section-footer-nav {
@@ -392,19 +443,21 @@ a {
       display: block;
     }
 
-    @media screen and (min-width: @screen-tablet) {
-      float: right;
-
+    @media screen and (min-width: 440px) {
       li {
         display: inline-block;
       }
+    }
+
+    @media screen and (min-width: 660px) {
+      float: right;
     }
   }
   .page-section-footer-aux {
     border-top: 1px solid #515151;
   }
   .page-section-footer-social {
-    float: left;
+
 
     li {
       margin-top: 8px;
@@ -423,6 +476,10 @@ a {
 
       font-size: 1em;
     }
+
+    @media screen and (min-width: 440px) {
+      float: left;
+    }
   }
   .page-section-footer-legal {
 
@@ -437,7 +494,7 @@ a {
       .font-size(10);
     }
 
-    @media screen and (min-width: @screen-tablet) {
+    @media screen and (min-width: 440px) {
       float: right;
 
       li {

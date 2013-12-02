@@ -302,11 +302,11 @@ a {
 .github-btn {
   border: 0;
   overflow: hidden;
-  width: 100px;
+  width: 85px;
 }
 
 .umrum-social-buttons .twitter-share-button {
-  width: 98px!important;
+  width: 85px!important;
 }
 
 .page-home .chart {
@@ -337,7 +337,7 @@ a {
 .navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav>.active>a:hover,
 .navbar-inverse .navbar-nav>.active>a:focus {
-  background: 0 0;
+  background: 0;
 }
 
 @media screen and (min-width:768px) {
@@ -367,7 +367,13 @@ a {
 }
 
 .page-section {
-  padding: 40px 0;
+  padding: 20px 0;
+}
+
+@media screen and (min-width:768px) {
+  .page-section {
+    padding-top: 40px;
+  }
 }
 
 .page-section-title {
@@ -376,8 +382,9 @@ a {
 }
 
 .page-home-intro {
-  padding-top: 110px;
+  padding-top: 80px;
   position: relative;
+  font-size: 1.2em;
   background-image: -webkit-linear-gradient(45deg, rgba(194,233,221,.5) 1%, rgba(104,119,132,.5) 100%),-webkit-linear-gradient(135deg, #494d71 0, rgba(217,230,185,.5) 80%);
   background-image: linear-gradient(45deg,rgba(194,233,221,.5) 1%,rgba(104,119,132,.5) 100%),linear-gradient(-45deg,#494d71 0,rgba(217,230,185,.5) 80%);
 }
@@ -394,7 +401,15 @@ a {
   padding-top: 20px;
 }
 
+.page-home-intro-btns .btn {
+  margin-bottom: 5px;
+}
+
 @media (min-width:768px) {
+  .page-home-intro {
+    padding-top: 110px;
+  }
+
   .page-home-intro .umrum-social {
     margin-bottom: 10px;
   }
@@ -415,7 +430,7 @@ a {
 }
 
 .page-section-overview-item {
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 40px;
   text-align: center;
 }
@@ -430,6 +445,13 @@ a {
 }
 
 @media screen and (min-width:768px) {
+  .page-section-overview-item {
+    margin-top: 30px;
+    margin-bottom: 40px;
+  }
+}
+
+@media screen and (min-width:768px) {
   .go-right {
     float: right;
   }
@@ -437,10 +459,29 @@ a {
 
 .page-section-callout {
   background-color: #1abc9c;
+  text-align: center;
 }
 
 .page-section-callout p {
+  float: left;
   font-size: 2em;
+}
+
+.page-section-callout .btn {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (min-width:1200px) {
+  .page-section-callout p {
+    text-align: left;
+  }
+
+  .page-section-callout .btn {
+    margin-top: 0;
+    float: right;
+  }
 }
 
 .page-section-team-item {
@@ -465,7 +506,7 @@ a {
 }
 
 .page-section-footer {
-  height: 150px;
+  min-height: 150px;
   text-transform: uppercase;
   background: #222f3d;
 }
@@ -494,7 +535,6 @@ a {
   margin: 0;
   padding: 5px 8px;
   display: block;
-  float: left;
   color: #777;
   font-size: 12px;
   font-size: 1.2rem;
@@ -509,27 +549,31 @@ a {
   text-transform: uppercase;
 }
 
+@media screen and (min-width:660px) {
+  .page-section-footer-signature {
+    float: left;
+  }
+}
+
 .page-section-footer-nav a {
   padding: 5px 8px;
   display: block;
 }
 
-@media screen and (min-width:768px) {
-  .page-section-footer-nav {
-    float: right;
-  }
-
+@media screen and (min-width:440px) {
   .page-section-footer-nav li {
     display: inline-block;
   }
 }
 
-.page-section-footer-aux {
-  border-top: 1px solid #515151;
+@media screen and (min-width:660px) {
+  .page-section-footer-nav {
+    float: right;
+  }
 }
 
-.page-section-footer-social {
-  float: left;
+.page-section-footer-aux {
+  border-top: 1px solid #515151;
 }
 
 .page-section-footer-social li {
@@ -547,6 +591,12 @@ a {
   font-size: 1em;
 }
 
+@media screen and (min-width:440px) {
+  .page-section-footer-social {
+    float: left;
+  }
+}
+
 .page-section-footer-legal a {
   padding: 5px 8px;
   display: block;
@@ -554,7 +604,7 @@ a {
   font-size: 1rem;
 }
 
-@media screen and (min-width:768px) {
+@media screen and (min-width:440px) {
   .page-section-footer-legal {
     float: right;
   }

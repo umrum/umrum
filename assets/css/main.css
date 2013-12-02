@@ -42,7 +42,7 @@ body {
 }
 
 a {
-  background: 0 0;
+  background: transparent;
 }
 
 a:focus {
@@ -7043,7 +7043,7 @@ a.list-group-item.active:focus .list-group-item-text {
 button.close {
   padding: 0;
   cursor: pointer;
-  background: 0 0;
+  background: transparent;
   border: 0;
   -webkit-appearance: none;
 }
