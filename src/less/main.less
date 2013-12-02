@@ -120,6 +120,116 @@ a {
   // height: 250px;
 }
 
+/* Gauge
+   ================================================= */
+
+@gauge-size: 18em;
+@gauge-speed: 4000ms;
+@gauge-color: fade(@brand-inverse-dark, 20%);
+
+@keyframes gauge {
+  0% {
+    transform: rotate(30deg);
+  }
+
+  10% {
+    transform: rotate(45deg);
+  }
+
+  20% {
+    transform: rotate(60deg);
+  }
+
+  24% {
+    transform: rotate(60deg);
+  }
+
+  40% {
+    transform: rotate(30deg);
+  }
+
+  54% {
+    transform: rotate(70deg);
+  }
+
+  56% {
+    transform: rotate(78deg);
+  }
+
+  58% {
+    transform: rotate(73deg);
+  }
+
+  60% {
+    transform: rotate(75deg);
+  }
+
+  62% {
+    transform: rotate(70deg);
+  }
+
+  70% {
+    transform: rotate(30deg);
+  }
+
+  80% {
+    transform: rotate(20deg);
+  }
+
+  83% {
+    transform: rotate(25deg);
+  }
+
+  86% {
+    transform: rotate(20deg);
+  }
+
+  89% {
+    transform: rotate(25deg);
+  }
+
+  100% {
+    transform: rotate(30deg);
+  }
+}
+
+.gauge {
+  font-size: 10px;
+  background: @gauge-color;
+  border-top-left-radius: (@gauge-size / 2);
+  border-top-right-radius: (@gauge-size / 2);
+  display: inline-block;
+  width: @gauge-size;
+  height: (@gauge-size / 2);
+  overflow: hidden;
+  position: relative;
+  text-indent: -9999px;
+}
+
+.gauge::before {
+  animation: gauge @gauge-speed infinite ease;
+  background: white;
+  border-radius: (@gauge-size / 32);
+  content: '';
+  position: absolute;
+  left: (@gauge-size / 2) - (@gauge-size / 32);
+  top: (@gauge-size / 12);
+  width: (@gauge-size / 16);
+  height: (5 * @gauge-size / 12);
+  transform-origin: 50% 100%;
+}
+
+.gauge::after {
+  content: '';
+  background: white;
+  border-radius: (@gauge-size / 8);
+  position: absolute;
+  left: (@gauge-size / 2) - (@gauge-size / 10);
+  top: (@gauge-size / 2) - (@gauge-size / 10);
+  width: (@gauge-size / 5);
+  height: (@gauge-size / 5);
+}
+
 
 /* ==========================================================================
    Header
@@ -245,6 +355,40 @@ a {
       margin-bottom: 5px;
     }
   }
+
+@media (min-width: 500px) {
+  .gauge {
+    margin-top: 15px;
+  }
+}
+
+@media (min-width: @screen-tablet) {
+  .gauge {
+    margin-top: 150px;
+
+    float: right;
+
+    font-size: 13px;
+  }
+}
+
+@media (min-width: @screen-desktop) {
+  .gauge {
+    margin-top: 110px;
+    margin-right: 6%;
+
+    font-size: 22px;
+  }
+}
+
+@media (min-width: @screen-lg-desktop) {
+  .gauge {
+    margin-top: 110px;
+    margin-right: 10%;
+
+    font-size: 24px;
+  }
+}
 
 @media (min-width: @screen-tablet) {
   .page-home-intro {

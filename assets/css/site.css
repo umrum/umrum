@@ -313,6 +313,209 @@ a {
   height: 300px;
 }
 
+@-webkit-keyframes gauge {
+  0% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+
+  10% {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  20% {
+    -webkit-transform: rotate(60deg);
+    transform: rotate(60deg);
+  }
+
+  24% {
+    -webkit-transform: rotate(60deg);
+    transform: rotate(60deg);
+  }
+
+  40% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+
+  54% {
+    -webkit-transform: rotate(70deg);
+    transform: rotate(70deg);
+  }
+
+  56% {
+    -webkit-transform: rotate(78deg);
+    transform: rotate(78deg);
+  }
+
+  58% {
+    -webkit-transform: rotate(73deg);
+    transform: rotate(73deg);
+  }
+
+  60% {
+    -webkit-transform: rotate(75deg);
+    transform: rotate(75deg);
+  }
+
+  62% {
+    -webkit-transform: rotate(70deg);
+    transform: rotate(70deg);
+  }
+
+  70% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+
+  80% {
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+  }
+
+  83% {
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+  }
+
+  86% {
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+  }
+
+  89% {
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+}
+
+@keyframes gauge {
+  0% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+
+  10% {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  20% {
+    -webkit-transform: rotate(60deg);
+    transform: rotate(60deg);
+  }
+
+  24% {
+    -webkit-transform: rotate(60deg);
+    transform: rotate(60deg);
+  }
+
+  40% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+
+  54% {
+    -webkit-transform: rotate(70deg);
+    transform: rotate(70deg);
+  }
+
+  56% {
+    -webkit-transform: rotate(78deg);
+    transform: rotate(78deg);
+  }
+
+  58% {
+    -webkit-transform: rotate(73deg);
+    transform: rotate(73deg);
+  }
+
+  60% {
+    -webkit-transform: rotate(75deg);
+    transform: rotate(75deg);
+  }
+
+  62% {
+    -webkit-transform: rotate(70deg);
+    transform: rotate(70deg);
+  }
+
+  70% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+
+  80% {
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+  }
+
+  83% {
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+  }
+
+  86% {
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+  }
+
+  89% {
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+  }
+}
+
+.gauge {
+  font-size: 10px;
+  background: rgba(43,60,78,.2);
+  border-top-left-radius: 9em;
+  border-top-right-radius: 9em;
+  display: inline-block;
+  width: 18em;
+  height: 9em;
+  overflow: hidden;
+  position: relative;
+  text-indent: -9999px;
+}
+
+.gauge::before {
+  -webkit-animation: gauge 4000ms infinite ease;
+  animation: gauge 4000ms infinite ease;
+  background: #fff;
+  border-radius: .5625em;
+  content: '';
+  position: absolute;
+  left: 8.4375em;
+  top: 1.5em;
+  width: 1.125em;
+  height: 7.5em;
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+
+.gauge::after {
+  content: '';
+  background: #fff;
+  border-radius: 2.25em;
+  position: absolute;
+  left: 7.2em;
+  top: 7.2em;
+  width: 3.6em;
+  height: 3.6em;
+}
+
 .navbar {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -403,6 +606,36 @@ a {
 
 .page-home-intro-btns .btn {
   margin-bottom: 5px;
+}
+
+@media (min-width:500px) {
+  .gauge {
+    margin-top: 15px;
+  }
+}
+
+@media (min-width:768px) {
+  .gauge {
+    margin-top: 150px;
+    float: right;
+    font-size: 13px;
+  }
+}
+
+@media (min-width:992px) {
+  .gauge {
+    margin-top: 110px;
+    margin-right: 6%;
+    font-size: 22px;
+  }
+}
+
+@media (min-width:1200px) {
+  .gauge {
+    margin-top: 110px;
+    margin-right: 10%;
+    font-size: 24px;
+  }
 }
 
 @media (min-width:768px) {
