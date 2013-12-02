@@ -123,7 +123,7 @@ module.exports = function(grunt) {
       },
       less: {
         files: ['src/less/*.less'],
-        tasks: ['less'],
+        tasks: ['less', 'autoprefixer', 'csso'],
       },
       js: {
         files: ['src/js/*.js'],
