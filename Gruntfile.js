@@ -126,7 +126,7 @@ module.exports = function(grunt) {
         tasks: ['less', 'autoprefixer', 'csso'],
       },
       js: {
-        files: ['src/js/*.js'],
+        files: ['src/js/**/*.js'],
         tasks: ['minjs']
       }
     },
