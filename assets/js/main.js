@@ -1,4 +1,4 @@
-/*! UMRUM - v0.0.0 - 2013-11-25
+/*! UMRUM - v0.0.0 - 2013-12-02
 * Copyright (c) 2013 ; Licensed  */
 /*!
  * jQuery JavaScript Library v1.10.2
@@ -9825,6 +9825,110 @@ $special = $event.special.debouncedresize = {
 };
 
 })(jQuery);
+(function($) {
+    'use strict';
+
+    function getScrollTop() {
+        return window.pageYOffset ||
+            document.documentElement.scrollTop ||
+            document.body.scrollTop;
+    }
+
+    function getViewportHeight() {
+        var height = window.innerHeight; // Safari, Opera
+        // if this is correct then return it. iPad has compat Mode, so will
+        // go into check clientHeight (which has the wrong value).
+        if (height) {
+            return height;
+        }
+        var mode = document.compatMode;
+
+        if ((mode || !$.support.boxModel)) { // IE, Gecko
+            height = (mode === 'CSS1Compat') ?
+                document.documentElement.clientHeight : // Standards
+                document.body.clientHeight; // Quirks
+        }
+
+        return height;
+    }
+
+    function offsetTop(debug) {
+        // Manually calculate offset rather than using jQuery's offset
+        // This works-around iOS < 4 on iPad giving incorrect value
+        // cf http://bugs.jquery.com/ticket/6446#comment:9
+        var curtop = 0;
+        for (var obj = debug; obj; obj = obj.offsetParent) {
+            curtop += obj.offsetTop;
+        }
+        return curtop;
+    }
+
+    function checkInView() {
+        var viewportTop = getScrollTop(),
+            viewportBottom = viewportTop + getViewportHeight(),
+            elems = [];
+
+        // naughty, but this is how it knows which elements to check for
+        $.each($.cache, function() {
+            if (this.events && this.events.inview) {
+                elems.push(this.handle.elem);
+            }
+        });
+
+        $(elems).each(function() {
+            var $el = $(this),
+                elTop = offsetTop(this),
+                elHeight = $el.height(),
+                elBottom = elTop + elHeight,
+                wasInView = $el.data('inview') || false,
+                offset = $el.data('offset') || 0,
+                inView = elTop > viewportTop && elBottom < viewportBottom,
+                isBottomVisible = elBottom + offset > viewportTop && elTop < viewportTop,
+                isTopVisible = elTop - offset < viewportBottom && elBottom > viewportBottom,
+                inViewWithOffset = inView || isBottomVisible || isTopVisible ||
+                    (elTop < viewportTop && elBottom > viewportBottom);
+
+            if (inViewWithOffset) {
+                var visPart = (isTopVisible) ? 'top' : (isBottomVisible) ? 'bottom' : 'both';
+                if (!wasInView || wasInView !== visPart) {
+                    $el.data('inview', visPart);
+                    $el.trigger('inview', [true, visPart]);
+                }
+            } else if (!inView && wasInView) {
+                $el.data('inview', false);
+                $el.trigger('inview', [false]);
+            }
+        });
+    }
+
+    function createFunctionLimitedToOneExecutionPerDelay(fn, delay) {
+        var shouldRun = false;
+        var timer = null;
+
+        function runOncePerDelay() {
+            if (timer !== null) {
+                shouldRun = true;
+                return;
+            }
+            shouldRun = false;
+            fn();
+            timer = setTimeout(function() {
+                timer = null;
+                if (shouldRun) {
+                    runOncePerDelay();
+                }
+            }, delay);
+        }
+
+        return runOncePerDelay;
+    }
+
+    // ready.inview kicks the event to pick up any elements already in view.
+    // note however, this only works if the plugin is included after the elements are bound to 'inview'
+    var runner = createFunctionLimitedToOneExecutionPerDelay(checkInView, 100);
+    $(window).on('checkInView.inview click.inview ready.inview scroll.inview resize.inview', runner);
+
+})(jQuery);
 /*!
  * Bootstrap v3.0.2 by @fat and @mdo
  * Copyright 2013 Twitter, Inc.
@@ -11905,8 +12009,15 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
 
   Project.Section.HomeCharts = {
     init: function() {
-      this.chart1();
-      this.chart2();
+      $('#chart1').on('inview', function() {
+        $(this).off('inview');
+        setTimeout(Project.Section.HomeCharts.chart1, 600);
+      });
+
+      $('#chart2').on('inview', function() {
+        $(this).off('inview');
+        setTimeout(Project.Section.HomeCharts.chart2, 600);
+      });
 
       $(window).on('debouncedresize', function() {
         Project.Section.HomeCharts.chart1();
@@ -11930,7 +12041,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
            data : [150,200,235,390,290,250,250]
          }
        ]
-      }
+      };
 
       var options1 = {
        scaleFontColor : "rgba(255,255,255,1)",
@@ -11941,7 +12052,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
        scaleSteps : 5,
        scaleStepWidth : 100,
        scaleStartValue : 0
-      }
+      };
 
       new Chart(c1.getContext("2d")).Line(data1,options1);
     },

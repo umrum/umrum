@@ -75,8 +75,15 @@
 
   Project.Section.HomeCharts = {
     init: function() {
-      this.chart1();
-      this.chart2();
+      $('#chart1').on('inview', function() {
+        $(this).off('inview');
+        setTimeout(Project.Section.HomeCharts.chart1, 600);
+      });
+
+      $('#chart2').on('inview', function() {
+        $(this).off('inview');
+        setTimeout(Project.Section.HomeCharts.chart2, 600);
+      });
 
       $(window).on('debouncedresize', function() {
         Project.Section.HomeCharts.chart1();
@@ -100,7 +107,7 @@
            data : [150,200,235,390,290,250,250]
          }
        ]
-      }
+      };
 
       var options1 = {
        scaleFontColor : "rgba(255,255,255,1)",
@@ -111,7 +118,7 @@
        scaleSteps : 5,
        scaleStepWidth : 100,
        scaleStartValue : 0
-      }
+      };
 
       new Chart(c1.getContext("2d")).Line(data1,options1);
     },
