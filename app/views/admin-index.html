@@ -1,72 +1,83 @@
 {% extends "admin-base.html" %}
 
-
 {% block content %}
-<div class="page-wrap">
+  <div class="page-wrap">
 
-  <div class="row">
-    <div class="col-lg-4">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-xs-6">
-              <i class="fa fa-chart-o fa-5x"></i>
-            </div>
-            <div class="col-xs-6 text-right">
-              <p class="announcement-heading">{{ data.currentVisits }}</p>
-              <p class="announcement-text">Current visitors</p>
-            </div>
-          </div>
-        </div>
-        <a href="#">
-          <div class="panel-footer announcement-bottom">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="panel panel-info">
+          <div class="panel-heading">
             <div class="row">
               <div class="col-xs-6">
-                View All
+                <i class="fa fa-chart-o fa-5x"></i>
               </div>
               <div class="col-xs-6 text-right">
-                <i class="fa fa-arrow-circle-right"></i>
+                <p class="announcement-heading">{{ data.currentVisits }}</p>
+                <p class="announcement-text">Current visitors</p>
               </div>
             </div>
           </div>
-        </a>
-      </div>
-    </div>
-  </div><!-- /.row -->
-
-
-  <div class="row">
-    <div class="col-lg-4">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Top Pages</h3>
-        </div>
-        <div class="panel-body">
-          <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped">
-              <thead>
-                <tr>
-                  <th>Page</th>
-                  <th>Views</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in data.topPages %}
-                <tr>
-                  <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <div class="text-right">
-            <a href="#">View All</a>
-          </div>
+          <a href="#">
+            <div class="panel-footer announcement-bottom">
+              <div class="row">
+                <div class="col-xs-6">
+                  View All
+                </div>
+                <div class="col-xs-6 text-right">
+                  <i class="fa fa-arrow-circle-right"></i>
+                </div>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
-    </div>
-  </div><!-- /.row -->
+    </div><!-- /.row -->
 
-</div><!-- /#page-wrapper -->
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Top Pages</h3>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover table-striped">
+                <thead>
+                  <tr>
+                    <th>Page</th>
+                    <th>Views</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in data.topPages %}
+                  <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="text-right">
+              <a href="#">View All</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.row -->
+
+  </div><!-- /#page-wrapper -->
+{% endblock %}
+
+{% block scripts %}
+  {{super()}}
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io.connect('http://localhost');
+    socket.on("{{ host }}", function (msg) {
+      // render it by component
+      $('.announcement-heading').text(msg.currentVisits);
+    });
+  </script>
 {% endblock %}
