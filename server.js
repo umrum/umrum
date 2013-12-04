@@ -4,6 +4,8 @@
  *  Creates the express app and configure static folders
  */
 
+require('newrelic');
+
 var express = require('express'),
     fs = require('fs'),
     env = require('./app/config/env'),

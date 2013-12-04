@@ -26,7 +26,8 @@
     "passport-google-oauth": "~0.1.5",
     "underscore": "~1.5.2",
     "connect-mongo": "~0.4.0",
-    "connect-flash": "~0.1.1"
+    "connect-flash": "~0.1.1",
+    "newrelic": "~1.1.1"
   },
   "engines": {
     "node": "0.10.x"
