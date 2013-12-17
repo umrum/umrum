@@ -1,0 +1,14 @@
+box: wercker/nodejs
+services:
+    - wercker/mongodb
+    - wercker/redis
+build:
+    steps:
+        - npm-install
+        - npm-install:
+            options: grunt-cli
+        - script:
+            name: project test
+            code: |
+                node_modules/grunt-cli/bin/grunt unittest
+
