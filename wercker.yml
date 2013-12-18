@@ -11,4 +11,12 @@ build:
             name: project test
             code: |
                 node_modules/grunt-cli/bin/grunt unittest
-
+deploy:
+    steps:
+        - add-to-known_hosts:
+            hostname: umrum.frontendbahia.com
+        - script:
+            name: deploy servermania
+            code: |
+                echo $deploy_key_PRIVATE > deploy.id_rsa && chmod 400 deploy.id_rsa
+                ./deploy wercker-servermania
