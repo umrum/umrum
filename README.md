@@ -1,4 +1,4 @@
-# UMRUM [![Build Status](https://travis-ci.org/frontendbahia/umrum.png?branch=master)](https://travis-ci.org/frontendbahia/umrum) [![wercker status](https://app.wercker.com/status/6352eaeefa758f4d3b98d6de80d8e82c "wercker status")](https://app.wercker.com/project/bykey/6352eaeefa758f4d3b98d6de80d8e82c)
+# UMRUM [![wercker status](https://app.wercker.com/status/6352eaeefa758f4d3b98d6de80d8e82c "wercker status")](https://app.wercker.com/project/bykey/6352eaeefa758f4d3b98d6de80d8e82c)
 An open source Real User Monitoring built using NodeJS.
 
 ### Install, configure and run
