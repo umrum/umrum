@@ -14,9 +14,30 @@ build:
 deploy:
     steps:
         - add-to-known_hosts:
-            hostname: umrum.frontendbahia.com
+            hostname: $PRODUCTION_HOST
+        - mktemp:
+            envvar: PRIVATEKEY_PATH
+        - create-file:
+            name: PrivateKey
+            filename: $PRIVATEKEY_PATH
+            content: $DEPLOY_KEY_PRIVATE
+            overwrite: true
+            hide-from-log: true
+        - create-file:
+            name: Deploy Configuration
+            filename: deploy.conf
+            overwrite: true
+            content: |
+                [wercker]
+                key $PRIVATEKEY_PATH
+                forward-agent yes
+                user $DEPLOY_USER
+                host $PRODUCTION_HOST
+                repo git@github.com:frontendbahia/umrum.git
+                ref origin/master
+                path $DEPLOY_HOME
+                post-deploy npm install && sv restart serverjs
+                test sleep 5 && wget -qO /dev/null localhost
         - script:
-            name: deploy servermania
-            code: |
-                echo $deploy_key_PRIVATE > deploy.id_rsa && chmod 400 deploy.id_rsa
-                ./deploy wercker-servermania
+            name: Deploy to $PRODUCTION_HOST
+            code: ./deploy wercker
