@@ -25,6 +25,7 @@ mongoose.connect(env.MONGO_URI, function (err) {
     console.log ('MongoDB successfully connected to: ' + env.MONGO_URI);
 });
 
+
 var autoload = function(path) {
     fs.readdirSync(path).forEach(function(file) {
         var newPath = path + '/' + file,
@@ -45,17 +46,22 @@ var app = express(),
     oneDay = 1 * 24 * 60 * 60 * 1000;
 
 app.use(express.compress());
-app.locals.assetsURL = env.assetsURL;
 app.set('views', env.views);
 app.engine('html', nunjucks.render);
+
+app.locals.assetsURL = env.assetsURL;
 app.use(
     app.locals.assetsURL,
     express.static(env.assetsPath, {
         maxAge: oneDay
     })
 );
+
 app.use(express.logger());
 app.use(express.favicon());
+
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'umrum-ftw' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
