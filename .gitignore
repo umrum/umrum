@@ -3,3 +3,4 @@ id_deploy*
 newrelic_agent.log
 dump.rdb
 deploy.conf
+start-umrum
