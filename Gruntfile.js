@@ -112,8 +112,13 @@ module.exports = function(grunt) {
         reporter: 'spec',
         recursive: true,
         env: {
-          NODE_PORT: '8000',
-          MONGO_URI: 'mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test'
+          NODE_ENV: "test",
+          MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
+          NODE_PORT: "8000",
+          NODE_IP: "0.0.0.0",
+          GITHUB_ID: "SOME_GITHUB_ID",
+          GITHUB_SECRET: "SOME_GITHU_SECRET",
+          GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
         }
       }
     },
@@ -141,8 +146,13 @@ module.exports = function(grunt) {
           file: 'server.js',
           args: ['-e js,html'],
           env: {
-            NODE_PORT: '8000',
-            MONGO_URI: 'mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test'
+            NODE_ENV: "dev",
+            MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
+            NODE_PORT: "8000",
+            NODE_IP: "0.0.0.0",
+            GITHUB_ID: "YOUR_GITHUB_ID",
+            GITHUB_SECRET: "YOUR_GITHU_SECRET",
+            GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
           }
         }
       }
