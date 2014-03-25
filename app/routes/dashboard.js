@@ -10,11 +10,12 @@ module.exports = function(app){
         } else {
             Site.find({creator: req.user.username}, function(err, docs) {
                 if ( err ) throw err;
-                docs = docs.map(function(e){ return e.host; });
                 res.render('admin-index.html', {
                     user: req.user,
                     title: req.user.username,
-                    sites: docs
+                    sites: docs.map(function(e){
+                        if ( e.host ) return {host: e.host, code:e._id};
+                    })
                 });
             });
         }
@@ -50,12 +51,12 @@ module.exports = function(app){
                     host: req.body.host,
                     creator: req.user.username,
                     created: Date.now()
-                }).save(function(err){
+                }).save(function(err, site){
                     if ( err ) {
                         res.json({code: 500, error: err});
                         return;
                     }
-                    res.json({code: 200})
+                    res.json({code: 200, siteCode: site._id})
                 });
             });
         }

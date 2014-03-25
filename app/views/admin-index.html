@@ -5,19 +5,22 @@
 {% block content %}
 <div class="page-wrap ">
   <div id="sites_manager" class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <div class="panel panel-primary">
         <div class="panel-heading">
           <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Your sites</h3>
         </div>
         <div class="panel-body">
           {% for site in sites %}
-          <p><a href="/dashboard/{{ site }}">{{ site }}</a></p>
+          <div class="clearfix">
+            <p class="col-md-6"><a href="/dashboard/{{ site.host }}">{{ site.host }}</a></p>
+            <p class="col-md-6">{{ site.code }}</p>
+          </div>
           {% endfor %}
         </div>
         <div class="panel-footer announcement-bottom clearfix">
-          <input id="new_site" type="text" class="new-site-host col-sm-9"/>
-          <a href="#" class="add-site col-sm-3 btn-sm btn-primary">Add new</a>
+          <input id="new_site" type="text" class="new-site-host col-sm-10"/>
+          <a href="#" class="add-site col-sm-2 btn-sm btn-primary">Create new</a>
         </div>
       </div>
     </div>
@@ -37,7 +40,10 @@
           alert(data.error);
         } else {
           $('#sites_manager .panel-body').append(
-            '<p><a href="/dashboard/'+host+'">'+host+'</a></p>'
+            '<div class="clearfix">'+
+              '<p class="col-md-6"><a href="/dashboard/'+host+'">'+host+'</a></p>' +
+              '<p class="col-md-6">'+data.siteCode+'</p>' +
+            '</div>'
           );
         }
       });
