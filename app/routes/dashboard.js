@@ -36,4 +36,28 @@ module.exports = function(app){
         }
     });
 
+    app.post('/dashboard/create', function(req, res) {
+        if ( !req.isAuthenticated() ) {
+            res.send(401);
+        } else {
+            Site.findOne({host: req.body.host}, function (err, existent) {
+                if(existent) {
+                    res.json({code: 500, error: 'Site is already being tracked'});
+                    return;
+                }
+
+                new Site({
+                    host: req.body.host,
+                    creator: req.user.username,
+                    created: Date.now()
+                }).save(function(err){
+                    if ( err ) {
+                        res.json({code: 500, error: err});
+                        return;
+                    }
+                    res.json({code: 200})
+                });
+            });
+        }
+    });
 };
