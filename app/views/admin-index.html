@@ -1,83 +1,53 @@
 {% extends "admin-base.html" %}
 
+{% block sidebar %} {% endblock %}
+
 {% block content %}
-  <div class="page-wrap">
-
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-xs-6">
-                <i class="fa fa-chart-o fa-5x"></i>
-              </div>
-              <div class="col-xs-6 text-right">
-                <p class="announcement-heading">{{ data.currentVisits }}</p>
-                <p class="announcement-text">Current visitors</p>
-              </div>
-            </div>
-          </div>
-          <a href="#">
-            <div class="panel-footer announcement-bottom">
-              <div class="row">
-                <div class="col-xs-6">
-                  View All
-                </div>
-                <div class="col-xs-6 text-right">
-                  <i class="fa fa-arrow-circle-right"></i>
-                </div>
-              </div>
-            </div>
-          </a>
+<div class="page-wrap ">
+  <div id="sites_manager" class="row">
+    <div class="col-lg-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Your sites</h3>
+        </div>
+        <div class="panel-body">
+          {% for site in sites %}
+          <p><a href="/dashboard/{{ site }}">{{ site }}</a></p>
+          {% endfor %}
+        </div>
+        <div class="panel-footer announcement-bottom clearfix">
+          <input id="new_site" type="text" class="new-site-host col-sm-9"/>
+          <a href="#" class="add-site col-sm-3 btn-sm btn-primary">Add new</a>
         </div>
       </div>
-    </div><!-- /.row -->
-
-
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Top Pages</h3>
-          </div>
-          <div class="panel-body">
-            <div class="table-responsive">
-              <table class="table table-bordered table-hover table-striped">
-                <thead>
-                  <tr>
-                    <th>Page</th>
-                    <th>Views</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for item in data.topPages %}
-                  <tr>
-                    <td>{{ item[0] }}</td>
-                    <td>{{ item[1] }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <div class="text-right">
-              <a href="#">View All</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div><!-- /.row -->
-
-  </div><!-- /#page-wrapper -->
+    </div>
+  </div><!-- /.row -->
+</div><!-- /#page-wrapper -->
 {% endblock %}
 
 {% block scripts %}
-  {{super()}}
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io.connect('http://localhost');
-    socket.on("{{ host }}", function (msg) {
-      // render it by component
-      $('.announcement-heading').text(msg.currentVisits);
+  {{ super() }}
+  <script type="text/javascript">
+    var createSite = function(){
+      var host = $.trim(window.new_site.value);
+      $.post('/dashboard/create', {host: host}, function(data){
+        window.new_site.value = '';
+        if ( data.code != 200 ) {
+          console.error(data.error);
+          alert(data.error);
+        } else {
+          $('#sites_manager .panel-body').append(
+            '<p><a href="/dashboard/'+host+'">'+host+'</a></p>'
+          );
+        }
+      });
+    };
+    $('.add-site').on('click', createSite);
+    $('#new_site').on('keydown', function(evt){
+      console.log(evt);
+      if ( evt.which == 13 ) {
+        createSite();
+      }
     });
   </script>
 {% endblock %}
