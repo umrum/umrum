@@ -7,8 +7,6 @@ module.exports = function(app, passport){
         '/auth/github/callback',
         passport.authenticate('github', { failureRedirect : '/error-404' }),
         function (req, res) {
-            console.log(req.isAuthenticated());
-            console.log(req.user);
             res.redirect('/dashboard');
         }
     );

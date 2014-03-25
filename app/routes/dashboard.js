@@ -9,12 +9,12 @@ module.exports = function(app){
             res.redirect('/signin');
         } else {
             Site.find({creator: req.user.username}, function(err, docs) {
-                if ( err ) throw err;
+                if ( err ) { throw err; }
                 res.render('admin-index.html', {
                     user: req.user,
                     title: req.user.username,
                     sites: docs.map(function(e){
-                        if ( e.host ) return {host: e.host, code:e._id};
+                        if ( e.host ) { return {host: e.host, code:e._id}; }
                     })
                 });
             });
@@ -56,7 +56,7 @@ module.exports = function(app){
                         res.json({code: 500, error: err});
                         return;
                     }
-                    res.json({code: 200, siteCode: site._id})
+                    res.json({code: 200, siteCode: site._id});
                 });
             });
         }
