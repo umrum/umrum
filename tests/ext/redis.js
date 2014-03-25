@@ -42,7 +42,7 @@ describe('Tests the redis ext module', function(){
     describe('#getHosInfo', function(){
         var zrevrangeCallbackArgumentIndex = 7,
             hgetCallbackArgumentIndex = 2,
-            host = 'testhost.com',
+            host = 'IDforTesthost.com',
             currentVisits = null,
             topPages = null,
             err = null,
@@ -81,7 +81,7 @@ describe('Tests the redis ext module', function(){
             mockRedis
                 .expects("zrevrangebyscore")
                 .once().withArgs(
-                    'toppages-'+host,
+                    'toppages:'+host,
                     '+inf', '-inf',
                     'WITHSCORES',
                     'LIMIT', 0, 10
@@ -140,7 +140,7 @@ describe('Tests the redis ext module', function(){
             mockRedis
                 .expects("zrevrangebyscore")
                 .once().withArgs(
-                    'toppages-'+host,
+                    'toppages:'+host,
                     '+inf', '-inf',
                     'WITHSCORES',
                     'LIMIT', 0, 10
@@ -167,7 +167,7 @@ describe('Tests the redis ext module', function(){
             mockRedis
                 .expects("zrevrangebyscore")
                 .once().withArgs(
-                    'toppages-'+host,
+                    'toppages:'+host,
                     '+inf', '-inf',
                     'WITHSCORES',
                     'LIMIT', 0, 10
@@ -194,7 +194,7 @@ describe('Tests the redis ext module', function(){
             mockRedis
                 .expects("zrevrangebyscore")
                 .once().withArgs(
-                    'toppages-'+host,
+                    'toppages:'+host,
                     '+inf', '-inf',
                     'WITHSCORES',
                     'LIMIT', 0, 10
@@ -219,18 +219,18 @@ describe('Tests the redis ext module', function(){
         it('unique behavior', function() {
             var active_user = {
                 'uid': 'unique user id',
-                'host': 'host.com',
-                'path': '/path1'
+                'hostId': 'IDfromHost.com',
+                'url': '/path1'
             };
 
             mockRedis.expects('hmset').once().withArgs(
                 active_user.uid, active_user
             );
             mockRedis.expects('hincrby').once().withArgs(
-                active_user.host, 'curr_visits', 1
+                active_user.hostId, 'curr_visits', 1
             );
             mockRedis.expects('zincrby').once().withArgs(
-                'toppages-'+active_user.host, 1, active_user.path
+                'toppages:'+active_user.hostId, 1, active_user.url
             );
 
             _redisApi.registerPageView(active_user);
@@ -243,16 +243,16 @@ describe('Tests the redis ext module', function(){
         it('unique behavior', function() {
             var active_user = {
                 'uid': 'unique user id',
-                'host': 'host.com',
-                'path': '/path1'
+                'hostId': 'IDfromHost.com',
+                'url': '/path1'
             };
 
             mockRedis.expects('del').once().withArgs(active_user.uid);
             mockRedis.expects('hincrby').once().withArgs(
-                active_user.host, 'curr_visits', -1
+                active_user.hostId, 'curr_visits', -1
             );
             mockRedis.expects('zincrby').once().withArgs(
-                'toppages-'+active_user.host, -1, active_user.path
+                'toppages:'+active_user.hostId, -1, active_user.url
             );
 
             _redisApi.removePageView(active_user);

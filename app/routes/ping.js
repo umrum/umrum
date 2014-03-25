@@ -4,19 +4,19 @@ var api = require('../ext/redis');
 
 module.exports = function(app){
     app.get('/ping', function(req, res) {
-        var host = req.query.host;
+        var hostId = req.query.hostId;
         var active_user = {
             'uid': req.query.uid,
-            'host': host,
-            'path': req.query.path
+            'hostId': hostId,
+            'url': req.query.url
         };
 
         var server = require('../../server');
         var io = server.io;
 
         var emitMessage = function() {
-            api.getHostInfo(host, function(err, info){
-                io.sockets.emit(host, info);
+            api.getHostInfo(hostId, function(err, info){
+                io.sockets.emit(hostId, info);
             });
         };
 

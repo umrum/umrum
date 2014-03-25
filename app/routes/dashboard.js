@@ -19,19 +19,21 @@ module.exports = function(app){
                 });
             });
         }
-
     });
 
     app.get('/dashboard/:host', function(req, res) {
         if ( !req.isAuthenticated() ) {
             res.redirect('/signin');
         } else {
-            api.getHostInfo(req.params.host, function(err, info){
-                //TODO add error handler
-                res.render('admin-view.html', {
-                    user: req.user,
-                    title: req.params.host,
-                    data: info
+            Site.findOne({host: req.params.host}, function (err, existent) {
+                api.getHostInfo(existent._id, function(err, info){
+                    //TODO add error handler
+                    res.render('admin-view.html', {
+                        user: req.user,
+                        title: req.params.host,
+                        hostId: existent._id,
+                        data: info
+                    });
                 });
             });
         }
