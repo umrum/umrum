@@ -1,4 +1,4 @@
-/* global require, process, console, module, __filename */
+/* global require, process, console, module, __filename, __dirname */
 
 /**
  *  Creates the express app and configure static folders
@@ -8,6 +8,7 @@ require('newrelic');
 
 var express = require('express'),
     fs = require('fs'),
+    path = require('path'),
     env = require('./app/config/env'),
     mongoose = require('mongoose'),
     nunjucks = require('nunjucks'),
@@ -55,6 +56,11 @@ app.use(
     express.static(env.assetsPath, {
         maxAge: oneDay
     })
+);
+
+app.use(
+    '/dist/',
+    express.static(path.normalize(path.join(__dirname, 'dist/')))
 );
 
 app.use(express.json());
