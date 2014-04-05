@@ -1,4 +1,4 @@
-/* global require, describe, it, before, after */
+/* global describe, it, before, after */
 
 var assert = require('assert'),
     nunjucks = require('nunjucks'),

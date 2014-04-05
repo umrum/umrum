@@ -1,5 +1,3 @@
-/* global require, module, console */
-
 module.exports.init = function(){
     var env = require('../config/env');
 

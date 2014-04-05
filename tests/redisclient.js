@@ -1,4 +1,4 @@
-/* global require, describe, it, before, after */
+/* global describe, it, before, after */
 
 var env = require('../app/config/env');
 var redis = require('redis');

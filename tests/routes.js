@@ -1,4 +1,4 @@
-/* global require, describe, it */
+/* global describe, it */
 
 var app = require('../server').app;
 var request = require('supertest');

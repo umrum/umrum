@@ -1,5 +1,3 @@
-/* global require, module */
-
 var api = require('../ext/redis'),
     Site = require('../models/site');
 

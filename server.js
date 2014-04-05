@@ -1,4 +1,4 @@
-/* global require, process, console, module, __filename, __dirname */
+/* global __filename, __dirname */
 
 /**
  *  Creates the express app and configure static folders

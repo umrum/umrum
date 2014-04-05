@@ -1,4 +1,4 @@
-/* global require, describe, it, beforeEach, afterEach, before, after */
+/* global describe, it, beforeEach, afterEach, before, after */
 
 var redisclient = require('../../app/config/redisclient');
 var sinon = require('sinon');

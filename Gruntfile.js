@@ -1,4 +1,4 @@
-/* global module:false */
+/* globals module */
 
 module.exports = function(grunt) {
 
@@ -56,7 +56,11 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         globals: {
-          jQuery: true
+          jQuery: true,
+          require: true,
+          module: true,
+          process: true,
+          console: true
         }
       },
       gruntfile: {

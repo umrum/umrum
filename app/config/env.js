@@ -1,4 +1,4 @@
-/* global require, process, __dirname, module */
+/* global __dirname */
 
 var path = require('path');
 

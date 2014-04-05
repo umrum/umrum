@@ -1,5 +1,3 @@
-/* global module */
-
 module.exports = function(app, passport){
     app.get('/signin', passport.authenticate('github', { scope: 'email' }));
     app.get('/signup', passport.authenticate('github', { scope: 'email' }));

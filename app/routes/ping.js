@@ -1,5 +1,4 @@
 /* global require, module, console */
-
 var api = require('../ext/redis');
 
 module.exports = function(app){

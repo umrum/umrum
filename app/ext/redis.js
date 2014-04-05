@@ -1,5 +1,3 @@
-/* global module, require */
-
 var redisclient = require('../config/redisclient');
 
 var _MAX_TOPPAGES = 10;
