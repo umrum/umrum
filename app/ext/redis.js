@@ -61,10 +61,9 @@ var _lazy_api = {
         }
         */
 
-        console.log(active_user);
-        redisclient.hmset(active_user.uid, active_user, console.log);
-        redisclient.hincrby(active_user.hostId, 'curr_visits', 1, console.log);
-        redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url, console.log);
+        redisclient.hmset(active_user.uid, active_user);
+        redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
+        redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
     },
     removePageView: function(active_user) {
         /*

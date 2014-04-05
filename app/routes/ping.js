@@ -10,6 +10,7 @@ module.exports = function(app){
             'hostId': hostId,
             'url': req.query.url
         };
+        console.log('/ping', active_user, req.query);
 
         var server = require('../../server');
         var io = server.io;
