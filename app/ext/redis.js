@@ -40,8 +40,10 @@ var _lazy_api = {
 
                     // result = [url, urlViwers, url2, url2Viewers...]
                     hostinfo.topPages = result.map(function(item, idx, arr){
-                        if (idx%2) return null;
-                        return [item, arr[idx+1]];
+                        if (idx%2) {
+                            return null;
+                        }
+                        return [item, parseInt(arr[idx+1], 10)];
                     }).filter(function(item){
                         return item && item[1];
                     });

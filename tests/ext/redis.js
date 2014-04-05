@@ -54,10 +54,14 @@ describe('Tests the redis ext module', function(){
                 'topPages': null
             };
             if ( topPages ) {
-                expectedHostInfo.topPages = [];
-                for (var i=0; i<topPages.length; i+=2) {
-                    expectedHostInfo.topPages.push([topPages[i], topPages[i+1]]);
-                }
+                expectedHostInfo.topPages = topPages.map(function(item, idx, arr){
+                    if (idx%2) {
+                        return null;
+                    }
+                    return [item, parseInt(arr[idx+1], 10)];
+                }).filter(function(item){
+                    return item && item[1];
+                });
             }
             return expectedHostInfo;
         };
@@ -76,7 +80,7 @@ describe('Tests the redis ext module', function(){
 
         it('normal behavior', function() {
             currentVisits = '7';
-            topPages = ['/', '5', '/a', '2'];
+            topPages = ['/', '5', '/d', '0', '/a', '2'];
 
             mockRedis
                 .expects("zrevrangebyscore")
