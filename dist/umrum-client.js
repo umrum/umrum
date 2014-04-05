@@ -1,7 +1,7 @@
 /* UMRUM client library */
 
 (function(win, doc, undefined){
-    var _server_ping = 'http://umrum.frontendba.com/ping',
+    var _server_ping = 'http://umrum.frontendbahia.com/ping',
         _server_ping_timeout = 10000,
         lib = win._mrm = win._mrm || {};
 
