@@ -5,7 +5,7 @@ services:
 build:
     steps:
         - npm-install
-        - npm-test:
+        - npm-test
 deploy:
     steps:
         - add-to-known_hosts:
