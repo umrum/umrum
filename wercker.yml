@@ -5,12 +5,7 @@ services:
 build:
     steps:
         - npm-install
-        - npm-install:
-            options: grunt-cli
-        - script:
-            name: project test
-            code: |
-                node_modules/grunt-cli/bin/grunt unittest
+        - npm-test:
 deploy:
     steps:
         - add-to-known_hosts:

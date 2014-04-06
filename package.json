@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "grunt unittest"
+    "test": "./node_modules/.bin/grunt unittest"
   },
   "repository": {
     "type": "git",
@@ -48,7 +48,8 @@
     "grunt-autoprefixer": "~0.4.0",
     "grunt-imageoptim": "~1.4.0",
     "grunt-nodemon": "~0.1.2",
-    "socket.io": "~0.9.16"
+    "socket.io": "~0.9.16",
+    "grunt-cli": "~0.1.13"
   },
   "author": "Frontend Bahia",
   "license": "BSD"
