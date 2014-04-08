@@ -69,6 +69,7 @@ var _lazy_api = {
         */
         redisclient.hlen(active_user.uid, function(err, keys_length){
             if (!err && !keys_length) {
+                console.log('new active user', active_user);
                 redisclient.hmset(active_user.uid, active_user);
                 redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
                 redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
