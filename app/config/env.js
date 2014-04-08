@@ -8,7 +8,9 @@ var _env = process.env.NODE_ENV || 'dev',
     _mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1/umrum',
     _redisHost = process.env.REDIS_HOST || '127.0.0.1',
     _redisPort = process.env.REDIS_PORT || '6379',
-    _redisOptions = {},
+    _redisOptions = {
+      'notify-keyspace-events': 'KEx'
+    },
     _githubOptions = {
         clientID: process.env.GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,

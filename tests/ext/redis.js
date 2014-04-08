@@ -7,11 +7,15 @@ describe('Tests the redis ext module', function(){
     var _redisApi = null,
         _redisInit = null,
         _fake_redis = {
+            on: function(){},
             del: function(){},
             hget: function(){},
+            hlen: function(){},
             hmset: function(){},
+            setex: function(){},
             hincrby: function(){},
             zincrby: function(){},
+            psubscribe: function(){},
             zrevrangebyscore: function(){}
         },
         mockRedis = null
@@ -226,6 +230,16 @@ describe('Tests the redis ext module', function(){
                 'hostId': 'IDfromHost.com',
                 'url': '/path1'
             };
+
+            mockRedis
+                .expects('hlen')
+                    .once()
+                    .withArgs(active_user.uid)
+                    .callsArgWith(1, 0);
+
+            mockRedis.expects('setex').once().withArgs(
+                'expusr-'+active_user.uid, 10, 1
+            );
 
             mockRedis.expects('hmset').once().withArgs(
                 active_user.uid, active_user

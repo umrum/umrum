@@ -1,6 +1,10 @@
-var redisclient = require('../config/redisclient');
+var config_redis = require('../config/redisclient');
 
-var _MAX_TOPPAGES = 10;
+var MAX_TOPPAGES = 10,
+    USER_TIMEOUT = 10,
+    EXP_USER_PREFIX = 'expusr-',
+    redisclient = null,
+    pubsub_cli = null;
 
 var _toppages_key = function(hostId) {
     return 'toppages:'+hostId;
@@ -32,7 +36,7 @@ var _lazy_api = {
                 _toppages_key(hostId),
                 '+inf', '-inf',
                 'WITHSCORES',
-                'LIMIT', 0, _MAX_TOPPAGES,
+                'LIMIT', 0, MAX_TOPPAGES,
                 function(err, result) {
                     if ( err || !result ) return callback(err, hostinfo);
 
@@ -63,10 +67,14 @@ var _lazy_api = {
           - uuid: user ID
         }
         */
-
-        redisclient.hmset(active_user.uid, active_user);
-        redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
-        redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
+        redisclient.hlen(active_user.uid, function(err, keys_length){
+            if (!err && !keys_length) {
+                redisclient.hmset(active_user.uid, active_user);
+                redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
+                redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
+            }
+            redisclient.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
+        });
     },
     removePageView: function(active_user) {
         /*
@@ -87,14 +95,30 @@ var _lazy_api = {
     }
 }
 
+
 module.exports = (function(){
-    var api = {};
+    var api = {},
+        init_client = function () {
+            redisclient = config_redis.init();
+            pubsub_cli = config_redis.init();
+            var expiredEvent = '__keyevent*__:expired'
+            pubsub_cli.psubscribe(expiredEvent);
+            pubsub_cli.on("pmessage", function(pattern, channel, msg) {
+                if (pattern === expiredEvent) {
+                    var uuid = msg.replace(EXP_USER_PREFIX, '');
+                    console.log('expired user: ' + uuid);
+                    redisclient.hgetall(uuid, function(err, active_usr){
+                        api.removePageView(active_usr);
+                    });
+                }
+            });
+        };
 
     for ( method in _lazy_api ) {
         api[method] = (function(method){
             return function(){
-                if ( redisclient.init ) {
-                    redisclient = redisclient.init();
+                if ( !redisclient ) {
+                    init_client();
                 }
                 var _args = Array.prototype.slice.call(arguments,0);
                 return _lazy_api[method].apply(null, _args);
