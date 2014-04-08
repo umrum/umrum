@@ -11,7 +11,7 @@ describe('Test the authentication module', function() {
     before(function(done) {
         mongoose.connection.on('connected', done);
         try{
-            this.timeout(3 * 1000);
+            this.timeout(5 * 1000);
             mongoose.connect(env.MONGO_URI);
         } catch(err){}
     });
