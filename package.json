@@ -27,7 +27,8 @@
     "underscore": "~1.5.2",
     "connect-mongo": "~0.4.0",
     "connect-flash": "~0.1.1",
-    "newrelic": "~1.1.1"
+    "newrelic": "~1.1.1",
+    "hiredis": "~0.1.16"
   },
   "engines": {
     "node": "0.10.x"
