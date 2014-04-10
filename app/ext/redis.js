@@ -1,7 +1,7 @@
 var config_redis = require('../config/redisclient');
 
 var MAX_TOPPAGES = 10,
-    USER_TIMEOUT = 10,
+    USER_TIMEOUT = 20,
     EXP_USER_PREFIX = 'expusr-',
     redisclient = null,
     pubsub_cli = null;
