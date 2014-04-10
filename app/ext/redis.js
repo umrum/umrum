@@ -104,7 +104,7 @@ module.exports = (function(){
             redisclient = config_redis.init();
             // pubsub client
             pubsub_cli = config_redis.init();
-            pubsub_cli.config('set', 'notify-keyspace-events', 'KEg', console.log);
+            pubsub_cli.config('set', 'notify-keyspace-events', 'KEx');
 
             // listening to expired events
             var expiredEvent = '__keyevent*__:expired';
