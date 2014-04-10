@@ -13,6 +13,7 @@ describe('Tests the redis ext module', function(){
             hlen: function(){},
             hmset: function(){},
             setex: function(){},
+            config: function(){},
             hincrby: function(){},
             zincrby: function(){},
             psubscribe: function(){},

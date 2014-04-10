@@ -100,9 +100,14 @@ var _lazy_api = {
 module.exports = (function(){
     var api = {},
         init_client = function () {
+            // common client
             redisclient = config_redis.init();
+            // pubsub client
             pubsub_cli = config_redis.init();
-            var expiredEvent = '__keyevent*__:expired'
+            pubsub_cli.config('set', 'notify-keyspace-events', 'KEg', console.log);
+
+            // listening to expired events
+            var expiredEvent = '__keyevent*__:expired';
             pubsub_cli.psubscribe(expiredEvent);
             pubsub_cli.on("pmessage", function(pattern, channel, msg) {
                 if (pattern === expiredEvent) {
