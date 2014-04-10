@@ -105,6 +105,7 @@ var server = app.listen(env.port, env.ipaddr, function(err) {
 });
 
 var io = require('socket.io').listen(server);
+io.set('log level', 2);
 
 require('./app/routes/authentication')(app, passport);
 
