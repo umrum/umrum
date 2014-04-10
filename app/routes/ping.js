@@ -15,16 +15,13 @@ module.exports = function(app){
             return res.json({error: err_msg});
         }
 
-        console.log('/ping', active_user, req.query);
-        var server = require('../../server');
-        var io = server.io;
-
         api.registerPageView(active_user);
 
+        var io = require('../../server').io;
         api.getHostInfo(hostId, function(err, info){
             io.sockets.emit(hostId, info);
         });
 
-        res.json(active_user);
+        return res.json(active_user);
     });
 };
