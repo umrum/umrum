@@ -12,23 +12,17 @@
     "url": "git@github.com:frontendbahia/umrum.git"
   },
   "dependencies": {
-    "nko": "*",
     "nunjucks": "~1.0.0",
     "express": "~3.4.4",
-    "redis": "~0.9.0",
+    "redis": "~0.10.1",
     "mongoose": "~3.8.3",
-    "crypto": "0.0.3",
-    "passport-local": "~0.1.6",
-    "passport": "~0.1.17",
-    "passport-facebook": "~1.0.2",
+    "passport": "~0.2.0",
     "passport-github": "~0.1.5",
-    "passport-twitter": "~1.0.2",
-    "passport-google-oauth": "~0.1.5",
-    "underscore": "~1.5.2",
     "connect-mongo": "~0.4.0",
     "connect-flash": "~0.1.1",
-    "newrelic": "~1.1.1",
-    "hiredis": "~0.1.16"
+    "newrelic": "~1.5.0",
+    "hiredis": "~0.1.16",
+    "socket.io": "~0.9.16"
   },
   "engines": {
     "node": "0.10.x"
@@ -49,7 +43,6 @@
     "grunt-autoprefixer": "~0.4.0",
     "grunt-imageoptim": "~1.4.0",
     "grunt-nodemon": "~0.1.2",
-    "socket.io": "~0.9.16",
     "grunt-cli": "~0.1.13"
   },
   "author": "Frontend Bahia",
