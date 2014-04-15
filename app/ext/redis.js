@@ -67,11 +67,20 @@ var _lazy_api = {
           - uuid: user ID
         }
         */
-        redisclient.hlen(active_user.uid, function(err, keys_length){
-            if (!err && !keys_length) {
+        redisclient.hgetall(active_user.uid, function(err, old_usr){
+            if (err) {
+                console.error('Error in registerPageView', active_user, err);
+                return;
+            }
+
+            if (!old_usr) {
                 console.log('new active user', active_user);
                 redisclient.hmset(active_user.uid, active_user);
                 redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
+                redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
+            } else if (old_usr.url != active_user.url) {
+                console.log('old user has changed URL', active_user);
+                redisclient.zincrby(_toppages_key(old_usr.hostId), -1, old_usr.url);
                 redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
             }
             redisclient.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);

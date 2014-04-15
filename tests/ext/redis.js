@@ -10,10 +10,10 @@ describe('Tests the redis ext module', function(){
             on: function(){},
             del: function(){},
             hget: function(){},
-            hlen: function(){},
             hmset: function(){},
             setex: function(){},
             config: function(){},
+            hgetall: function(){},
             hincrby: function(){},
             zincrby: function(){},
             psubscribe: function(){},
@@ -225,7 +225,7 @@ describe('Tests the redis ext module', function(){
     });
 
     describe('#registerPageView', function(){
-        it('unique behavior', function() {
+        it('new user', function() {
             var active_user = {
                 'uid': 'unique user id',
                 'hostId': 'IDfromHost.com',
@@ -233,10 +233,10 @@ describe('Tests the redis ext module', function(){
             };
 
             mockRedis
-                .expects('hlen')
+                .expects('hgetall')
                     .once()
                     .withArgs(active_user.uid)
-                    .callsArgWith(1, 0);
+                    .callsArgWith(1, undefined, null);
 
             mockRedis.expects('setex').once().withArgs(
                 'expusr-'+active_user.uid, 30, 1
@@ -247,6 +247,42 @@ describe('Tests the redis ext module', function(){
             );
             mockRedis.expects('hincrby').once().withArgs(
                 active_user.hostId, 'curr_visits', 1
+            );
+            mockRedis.expects('zincrby').once().withArgs(
+                'toppages:'+active_user.hostId, 1, active_user.url
+            );
+
+            _redisApi.registerPageView(active_user);
+
+            mockRedis.verify();
+        });
+
+        it('old user changed page', function() {
+            var active_user = {
+                    'uid': 'unique user id',
+                    'hostId': 'IDfromHost.com',
+                    'url': '/path1'
+                },
+                old_user = {
+                    'uid': 'unique user id',
+                    'hostId': 'IDfromHost.com',
+                    'url': '/path0'
+                };
+
+            mockRedis
+                .expects('hgetall')
+                    .once()
+                    .withArgs(active_user.uid)
+                    .callsArgWith(1, undefined, old_user);
+
+            mockRedis.expects('setex').once().withArgs(
+                'expusr-'+active_user.uid, 30, 1
+            );
+
+            mockRedis.expects('hmset').never();
+            mockRedis.expects('hincrby').never();
+            mockRedis.expects('zincrby').once().withArgs(
+                'toppages:'+old_user.hostId, -1, old_user.url
             );
             mockRedis.expects('zincrby').once().withArgs(
                 'toppages:'+active_user.hostId, 1, active_user.url
