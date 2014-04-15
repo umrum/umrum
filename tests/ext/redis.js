@@ -239,7 +239,7 @@ describe('Tests the redis ext module', function(){
                     .callsArgWith(1, 0);
 
             mockRedis.expects('setex').once().withArgs(
-                'expusr-'+active_user.uid, 20, 1
+                'expusr-'+active_user.uid, 30, 1
             );
 
             mockRedis.expects('hmset').once().withArgs(

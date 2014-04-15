@@ -2,7 +2,7 @@
 
 (function(win, doc, undefined){
     var _server_ping = 'http://umrum.frontendbahia.com/ping',
-        _server_ping_timeout = 10000,
+        _server_ping_timeout = 15 * 1000,
         lib = win._mrm = win._mrm || {};
 
     //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript#answer-2117523
