@@ -114,6 +114,10 @@ module.exports = (function(){
                     var uuid = msg.replace(EXP_USER_PREFIX, '');
                     console.log('expired user: ' + uuid);
                     redisclient.hgetall(uuid, function(err, active_usr){
+                        if (!active_usr) {
+                            console.error('Could not find user for ' + uuid);
+                            return;
+                        }
                         api.removePageView(active_usr);
                     });
                 }
