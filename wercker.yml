@@ -36,3 +36,6 @@ deploy:
         - script:
             name: Deploy to $PRODUCTION_HOST
             code: ./deploy wercker
+        - newrelic-deployment:
+            api_key: $NEWRELIC_API_KEY
+            app_name: UMRUM
