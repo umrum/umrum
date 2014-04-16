@@ -3,15 +3,27 @@
 (function(win, doc, undefined){
     var _server_ping = 'http://umrum.frontendbahia.com/ping',
         _server_ping_timeout = 15 * 1000,
-        lib = win._mrm = win._mrm || {};
+        lib = win._mrm = win._mrm || {},
+        1rum_ckn = '__1rum',
+        ping_fn;
 
-    //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript#answer-2117523
-    lib.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
+    doc.cookie.split(';').forEach(function(cookie){
+        if (cookie.indexOf(1rum_ckn) == 0) {
+            lib.uid = cookie.replace(1rum_ckn+'=', '');
+        }
     });
 
-    var ping_server = function() {
+    if (!lib.uid) {
+        var domain = '.'+win.location.host.replace('www.','');
+        // http://stackoverflow.com/q/105034/1197796#answer-2117523
+        lib.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+        doc.cookie = 1rum_ckn + '=' + lib.uid + ';expires=new Date((+new Date)+7*24*60*60*1000).toUTCString()';
+    }
+
+    ping_fn = function() {
         lib.url = encodeURIComponent(win.location.href);
         lib.title = encodeURIComponent(doc.title);
 
@@ -35,7 +47,7 @@
             "&title=", lib.title,
             "&t=", (+new Date)
         ].join('');
-        setTimeout(ping_server, _server_ping_timeout);
+        setTimeout(ping_fn, _server_ping_timeout);
     };
-    ping_server();
+    ping_fn();
 })(window, document);
