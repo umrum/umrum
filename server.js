@@ -78,19 +78,12 @@ var server = app.listen(env.port, env.ipaddr, function(err) {
         process.exit(-1);
     }
 
-    // if run as root, downgrade to the owner of this file
-    if (process.platform.toLowerCase().indexOf('win') === -1) {
-        if ( process.getuid() === 0 ) {
-            fs.stat(__filename, function(err, stats) {
-                if (err) {
-                    return console.error(err);
-                }
-                process.setuid(stats.uid);
-            });
-        }
-    }
-    console.log('%s: Node server started on http://%s:%d ...',
-                Date(Date.now() ), env.ipaddr, env.port);
+    console.log(
+        '%s: Node server started on http://%s:%d ...',
+        new Date(),
+        env.ipaddr,
+        env.port
+    );
 });
 
 var io = require('socket.io').listen(server);
