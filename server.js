@@ -1,4 +1,4 @@
-/* global __filename, __dirname */
+/* global __dirname */
 
 /**
  *  Creates the express app and configure static folders
@@ -7,9 +7,9 @@
 require('newrelic');
 
 var express = require('express'),
-    fs = require('fs'),
     path = require('path'),
     env = require('./app/config/env'),
+    filewalker = require('filewalker'),
     mongoose = require('mongoose'),
     nunjucks = require('nunjucks'),
     passport = require('passport'),
@@ -26,22 +26,11 @@ mongoose.connect(env.MONGO_URI, function (err) {
     console.log ('MongoDB successfully connected to: ' + env.MONGO_URI);
 });
 
-
-var autoload = function(path) {
-    fs.readdirSync(path).forEach(function(file) {
-        var newPath = path + '/' + file,
-            stat = fs.statSync(newPath)
-        ;
-        if (stat.isFile()) {
-            if (/(.*)\.(js|coffee)/.test(file)) {
-                require(newPath);
-            }
-        } else if (stat.isDirectory()) {
-            autoload(newPath);
-        }
-    });
-};
-autoload(env.modelsPath);
+filewalker(
+    env.modelsPath, {matchRegExp: /.*\.js/i}
+).on('file', function(file){
+    require(path.join(env.modelsPath, file));
+}).walk();
 
 var app = express(),
     oneDay = 1 * 24 * 60 * 60 * 1000;
