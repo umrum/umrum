@@ -2,7 +2,7 @@
 
 (function(win, doc, undefined){
     var _server_ping = 'http://umrum.frontendbahia.com/ping',
-        _server_ping_timeout = 15 * 1000,
+        _server_ping_timeout = 30 * 1000,
         lib = win._mrm = win._mrm || {},
         _1rumCkn = '__1rum',
         addEvent = function(){},
