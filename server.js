@@ -1,9 +1,5 @@
 /* global __dirname */
 
-/**
- *  Creates the express app and configure static folders
- */
-
 require('newrelic');
 
 var express = require('express'),
@@ -26,6 +22,7 @@ mongoose.connect(env.MONGO_URI, function (err) {
     console.log ('MongoDB successfully connected to: ' + env.MONGO_URI);
 });
 
+// load mongo models
 filewalker(
     env.modelsPath, {matchRegExp: /.*\.js/i}
 ).on('file', function(file){
@@ -35,42 +32,51 @@ filewalker(
 var app = express(),
     oneDay = 1 * 24 * 60 * 60 * 1000;
 
-app.use(express.compress());
-app.set('views', env.views);
-app.engine('html', nunjucks.render);
-
 app.locals.assetsURL = env.assetsURL;
-app.use(
-    app.locals.assetsURL,
-    express.static(env.assetsPath, {
-        maxAge: oneDay
-    })
-);
 
-app.use(
-    '/dist/',
-    express.static(path.normalize(path.join(__dirname, 'dist/')))
-);
+app.set('views', env.views);
 
-app.use(express.json());
-app.use(express.urlencoded());
-
-app.use(express.logger());
-app.use(express.favicon());
-
-app.use(express.cookieParser());
-app.use(express.session({ secret: 'umrum-ftw' }));
-
-app.use(passport.initialize());
-app.use(passport.session());
-authConfig(passport, env);
-
-app.use(app.router);
-
+// configure template engine
+app.engine('html', nunjucks.render);
 nunjucks.configure(env.views, {
     autoescape: true,
     express: app
 });
+
+app.use(express.logger());
+app.use(express.favicon());
+
+// express compress to render result
+app.use(express.compress());
+
+// parse request parameters
+app.use(express.json());
+app.use(express.urlencoded());
+
+// parse cookies
+app.use(express.cookieParser());
+
+// encrypt session
+app.use(express.session({ secret: 'umrum-ftw' }));
+
+// config app session
+app.use(passport.initialize());
+app.use(passport.session());
+authConfig(passport, env);
+
+// app auth route
+require('./app/routes/authentication')(app, passport);
+
+// app other routes
+var routes = ['index', 'ping', 'dashboard', 'errors'];
+for (var i = routes.length - 1; i >= 0; i--) {
+    require('./app/routes/' + routes[i])(app);
+}
+
+// static routes
+app.use(app.locals.assetsURL, express.static(env.assetsPath, {maxAge: oneDay}));
+console.log(path.join(__dirname, 'dist'));
+app.use('/dist/', express.static(path.join(__dirname, 'dist')));
 
 var server = app.listen(env.port, env.ipaddr, function(err) {
     if (err) {
@@ -88,13 +94,6 @@ var server = app.listen(env.port, env.ipaddr, function(err) {
 
 var io = require('socket.io').listen(server);
 io.set('log level', 2);
-
-require('./app/routes/authentication')(app, passport);
-
-var routes = ['index', 'ping', 'dashboard', 'errors'];
-for (var i = routes.length - 1; i >= 0; i--) {
-    require('./app/routes/' + routes[i])(app);
-}
 
 module.exports = {
     'app': app,
