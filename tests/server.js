@@ -107,6 +107,12 @@ describe('server.js', function(){
     });
 
     it('express configure method#use', function() {
+
+        // ensure that first call of app.use is express.compress
+        express_app.use.getCall(0).calledWithExactly(
+            srv_requires.express['compress-rs']
+        );
+
         var simple_exp_methods = [
             'json',
             'logger',
@@ -137,34 +143,39 @@ describe('server.js', function(){
 
         var simple_routes = ['index', 'ping', 'dashboard', 'errors'];
         for (var idx in simple_routes) {
-            var route = simple_routes[idx];
-            assert(srv_requires['./app/routes/'+route].calledOnce);
-            assert(srv_requires['./app/routes/'+route].calledWith(express_app));
+            var route_mod = srv_requires['./app/routes/'+simple_routes[idx]];
+            assert(route_mod.calledOnce);
+            assert(route_mod.calledWithExactly(express_app));
         }
     });
 
     it('static routes configurations', function() {
-        assert(
-            srv_requires.express.static.withArgs(
+        var static_assets = srv_requires.express.static.withArgs(
                 env.assetsPath, {maxAge: 24*60*60*1000}
-            ).calledOnce
-        );
-        assert(
-            express_app.use.withArgs(
-                env.assetsURL, srv_requires.express['static-rs']
-            ).calledOnce
-        );
-
-        assert(
-            srv_requires.express.static.withArgs(
+            ),
+            static_dist = srv_requires.express.static.withArgs(
                 path.join(__dirname, '..', 'dist')
-            ).calledOnce
-        );
-        assert(
-            express_app.use.withArgs(
+            ),
+            route_assets = express_app.use.withArgs(
+                env.assetsURL, srv_requires.express['static-rs']
+            ),
+            route_dist = express_app.use.withArgs(
                 '/dist/', srv_requires.express['static-rs']
-            ).calledOnce
-        );
+            )
+        ;
+
+        assert(static_assets.calledOnce);
+        assert(static_assets.calledBefore(route_assets));
+        assert(route_assets.calledOnce);
+        assert(route_assets.calledBefore(route_dist));
+
+        assert(static_dist.calledOnce);
+        assert(static_dist.calledBefore(route_dist));
+        assert(route_dist.calledOnce);
+
+        assert(route_dist.calledBefore(
+            srv_requires['./app/routes/authentication']
+        ));
     });
 
     it('express listen', function() {

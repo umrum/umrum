@@ -43,11 +43,11 @@ nunjucks.configure(env.views, {
     express: app
 });
 
-app.use(express.logger());
-app.use(express.favicon());
-
 // express compress to render result
 app.use(express.compress());
+
+app.use(express.logger());
+app.use(express.favicon());
 
 // parse request parameters
 app.use(express.json());
@@ -64,6 +64,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 authConfig(passport, env);
 
+// static routes
+app.use(app.locals.assetsURL, express.static(env.assetsPath, {maxAge: oneDay}));
+app.use('/dist/', express.static(path.join(__dirname, 'dist')));
+
 // app auth route
 require('./app/routes/authentication')(app, passport);
 
@@ -72,11 +76,6 @@ var routes = ['index', 'ping', 'dashboard', 'errors'];
 for (var i = routes.length - 1; i >= 0; i--) {
     require('./app/routes/' + routes[i])(app);
 }
-
-// static routes
-app.use(app.locals.assetsURL, express.static(env.assetsPath, {maxAge: oneDay}));
-console.log(path.join(__dirname, 'dist'));
-app.use('/dist/', express.static(path.join(__dirname, 'dist')));
 
 var server = app.listen(env.port, env.ipaddr, function(err) {
     if (err) {
