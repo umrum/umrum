@@ -4,7 +4,7 @@
     var _server_ping = 'http://umrum.frontendbahia.com/ping',
         _server_ping_timeout = 15 * 1000,
         lib = win._mrm = win._mrm || {},
-        1rum_ckn = '__1rum',
+        _1rumCkn = '__1rum',
         addEvent = function(){},
         ping_fn;
 
@@ -22,8 +22,8 @@
     }
 
     doc.cookie.split(';').forEach(function(cookie){
-        if (cookie.indexOf(1rum_ckn) == 0) {
-            lib.uid = cookie.replace(1rum_ckn+'=', '');
+        if (cookie.indexOf(_1rumCkn) == 0) {
+            lib.uid = cookie.replace(_1rumCkn+'=', '');
         }
     });
 
@@ -34,7 +34,7 @@
             var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
             return v.toString(16);
         });
-        doc.cookie = 1rum_ckn + '=' + lib.uid + ';expires=new Date((+new Date)+7*24*60*60*1000).toUTCString()';
+        doc.cookie = _1rumCkn + '=' + lib.uid + ';expires=new Date((+new Date)+7*24*60*60*1000).toUTCString()';
     }
 
     ping_fn = function() {
@@ -84,8 +84,8 @@
     // adding leave page listeners
     win.onblur = function() { lib.interaction = false; };
     win.onbeforeunload = function(){
-        // must clear timeout
         lib.interaction = false;
+        // must clear timeout when changing page
         clearTimeout(lib.ping_timeout);
     }
 })(window, document);
