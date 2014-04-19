@@ -11,11 +11,11 @@ describe('Tests the env module', function(){
     });
 
     it('should return the correct views variable', function() {
-        assert.equal(env.views, path.normalize(path.join(__dirname, '../app/views/')));
+        assert.equal(env.views, path.join(__dirname, '../app/views'));
     });
 
     it('should return the correct assetsPath variable', function() {
-        assert.equal(env.assetsPath, path.normalize(path.join(__dirname, '../assets/')));
+        assert.equal(env.assetsPath, path.join(__dirname, '../assets'));
     });
 
     it('should return the correct assetsURL variable', function() {
