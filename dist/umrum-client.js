@@ -34,7 +34,8 @@
             var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
             return v.toString(16);
         });
-        doc.cookie = _1rumCkn + '=' + lib.uid + ';expires=new Date((+new Date)+7*24*60*60*1000).toUTCString()';
+        var weekAhead = new Date((+new Date)+7*24*60*60*1000).toUTCString();
+        doc.cookie = _1rumCkn + '=' + lib.uid + ';expires=' + weekAhead;
     }
 
     ping_fn = function() {
