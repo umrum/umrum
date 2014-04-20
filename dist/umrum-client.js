@@ -67,6 +67,7 @@
         }
         lib.ping_timeout = setTimeout(ping_fn, _server_ping_timeout);
     };
+    lib.interaction = true;
     ping_fn();
 
     // adding page interaction interaction listeners
