@@ -59,9 +59,14 @@
                 this.send('/ping');
             }
             var _api = this;
-            _api.ping_timeout = setTimeout(function(){
+            this.ping_timeout = setTimeout(function(){
                 _api.ping();
-            }, 30 * 1000    );
+            }, 30 * 1000);
+        },
+        exit: function(cancelPing){
+            _mrm.interaction = false;
+            this.send('/disconnect');
+            clearTimeout(this.ping_timeout);
         }
     };
 
@@ -109,9 +114,7 @@
         _mrm.interaction = false;
     });
     addEvent(win, 'beforeunload', function(){
-        _mrm.interaction = false;
-        // must clear timeout when changing page
-        clearTimeout(_1rumAPI.ping_timeout);
+        _1rumAPI.exit();
     });
 
     // init track
