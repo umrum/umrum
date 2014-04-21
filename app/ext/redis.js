@@ -99,6 +99,7 @@ var _lazy_api = {
         }
         */
 
+        console.log('remove user', active_user);
         redisclient.del(active_user.uid);
         redisclient.hincrby(active_user.hostId, 'curr_visits', -1);
         redisclient.zincrby(_toppages_key(active_user.hostId), -1, active_user.url);

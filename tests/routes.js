@@ -49,6 +49,36 @@ describe('Tests api routes', function(){
                 .end(done);
         });
     });
+
+    describe('api#disconnect', function(){
+        it('no hostId -> erro 500', function(done){
+            request(app)
+                .get('/api/disconnect?uid='+uid+'&url='+encodedUrl)
+                .expect(500)
+                .end(done);
+        });
+
+        it('no url -> erro 500', function(done){
+            request(app)
+                .get('/api/disconnect?uid='+uid+'&hostId='+hostId)
+                .expect(500)
+                .end(done);
+        });
+
+        it('no uid -> erro 500', function(done){
+            request(app)
+                .get('/api/disconnect?url='+encodedUrl+'&hostId='+hostId)
+                .expect(500)
+                .end(done);
+        });
+
+        it('ok 200', function(done){
+            request(app)
+                .get('/api/disconnect?hostId='+hostId+'&uid='+uid+'&url='+encodedUrl)
+                .expect(200)
+                .end(done);
+        });
+    });
 });
 
 describe('Tests the errors route', function(){

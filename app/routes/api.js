@@ -41,4 +41,17 @@ module.exports = function(app){
 
         return res.json(active_user);
     });
+
+    defRoute('/disconnect', function(req, res) {
+        var active_user = getActiveUserFromRequest(req);
+
+        api.removePageView(active_user);
+
+        var io = require('../../server').io;
+        api.getHostInfo(active_user.hostId, function(err, info){
+            io.sockets.emit(active_user.hostId, info);
+        });
+
+        return res.json(active_user);
+    });
 };
