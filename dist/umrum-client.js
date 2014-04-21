@@ -1,24 +1,24 @@
 /* UMRUM client library */
 
 (function(win, doc, undefined){
-    var _mrm = win._mrm || {},
-        _1rumCkn = '__1rum';
+    var _1rumObj = win._mrm || {},
+        _1rumCookieName = '__1rum';
 
     // def user uid
     doc.cookie.split(';').forEach(function(cookie){
-        if (cookie.indexOf(_1rumCkn) == 0) {
-            _mrm.uid = cookie.replace(_1rumCkn+'=', '');
+        if (cookie.indexOf(_1rumCookieName) == 0) {
+            _1rumObj.uid = cookie.replace(_1rumCookieName+'=', '');
         }
     });
-    if (!_mrm.uid) {
+    if (!_1rumObj.uid) {
         var domain = '.'+win.location.host.replace('www.','');
         // http://stackoverflow.com/q/105034/1197796#answer-2117523
-        _mrm.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        _1rumObj.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
             return v.toString(16);
         });
         var weekAhead = new Date((+new Date)+7*24*60*60*1000).toUTCString();
-        doc.cookie = _1rumCkn + '=' + _mrm.uid + ';expires=' + weekAhead;
+        doc.cookie = _1rumCookieName + '=' + _1rumObj.uid + ';expires=' + weekAhead;
     }
 
     // def 1rum API
@@ -42,20 +42,20 @@
             if (!this.element) {
                 this.init();
             }
-            _mrm.url = encodeURIComponent(win.location.href);
-            _mrm.title = encodeURIComponent(doc.title);
+            _1rumObj.url = encodeURIComponent(win.location.href);
+            _1rumObj.title = encodeURIComponent(doc.title);
             this.element.src = [
                 this.API_URL+route,
-                "?uid=", _mrm.uid,
-                "&hostId=", _mrm.hostId,
-                "&url=", _mrm.url,
-                "&title=", _mrm.title,
+                "?uid=", _1rumObj.uid,
+                "&hostId=", _1rumObj.hostId,
+                "&url=", _1rumObj.url,
+                "&title=", _1rumObj.title,
                 "&t=", (+new Date)
             ].join('');
         },
         ping: function(){
-            if ( _mrm.interaction ) {
-                _mrm.interaction = false;
+            if ( _1rumObj.interaction ) {
+                _1rumObj.interaction = false;
                 this.send('/ping');
             }
             var _api = this;
@@ -64,7 +64,7 @@
             }, 30 * 1000);
         },
         exit: function(cancelPing){
-            _mrm.interaction = false;
+            _1rumObj.interaction = false;
             this.send('/disconnect');
             clearTimeout(this.ping_timeout);
         }
@@ -97,28 +97,28 @@
     }
 
     // adding page interaction interaction listeners
-    addEvent(win, 'scroll', function(){ _mrm.interaction = true; });
-    addEvent(doc.body, 'click', function(){ _mrm.interaction = true; });
+    addEvent(win, 'scroll', function(){ _1rumObj.interaction = true; });
+    addEvent(doc.body, 'click', function(){ _1rumObj.interaction = true; });
     var bodyChildren = Array.prototype.slice.call(doc.body.children, childIdx);
     var childIdx = bodyChildren.length;
     while (childIdx) {
         addEvent(
             bodyChildren[--childIdx],
             'mouseover',
-            function(){ _mrm.interaction = true; }
+            function(){ _1rumObj.interaction = true; }
         );
     }
 
     // adding leave page listeners
     win.onblur = concatFunctions(window.onblur, function(){
-        _mrm.interaction = false;
+        _1rumObj.interaction = false;
     });
     addEvent(win, 'beforeunload', function(){
         _1rumAPI.exit();
     });
 
     // init track
-    _mrm.interaction = true;
+    _1rumObj.interaction = true;
     _1rumAPI.init();
     _1rumAPI.ping();
 })(window, document);
