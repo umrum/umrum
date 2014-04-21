@@ -5,11 +5,13 @@
         _1rumCookieName = '__1rum';
 
     // def user uid
-    doc.cookie.split(';').forEach(function(cookie){
-        if (cookie.indexOf(_1rumCookieName) == 0) {
+    var cookies = doc.cookie.split(';'),
+        cookieIdx = cookies.length;
+    while (cookieIdx) {
+        if (cookies[--cookieIdx].indexOf(_1rumCookieName) == 0) {
             _1rumObj.uid = cookie.replace(_1rumCookieName+'=', '');
         }
-    });
+    }
     if (!_1rumObj.uid) {
         var domain = '.'+win.location.host.replace('www.','');
         // http://stackoverflow.com/q/105034/1197796#answer-2117523
