@@ -79,7 +79,7 @@ var _lazy_api = {
                 redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
                 redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
             } else if (old_usr.url != active_user.url) {
-                console.log('old user update', old_usr.url, active_user.url);
+                console.log('old user update', old_usr, active_user);
                 redisclient.zincrby(_toppages_key(old_usr.hostId), -1, old_usr.url);
                 redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
             }
