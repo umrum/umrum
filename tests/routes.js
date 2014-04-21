@@ -15,15 +15,40 @@ describe('Tests the index route', function(){
 
 });
 
-describe('Tests the ping route', function(){
+describe('Tests api routes', function(){
+    var encodedUrl = 'https%3A%2F%2Fgithub.com%2Ffrontendbahia',
+        hostId = 'HOST_ID_3233',
+        uid = 'UID-78946';
 
-    it('should return 200 status code', function(done){
-        request(app)
-            .get('/ping')
-            .expect(200)
-            .end(done);
+    describe('api#ping', function(){
+        it('no hostId -> erro 500', function(done){
+            request(app)
+                .get('/api/ping?uid='+uid+'&url='+encodedUrl)
+                .expect(500)
+                .end(done);
+        });
+
+        it('no url -> erro 500', function(done){
+            request(app)
+                .get('/api/ping?uid='+uid+'&hostId='+hostId)
+                .expect(500)
+                .end(done);
+        });
+
+        it('no uid -> erro 500', function(done){
+            request(app)
+                .get('/api/ping?url='+encodedUrl+'&hostId='+hostId)
+                .expect(500)
+                .end(done);
+        });
+
+        it('ok 200', function(done){
+            request(app)
+                .get('/api/ping?hostId='+hostId+'&uid='+uid+'&url='+encodedUrl)
+                .expect(200)
+                .end(done);
+        });
     });
-
 });
 
 describe('Tests the errors route', function(){

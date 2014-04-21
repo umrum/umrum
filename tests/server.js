@@ -42,7 +42,7 @@ describe('server.js', function(){
 
             './app/config/authentication': sinon.spy(),
 
-            './app/routes/ping': sinon.spy(),
+            './app/routes/api': sinon.spy(),
             './app/routes/index': sinon.spy(),
             './app/routes/errors': sinon.spy(),
             './app/routes/dashboard': sinon.spy(),
@@ -141,7 +141,7 @@ describe('server.js', function(){
             express_app, srv_requires.passport
         ));
 
-        var simple_routes = ['index', 'ping', 'dashboard', 'errors'];
+        var simple_routes = ['index', 'api', 'dashboard', 'errors'];
         for (var idx in simple_routes) {
             var route_mod = srv_requires['./app/routes/'+simple_routes[idx]];
             assert(route_mod.calledOnce);
