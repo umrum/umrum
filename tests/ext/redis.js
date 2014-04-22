@@ -295,12 +295,18 @@ describe('Tests the redis ext module', function(){
     });
 
     describe('#removePageView', function(){
-        it('unique behavior', function() {
+        it('old_usr is the same of active_usr', function() {
             var active_user = {
                 'uid': 'unique user id',
                 'hostId': 'IDfromHost.com',
                 'url': '/path1'
             };
+
+            mockRedis
+                .expects('hgetall')
+                    .once()
+                    .withArgs(active_user.uid)
+                    .callsArgWith(1, undefined, active_user);
 
             mockRedis.expects('del').once().withArgs(active_user.uid);
             mockRedis.expects('hincrby').once().withArgs(
@@ -309,6 +315,55 @@ describe('Tests the redis ext module', function(){
             mockRedis.expects('zincrby').once().withArgs(
                 'toppages:'+active_user.hostId, -1, active_user.url
             );
+
+            _redisApi.removePageView(active_user);
+
+            mockRedis.verify();
+        });
+
+        it('old_usr doesnt exists', function() {
+            var active_user = {
+                'uid': 'unique user id',
+                'hostId': 'IDfromHost.com',
+                'url': '/path1'
+            };
+
+            mockRedis
+                .expects('hgetall')
+                    .once()
+                    .withArgs(active_user.uid)
+                    .callsArgWith(1, undefined, null);
+
+            mockRedis.expects('del').never();
+            mockRedis.expects('hincrby').never();
+            mockRedis.expects('zincrby').never();
+
+            _redisApi.removePageView(active_user);
+
+            mockRedis.verify();
+        });
+
+        it('old_usr different URL from active_usr', function() {
+            var active_user = {
+                    'uid': 'unique user id',
+                    'hostId': 'IDfromHost.com',
+                    'url': '/path1'
+                },
+                old_usr = {
+                    'uid': 'unique user id',
+                    'hostId': 'IDfromHost.com',
+                    'url': '/path2'
+                };
+
+            mockRedis
+                .expects('hgetall')
+                    .once()
+                    .withArgs(active_user.uid)
+                    .callsArgWith(1, undefined, old_usr);
+
+            mockRedis.expects('del').never();
+            mockRedis.expects('hincrby').never();
+            mockRedis.expects('zincrby').never();
 
             _redisApi.removePageView(active_user);
 
