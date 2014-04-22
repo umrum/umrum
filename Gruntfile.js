@@ -155,7 +155,7 @@ module.exports = function(grunt) {
             NODE_PORT: "8000",
             NODE_IP: "0.0.0.0",
             GITHUB_ID: "YOUR_GITHUB_ID",
-            GITHUB_SECRET: "YOUR_GITHU_SECRET",
+            GITHUB_SECRET: "YOUR_GITHUB_SECRET",
             GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
           }
         }
