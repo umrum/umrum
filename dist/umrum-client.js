@@ -8,7 +8,7 @@
     var cookies = doc.cookie.split(';'),
         cookieIdx = cookies.length;
     while (cookieIdx) {
-        var cookie = cookies[--cookieIdx];
+        var cookie = cookies[--cookieIdx].replace(/^\s+/, '');
         if (cookie.indexOf(_1rumCookieName) == 0) {
             _1rumObj.uid = cookie.replace(_1rumCookieName+'=', '');
         }
