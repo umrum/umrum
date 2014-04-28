@@ -19,8 +19,8 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'assets/js/init.js': ['src/js/libs/modernizr-2.6.3.js'],
-          'assets/js/main.js': [
+          'public/js/init.js': ['src/js/libs/modernizr-2.6.3.js'],
+          'public/js/main.js': [
             'src/js/libs/jquery-1.10.2.js',
             'src/js/plugins/*.js',
             'src/js/app/bootstrap.js',
@@ -36,8 +36,8 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'assets/js/init.min.js': ['assets/js/init.js'],
-          'assets/js/main.min.js': ['assets/js/main.js', 'src/js/app/chart.js'],
+          'public/js/init.min.js': ['public/js/init.js'],
+          'public/js/main.min.js': ['public/js/main.js', 'src/js/app/chart.js'],
         }
       }
     },
@@ -79,13 +79,13 @@ module.exports = function(grunt) {
     less: {
       production: {
         options: {
-          // paths: ['src/css', '_static/assets/less'],
+          // paths: ['src/css', '_static/public/less'],
           cleancss: true
         },
         files: {
-          'assets/css/main.css': ['src/less/bootstrap.less'],
-          'assets/css/site.css': ['src/less/site.less'],
-          'assets/css/admin.css': ['src/less/admin.less']
+          'public/css/main.css': ['src/less/bootstrap.less'],
+          'public/css/site.css': ['src/less/site.less'],
+          'public/css/admin.css': ['src/less/admin.less']
         }
       }
     },
@@ -95,18 +95,18 @@ module.exports = function(grunt) {
           browsers: ['last 2 versions', '> 10%', 'ie 8']
         },
         files: {
-          'assets/css/main.css': ['assets/css/main.css'],
-          'assets/css/site.css': ['assets/css/site.css'],
-          'assets/css/admin.css': ['assets/css/admin.css']
+          'public/css/main.css': ['public/css/main.css'],
+          'public/css/site.css': ['public/css/site.css'],
+          'public/css/admin.css': ['public/css/admin.css']
         }
       }
     },
     csso: {
       dist: {
         files : {
-          'assets/css/main.min.css': ['assets/css/main.css'],
-          'assets/css/site.min.css': ['assets/css/site.css'],
-          'assets/css/admin.min.css': ['assets/css/admin.css']
+          'public/css/main.min.css': ['public/css/main.css'],
+          'public/css/site.min.css': ['public/css/site.css'],
+          'public/css/admin.min.css': ['public/css/admin.css']
         }
       }
     },

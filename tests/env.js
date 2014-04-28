@@ -15,11 +15,11 @@ describe('Tests the env module', function(){
     });
 
     it('should return the correct assetsPath variable', function() {
-        assert.equal(env.assetsPath, path.join(__dirname, '../assets/'));
+        assert.equal(env.assetsPath, path.join(__dirname, '../public/'));
     });
 
     it('should return the correct assetsURL variable', function() {
-        assert.equal(env.assetsURL, '/assets/');
+        assert.equal(env.assetsURL, '/public/');
     });
 
 });
