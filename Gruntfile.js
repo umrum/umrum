@@ -24,8 +24,7 @@ module.exports = function(grunt) {
                     'src/js/plugins/*.js',
                     'src/js/app/bootstrap.js',
                     'src/js/app/landing-page.js',
-                    'src/js/app/chart.js',
-                    'src/js/app/admin.js'
+                    'src/js/app/chart.js'
                 ],
                 dest: 'public/js/main.js'
             }
