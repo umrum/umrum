@@ -13,21 +13,21 @@ module.exports = function(grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     concat: {
-      options: {
-        banner: '<%= banner %>',
-        stripBanners: true
-      },
-      dist: {
-        files: {
-          'public/js/init.js': ['src/js/libs/modernizr-2.6.3.js'],
-          'public/js/main.js': [
-            'src/js/libs/jquery-1.10.2.js',
-            'src/js/plugins/*.js',
-            'src/js/app/bootstrap.js',
-            'src/js/app/landing-page.js',
-            'src/js/app/admin.js'
-          ]
-        }
+      js: {
+        options: {
+          banner: '<%= banner %>',
+          stripBanners: true
+        },
+        src: [
+          'src/js/libs/modernizr-2.6.3.js',
+          'src/js/libs/jquery-1.10.2.js',
+          'src/js/plugins/*.js',
+          'src/js/app/bootstrap.js',
+          'src/js/app/landing-page.js',
+          'src/js/app/chart.js',
+          'src/js/app/admin.js'
+        ],
+        dest: 'public/js/main.js'
       }
     },
     uglify: {
@@ -35,10 +35,8 @@ module.exports = function(grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        files: {
-          'public/js/init.min.js': ['public/js/init.js'],
-          'public/js/main.min.js': ['public/js/main.js', 'src/js/app/chart.js'],
-        }
+        src: '<%= concat.js.dest %>',
+        dest: 'public/js/main.min.js'
       }
     },
     jshint: {
