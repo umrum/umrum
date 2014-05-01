@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                    ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
         // Task configuration.
         concat: {
-            js: {
+            core: {
                 options: {
                     banner: '<%= banner %>',
                     stripBanners: true
@@ -21,21 +21,36 @@ module.exports = function(grunt) {
                 src: [
                     'src/js/libs/modernizr-2.6.3.js',
                     'src/js/libs/jquery-1.10.2.js',
+                ],
+                dest: 'public/js/core.js'
+            },
+            site: {
+                options: {
+                    banner: '<%= banner %>',
+                    stripBanners: true
+                },
+                src: [
                     'src/js/plugins/*.js',
                     'src/js/app/bootstrap.js',
                     'src/js/app/landing-page.js',
                     'src/js/app/chart.js'
                 ],
-                dest: 'public/js/main.js'
+                dest: 'public/js/site.js'
             }
         },
         uglify: {
             options: {
                 banner: '<%= banner %>'
             },
-            dist: {
-                src: '<%= concat.js.dest %>',
-                dest: 'public/js/main.min.js'
+            core: {
+                files: {
+                    'public/js/core.min.js': ['<%= concat.core.dest %>']
+                }
+            },
+            site: {
+                files: {
+                    'public/js/site.min.js': ['<%= concat.site.dest %>']
+                }
             }
         },
         jshint: {
