@@ -81,12 +81,13 @@ module.exports = function(grunt) {
         less: {
             production: {
                 options: {
-                    cleancss: true
+                    cleancss: true,
+                    compress: true,
                 },
                 files: {
-                    'public/css/main.css': ['src/less/bootstrap.less'],
-                    'public/css/site.css': ['src/less/site.less'],
-                    'public/css/admin.css': ['src/less/admin.less']
+                    'public/css/main.min.css': ['src/less/bootstrap.less'],
+                    'public/css/site.min.css': ['src/less/site.less'],
+                    'public/css/admin.min.css': ['src/less/admin.less']
                 }
             }
         },
@@ -96,18 +97,9 @@ module.exports = function(grunt) {
                     browsers: ['last 2 versions', '> 10%', 'ie 8']
                 },
                 files: {
-                    'public/css/main.css': ['public/css/main.css'],
-                    'public/css/site.css': ['public/css/site.css'],
-                    'public/css/admin.css': ['public/css/admin.css']
-                }
-            }
-        },
-        csso: {
-            dist: {
-                files : {
-                    'public/css/main.min.css': ['public/css/main.css'],
-                    'public/css/site.min.css': ['public/css/site.css'],
-                    'public/css/admin.min.css': ['public/css/admin.css']
+                    'public/css/main.min.css': ['public/css/main.min.css'],
+                    'public/css/site.min.css': ['public/css/site.min.css'],
+                    'public/css/admin.min.css': ['public/css/admin.min.css']
                 }
             }
         },
@@ -207,12 +199,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-autoprefixer');
-    grunt.loadNpmTasks('grunt-csso');
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
 
     grunt.registerTask('minjs', ['uglify']);
-    grunt.registerTask('mincss', ['less', 'autoprefixer', 'csso']);
+    grunt.registerTask('mincss', ['less', 'autoprefixer']);
     grunt.registerTask('copy-static', ['copy:imgs', 'copy:fonts']);
 
     grunt.registerTask('compile', ['copy-static', 'mincss', 'minjs']);
