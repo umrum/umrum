@@ -175,8 +175,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'mochacli', 'less', 'autoprefixer', 'csso', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'mochacli', 'minjs', 'mincss', 'uglify']);
     grunt.registerTask('minjs', ['jshint', 'uglify']);
+    grunt.registerTask('mincss', ['less', 'autoprefixer', 'csso']);
     grunt.registerTask('unittest', ['jshint', 'mochacli']);
     grunt.registerTask('server', ['nodemon']);
 };
