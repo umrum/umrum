@@ -4,3 +4,4 @@ newrelic_agent.log
 dump.rdb
 deploy.conf
 start-umrum
+public

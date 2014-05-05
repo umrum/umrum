@@ -111,6 +111,20 @@ module.exports = function(grunt) {
                 }
             }
         },
+        copy: {
+            imgs: {
+                expand: true,
+                cwd: 'src/img/',
+                src: '**',
+                dest: 'public/img'
+            },
+            fonts: {
+                expand: true,
+                cwd: 'src/fonts/',
+                src: '**',
+                dest: 'public/fonts'
+            }
+        },
         mochacli: {
             files: 'tests/',
             options: {
@@ -138,7 +152,7 @@ module.exports = function(grunt) {
             },
             less: {
                 files: ['src/less/*.less'],
-                tasks: ['less', 'autoprefixer', 'csso'],
+                tasks: ['mincss'],
             },
             js: {
                 files: ['src/js/**/*.js'],
@@ -147,9 +161,10 @@ module.exports = function(grunt) {
         },
         nodemon: {
             dev: {
+                script: 'server.js',
                 options: {
-                    file: 'server.js',
-                    args: ['-e js,html'],
+                    ext: 'js,html,less',
+                    watch: ['app', 'src'],
                     env: {
                         NODE_ENV: "dev",
                         MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
@@ -158,6 +173,27 @@ module.exports = function(grunt) {
                         GITHUB_ID: "YOUR_GITHUB_ID",
                         GITHUB_SECRET: "YOUR_GITHUB_SECRET",
                         GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
+                    },
+                    callback: function (nodemon) {
+                        nodemon.on('log', function (e) {
+                            grunt.log.writeln(e.colour);
+                        });
+
+                        nodemon.on('restart', function () {
+                            grunt.log.subhead('Running compile task ... ');
+                            grunt.util.spawn({
+                                grunt: true,
+                                args: ['compile'],
+                            }, function(err, result) {
+                                grunt.log.debug(result.toString());
+                                if (err || result.code !== 0) {
+                                    grunt.log.write('Error while compiling')
+                                             .error()
+                                             .error(err);
+                                }
+                                grunt.log.subhead('Compile task: \u001b[32mOK');
+                            });
+                        });
                     }
                 }
             }
@@ -165,6 +201,7 @@ module.exports = function(grunt) {
     });
 
     // These plugins provide necessary tasks.
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -174,10 +211,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
 
-    // Default task.
-    grunt.registerTask('default', ['jshint', 'mochacli', 'minjs', 'mincss', 'uglify']);
-    grunt.registerTask('minjs', ['jshint', 'uglify']);
+    grunt.registerTask('minjs', ['uglify']);
     grunt.registerTask('mincss', ['less', 'autoprefixer', 'csso']);
+    grunt.registerTask('copy-static', ['copy:imgs', 'copy:fonts']);
+
+    grunt.registerTask('compile', ['copy-static', 'mincss', 'minjs']);
+
     grunt.registerTask('unittest', ['jshint', 'mochacli']);
-    grunt.registerTask('server', ['nodemon']);
+
+    grunt.registerTask('server', ['compile', 'nodemon:dev']);
 };
