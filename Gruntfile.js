@@ -12,44 +12,34 @@ module.exports = function(grunt) {
                    '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
                    ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
         // Task configuration.
-        concat: {
-            core: {
-                options: {
-                    banner: '<%= banner %>',
-                    stripBanners: true
-                },
-                src: [
-                    'src/js/libs/modernizr-2.6.3.js',
-                    'src/js/libs/jquery-1.10.2.js',
-                ],
-                dest: 'public/js/core.js'
-            },
-            site: {
-                options: {
-                    banner: '<%= banner %>',
-                    stripBanners: true
-                },
-                src: [
-                    'src/js/plugins/*.js',
-                    'src/js/app/bootstrap.js',
-                    'src/js/app/landing-page.js',
-                    'src/js/app/chart.js'
-                ],
-                dest: 'public/js/site.js'
-            }
-        },
         uglify: {
             options: {
                 banner: '<%= banner %>'
             },
             core: {
+                options: {
+                    sourceMap: true,
+                    sourceMapName: 'public/js/core.js.map'
+                },
                 files: {
-                    'public/js/core.min.js': ['<%= concat.core.dest %>']
+                    'public/js/core.min.js': [
+                        'src/js/libs/modernizr-2.6.3.js',
+                        'src/js/libs/jquery-1.10.2.js',
+                    ]
                 }
             },
             site: {
+                options: {
+                    sourceMap: true,
+                    sourceMapName: 'public/js/site.js.map'
+                },
                 files: {
-                    'public/js/site.min.js': ['<%= concat.site.dest %>']
+                    'public/js/site.min.js': [
+                        'src/js/plugins/*.js',
+                        'src/js/app/bootstrap.js',
+                        'src/js/app/landing-page.js',
+                        'src/js/app/chart.js'
+                    ]
                 }
             }
         },
@@ -175,20 +165,18 @@ module.exports = function(grunt) {
     });
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-csso');
-    //grunt.loadNpmTasks('grunt-imageoptim');
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'mochacli', 'less', 'autoprefixer', 'csso', 'concat', 'uglify']);
-    grunt.registerTask('minjs', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'mochacli', 'less', 'autoprefixer', 'csso', 'uglify']);
+    grunt.registerTask('minjs', ['jshint', 'uglify']);
     grunt.registerTask('unittest', ['jshint', 'mochacli']);
     grunt.registerTask('server', ['nodemon']);
 };
