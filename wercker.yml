@@ -31,7 +31,7 @@ deploy:
                 repo git@github.com:frontendbahia/umrum.git
                 ref origin/master
                 path $DEPLOY_HOME
-                post-deploy npm install && sv restart serverjs
+                post-deploy npm install && ./node_modules/.bin/grunt compile && sv restart serverjs
                 test sleep 5 && wget -qO /dev/null localhost
         - script:
             name: Deploy to $PRODUCTION_HOST
