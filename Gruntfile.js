@@ -41,6 +41,20 @@ module.exports = function(grunt) {
                         'src/js/app/chart.js'
                     ]
                 }
+            },
+            application: {
+                options: {
+                    sourceMap: true,
+                    sourceMapName: 'public/js/application.js.map'
+                },
+                files: {
+                    'public/js/application.min.js': [
+                        'src/js/libs/handlebars.runtime-v1.3.0.js',
+                        'src/js/libs/ember.1.5.1.js',
+                        'src/js/app.js',
+                        'src/js/views/dashboard.js',
+                    ]
+                }
             }
         },
         jshint: {
@@ -62,7 +76,8 @@ module.exports = function(grunt) {
                     require: true,
                     module: true,
                     process: true,
-                    console: true
+                    console: true,
+                    Ember: true
                 }
             },
             gruntfile: {
