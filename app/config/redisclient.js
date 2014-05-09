@@ -14,5 +14,10 @@ module.exports.init = function(){
         ].join(''));
         console.log('Redis connection options: ', env.REDIS_OPTIONS);
     });
+
+    client.on('error', function(err) {
+        console.error('Error in redis connection', err);
+    });
+
     return client;
 };

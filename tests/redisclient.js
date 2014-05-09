@@ -1,44 +1,49 @@
 /* global describe, it, before, after */
 
-var env = require('../app/config/env');
-var redis = require('redis');
-var sinon = require('sinon');
+var proxyquire = require('proxyquire'),
+    assert = require('assert'),
+    sinon = require('sinon');
 
 describe('Tests the redisclient module', function(){
-    var mockRedis = null;
+    var mockRedis = null,
+        fakeRedisClient = null;
 
-    before(function(done){
-        mockRedis = sinon.mock(redis);
-        done();
+    before(function(){
+        fakeRedisClient = {
+            on: sinon.spy()
+        };
+        mockRedis = {
+            createClient: sinon.stub().returns(fakeRedisClient),
+        };
     });
 
-    after(function(done){
-        mockRedis.restore();
-        done();
+    after(function(){
+        mockRedis.createClient.reset();
+        fakeRedisClient.on.reset();
     });
 
     it('check createClient parameters', function(){
-        var _redisCreatedClient = { on: function(){} };
         var _redis_port = '123';
         var _redis_host = 'nohost';
         var _redis_opt = {'none': null};
-        env.REDIS_PORT = _redis_port;
-        env.REDIS_HOST = _redis_host;
-        env.REDIS_OPTIONS = _redis_opt;
 
-        mockRedis
-            .expects("createClient")
-                .once()
-                .withExactArgs(_redis_port, _redis_host, _redis_opt)
-                .returns(_redisCreatedClient)
-        ;
+        var configRedis = proxyquire('../app/config/redisclient', {
+            redis: mockRedis,
+            '../config/env': {
+                REDIS_PORT: _redis_port,
+                REDIS_HOST: _redis_host,
+                REDIS_OPTIONS: _redis_opt
+            }
+        });
+        configRedis.init();
 
-        var _mock_fake_client = sinon.mock(_redisCreatedClient);
-        _mock_fake_client.expects('on').once();
+        assert.ok(mockRedis.createClient.calledOnce);
+        assert.ok(mockRedis.createClient.calledWithExactly(
+            _redis_port, _redis_host, _redis_opt
+        ));
 
-        require('../app/config/redisclient').init();
-
-        mockRedis.verify();
-        _mock_fake_client.verify();
+        assert.ok(fakeRedisClient.on.calledTwice);
+        assert.ok(fakeRedisClient.on.firstCall.args[0], 'connect');
+        assert.ok(fakeRedisClient.on.secondCall.args[0], 'error');
     });
 });
