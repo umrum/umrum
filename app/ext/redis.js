@@ -10,7 +10,7 @@ var _toppages_key = function(hostId) {
     return 'toppages:'+hostId;
 }
 
-var _lazy_api = {
+var _api = {
     getHostInfo: function(hostId, callback) {
         /*
         This function should returns a map with the current visitors of
@@ -29,7 +29,9 @@ var _lazy_api = {
             topPages: null
         };
         redisclient.hget(hostId, 'curr_visits', function(err, result){
-            if ( err || !result ) return callback(err, hostinfo);
+            if ( err || !result ) {
+                return callback(err, hostinfo);
+            }
 
             hostinfo.currentVisits = result;
             redisclient.zrevrangebyscore(
@@ -72,18 +74,21 @@ var _lazy_api = {
                 console.error('Error in registerPageView', active_user, err);
                 return;
             }
+            var multi = redisclient.multi(),
+                toppagesKey = _toppages_key(active_user.hostId);
 
             if (!old_usr) {
                 console.log('new active user', active_user);
-                redisclient.hmset(active_user.uid, active_user);
-                redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
-                redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
+                multi.hmset(active_user.uid, active_user);
+                multi.hincrby(active_user.hostId, 'curr_visits', 1);
+                multi.zincrby(toppagesKey, 1, active_user.url);
             } else if (old_usr.url != active_user.url) {
                 console.log('old user update', old_usr, active_user);
-                redisclient.zincrby(_toppages_key(old_usr.hostId), -1, old_usr.url);
-                redisclient.zincrby(_toppages_key(active_user.hostId), 1, active_user.url);
+                multi.zincrby(toppagesKey, -1, old_usr.url);
+                multi.zincrby(toppagesKey, 1, active_user.url);
             }
-            redisclient.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
+            multi.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
+            multi.exec(console.log);
         });
     },
     removePageView: function(active_user) {
@@ -107,9 +112,13 @@ var _lazy_api = {
 
             if (old_usr && old_usr.url === active_user.url) {
                 console.log('remove user', active_user);
-                redisclient.del(active_user.uid);
-                redisclient.hincrby(active_user.hostId, 'curr_visits', -1);
-                redisclient.zincrby(_toppages_key(active_user.hostId), -1, active_user.url);
+                var multi = redisclient.multi(),
+                    toppagesKey = _toppages_key(active_user.hostId);
+
+                multi.del(active_user.uid);
+                multi.hincrby(active_user.hostId, 'curr_visits', -1);
+                multi.zincrby(toppagesKey, -1, active_user.url);
+                multi.exec(console.log);
             }
 
         });
@@ -118,8 +127,8 @@ var _lazy_api = {
 
 
 module.exports = (function(){
-    var api = {},
-        init_client = function () {
+    var lazy_api = {
+        __init__: function () {
             // common client
             redisclient = config_redis.init();
             // pubsub client
@@ -130,31 +139,39 @@ module.exports = (function(){
             var expiredEvent = '__keyevent*__:expired';
             pubsub_cli.psubscribe(expiredEvent);
             pubsub_cli.on("pmessage", function(pattern, channel, msg) {
-                if (pattern === expiredEvent) {
-                    var uuid = msg.replace(EXP_USER_PREFIX, '');
-                    console.log('expired user: ' + uuid);
-                    redisclient.hgetall(uuid, function(err, active_usr){
-                        if (!active_usr) {
-                            console.error('Could not find user for ' + uuid);
-                            return;
-                        }
-                        api.removePageView(active_usr);
-                    });
+                if (pattern !== expiredEvent) {
+                    console.warn('Undesired event trigger', pattern);
+                    return;
                 }
-            });
-        };
 
-    for ( method in _lazy_api ) {
-        api[method] = (function(method){
+                var uuid = msg.replace(EXP_USER_PREFIX, '');
+                console.log('expired user: ' + uuid);
+                redisclient.hgetall(uuid, function(err, active_usr){
+                    if (!active_usr) {
+                        console.error('Could not find user for ' + uuid);
+                        return;
+                    }
+                    _api.removePageView(active_usr);
+                });
+            });
+        }
+    };
+
+    Object.keys(_api).forEach(function(method){
+        lazy_api[method] = (function(m){
             return function(){
-                if ( !redisclient ) {
-                    init_client();
+                try {
+                    if ( !redisclient ) {
+                        lazy_api.__init__();
+                    }
+                    var _args = Array.prototype.slice.call(arguments, 0);
+                    return _api[m].apply(_api, _args);
+                } catch(e) {
+                    console.error('Error executing redis[' + m + ']', e);
                 }
-                var _args = Array.prototype.slice.call(arguments,0);
-                return _lazy_api[method].apply(null, _args);
             }
         })(method);
-    }
-    return api;
+    });
+    return lazy_api;
 })();
 

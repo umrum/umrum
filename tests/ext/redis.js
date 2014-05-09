@@ -1,50 +1,80 @@
-/* global describe, it, beforeEach, afterEach, before, after */
+/* global describe, it, before, afterEach, beforeEach */
 
-var redisclient = require('../../app/config/redisclient');
-var sinon = require('sinon');
+var sinon = require('sinon'),
+    assert = require('assert'),
+    proxyquire = require('proxyquire');
 
-describe('Tests the redis ext module', function(){
-    var _redisApi = null,
-        _redisInit = null,
-        _fake_redis = {
-            on: function(){},
-            del: function(){},
-            hget: function(){},
-            hmset: function(){},
-            setex: function(){},
-            config: function(){},
-            hgetall: function(){},
-            hincrby: function(){},
-            zincrby: function(){},
-            psubscribe: function(){},
-            zrevrangebyscore: function(){}
-        },
-        mockRedis = null
-    ;
+describe('app/ext/redis', function(){
+    var configRedis = null,
+        mPipeline = null,
+        mPubSub = null,
+        mRedis = null,
+        _redisApi = null;
 
-    before(function(done){
-        _redisInit = sinon.stub(redisclient, 'init');
-        _redisInit.returns(_fake_redis);
-        _redisApi = require("../../app/ext/redis");
-        done();
+    before(function(){
+        mPipeline = {
+            del: sinon.stub(),
+            hmset: sinon.stub(),
+            setex: sinon.stub(),
+            hincrby: sinon.stub(),
+            zincrby: sinon.stub(),
+            exec: sinon.stub()
+        };
+        mRedis = {
+            on: sinon.stub(),
+            hget: sinon.stub(),
+            multi: sinon.stub().returns(mPipeline),
+            hgetall: sinon.stub(),
+            psubscribe: sinon.stub(),
+            zrevrangebyscore: sinon.stub()
+        };
+        mPubSub = {
+            on: sinon.stub(),
+            config: sinon.stub(),
+            psubscribe: sinon.stub(),
+        };
+
+        configRedis = { init: sinon.stub() };
+        configRedis.init.onFirstCall().returns(mRedis);
+        configRedis.init.onSecondCall().returns(mPubSub);
+
+        _redisApi = proxyquire('../../app/ext/redis', {
+            '../config/redisclient': configRedis
+        });
     });
 
-    after(function(done){
-        _redisInit.restore();
-        done();
+    afterEach(function(){
+        [mPipeline, mPubSub, mRedis].forEach(function(mock){
+            Object.keys(mock).forEach(function(method){
+                if ( mock.hasOwnProperty(method) ) {
+                    mock[method].reset();
+                }
+            });
+        });
     });
 
-    beforeEach(function(done){
-        mockRedis = sinon.mock(_fake_redis);
-        done();
+    it("#__init__", function(){
+        // execute
+        _redisApi.__init__();
+
+        /* MOCKs verifications */
+
+        assert.ok(mPubSub.config.calledOnce);
+        assert.ok(mPubSub.config.calledWithExactly(
+            'set', 'notify-keyspace-events', 'KEx'
+        ));
+
+        assert.ok(mPubSub.psubscribe.calledOnce);
+        assert.ok(mPubSub.psubscribe.calledAfter(mPubSub.config));
+        assert.ok(mPubSub.psubscribe.calledWithExactly(
+            '__keyevent*__:expired'
+        ));
+        assert.ok(mPubSub.on.calledOnce);
+        assert.ok(mPubSub.on.calledAfter(mPubSub.psubscribe));
+        assert.ok(mPubSub.on.calledWith('pmessage'));
     });
 
-    afterEach(function(done){
-        mockRedis.restore();
-        done();
-    });
-
-    describe('#getHosInfo', function(){
+    describe('#getHostInfo', function(){
         var zrevrangeCallbackArgumentIndex = 7,
             hgetCallbackArgumentIndex = 2,
             host = 'IDforTesthost.com',
@@ -71,156 +101,184 @@ describe('Tests the redis ext module', function(){
             return expectedHostInfo;
         };
 
-        beforeEach(function(done){
-            callback = sinon.mock();
-            done();
+        beforeEach(function(){
+            callback = sinon.spy();
         });
 
-        afterEach(function(done){
+        afterEach(function(){
             currentVisits = null;
             topPages = null;
             err = null;
-            done();
         });
 
         it('normal behavior', function() {
             currentVisits = '7';
             topPages = ['/', '5', '/d', '0', '/a', '2'];
 
-            mockRedis
-                .expects("zrevrangebyscore")
-                .once().withArgs(
-                    'toppages:'+host,
-                    '+inf', '-inf',
-                    'WITHSCORES',
-                    'LIMIT', 0, 10
-                )
-                .callsArgWith(zrevrangeCallbackArgumentIndex, null, topPages)
-            ;
-            mockRedis
-                .expects("hget")
-                .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
-            ;
+            /* callbacks excutions */
+            mRedis.hget.callsArgWith(
+                hgetCallbackArgumentIndex, null, currentVisits
+            );
+            mRedis.zrevrangebyscore.callsArgWith(
+                zrevrangeCallbackArgumentIndex, null, topPages
+            );
 
+            /* execute method */
             _redisApi.getHostInfo(host, callback);
 
-            mockRedis.verify();
-            sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(mRedis.zrevrangebyscore.calledOnce);
+            assert.ok(mRedis.zrevrangebyscore.calledWith(
+                'toppages:'+host,
+                '+inf', '-inf',
+                'WITHSCORES',
+                'LIMIT', 0, 10
+            ));
+
+            assert.ok(callback.calledOnce);
+            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
         });
 
         it('no results hget', function() {
+            /* callbacks excutions */
+            mRedis.hget.callsArgWith(
+                hgetCallbackArgumentIndex, null, currentVisits
+            );
 
-            mockRedis.expects("zrevrangebyscore").never();
-            mockRedis
-                .expects("hget")
-                .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
-            ;
-
+            /* execute method */
             _redisApi.getHostInfo(host, callback);
 
-            mockRedis.verify();
-            sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(!mRedis.zrevrangebyscore.called);
+
+            assert.ok(callback.calledOnce);
+            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
         });
 
         it('error in hget', function() {
             err = {error: 'some error'};
 
-            mockRedis.expects("zrevrangebyscore").never();
-            mockRedis
-                .expects("hget")
-                .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hgetCallbackArgumentIndex, err, null)
-            ;
+            /* callbacks excutions */
+            mRedis.hget.callsArgWith(
+                hgetCallbackArgumentIndex, err, null
+            );
 
+            /* execute method */
             _redisApi.getHostInfo(host, callback);
 
-            mockRedis.verify();
-            sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(!mRedis.zrevrangebyscore.called);
+
+            assert.ok(callback.calledOnce);
+            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
+
         });
 
         it('no result in zrevrangebyscore', function() {
             currentVisits = '7';
 
-            mockRedis
-                .expects("zrevrangebyscore")
-                .once().withArgs(
-                    'toppages:'+host,
-                    '+inf', '-inf',
-                    'WITHSCORES',
-                    'LIMIT', 0, 10
-                )
-                .callsArgWith(zrevrangeCallbackArgumentIndex, null, topPages)
-            ;
-            mockRedis
-                .expects("hget")
-                .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
-            ;
+            /* callbacks excutions */
+            mRedis.hget.callsArgWith(
+                hgetCallbackArgumentIndex, null, currentVisits
+            );
+            mRedis.zrevrangebyscore.callsArgWith(
+                zrevrangeCallbackArgumentIndex, null, topPages
+            );
 
+            /* execute method */
             _redisApi.getHostInfo(host, callback);
 
-            mockRedis.verify();
-            sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(mRedis.zrevrangebyscore.calledOnce);
+            assert.ok(mRedis.zrevrangebyscore.calledWith(
+                'toppages:'+host,
+                '+inf', '-inf',
+                'WITHSCORES',
+                'LIMIT', 0, 10
+            ));
+
+            assert.ok(callback.calledOnce);
+            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
         });
 
         it('empty result in zrevrangebyscore', function() {
             currentVisits = '7';
             topPages = [];
 
-            mockRedis
-                .expects("zrevrangebyscore")
-                .once().withArgs(
-                    'toppages:'+host,
-                    '+inf', '-inf',
-                    'WITHSCORES',
-                    'LIMIT', 0, 10
-                )
-                .callsArgWith(zrevrangeCallbackArgumentIndex, null, topPages)
-            ;
-            mockRedis
-                .expects("hget")
-                .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
-            ;
+            /* callbacks excutions */
+            mRedis.hget.callsArgWith(
+                hgetCallbackArgumentIndex, null, currentVisits
+            );
+            mRedis.zrevrangebyscore.callsArgWith(
+                zrevrangeCallbackArgumentIndex, null, topPages
+            );
 
+            /* execute method */
             _redisApi.getHostInfo(host, callback);
 
-            mockRedis.verify();
-            sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(mRedis.zrevrangebyscore.calledOnce);
+            assert.ok(mRedis.zrevrangebyscore.calledWith(
+                'toppages:'+host,
+                '+inf', '-inf',
+                'WITHSCORES',
+                'LIMIT', 0, 10
+            ));
+
+            assert.ok(callback.calledOnce);
+            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
         });
 
         it('error in zrevrangebyscore', function() {
             err = {error: 'some error'};
             currentVisits = '7';
 
-            mockRedis
-                .expects("zrevrangebyscore")
-                .once().withArgs(
-                    'toppages:'+host,
-                    '+inf', '-inf',
-                    'WITHSCORES',
-                    'LIMIT', 0, 10
-                )
-                .callsArgWith(zrevrangeCallbackArgumentIndex, err, null)
-            ;
-            mockRedis
-                .expects("hget")
-                .once().withArgs(host, 'curr_visits')
-                .callsArgWith(hgetCallbackArgumentIndex, null, currentVisits)
-            ;
+            /* callbacks excutions */
+            mRedis.hget.callsArgWith(
+                hgetCallbackArgumentIndex, null, currentVisits
+            );
+            mRedis.zrevrangebyscore.callsArgWith(
+                zrevrangeCallbackArgumentIndex, err, null
+            );
 
+            /* execute method */
             _redisApi.getHostInfo(host, callback);
 
-            mockRedis.verify();
-            sinon.assert.calledOnce(callback);
-            sinon.assert.calledWith(callback, err, _calculate_hostInfo());
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(mRedis.zrevrangebyscore.calledOnce);
+            assert.ok(mRedis.zrevrangebyscore.calledWith(
+                'toppages:'+host,
+                '+inf', '-inf',
+                'WITHSCORES',
+                'LIMIT', 0, 10
+            ));
+
+            assert.ok(callback.calledOnce);
+            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
         });
     });
 
@@ -232,29 +290,42 @@ describe('Tests the redis ext module', function(){
                 'url': '/path1'
             };
 
-            mockRedis
-                .expects('hgetall')
-                    .once()
-                    .withArgs(active_user.uid)
-                    .callsArgWith(1, undefined, null);
+            /* callbacks excutions */
+            mRedis.hgetall.callsArgWith(1, undefined, null);
 
-            mockRedis.expects('setex').once().withArgs(
-                'expusr-'+active_user.uid, 300, 1
-            );
-
-            mockRedis.expects('hmset').once().withArgs(
-                active_user.uid, active_user
-            );
-            mockRedis.expects('hincrby').once().withArgs(
-                active_user.hostId, 'curr_visits', 1
-            );
-            mockRedis.expects('zincrby').once().withArgs(
-                'toppages:'+active_user.hostId, 1, active_user.url
-            );
-
+            /* execute method */
             _redisApi.registerPageView(active_user);
 
-            mockRedis.verify();
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hgetall.calledOnce);
+            assert.ok(mRedis.hgetall.calledWith(active_user.uid));
+
+            assert.ok(mRedis.multi.calledOnce);
+
+            assert.ok(mPipeline.hmset.calledOnce);
+            assert.ok(mPipeline.hmset.calledWith(
+                active_user.uid, active_user
+            ));
+
+            assert.ok(mPipeline.hincrby.calledOnce);
+            assert.ok(mPipeline.hincrby.calledWith(
+                active_user.hostId, 'curr_visits', 1
+            ));
+
+            assert.ok(mPipeline.zincrby.calledOnce);
+            assert.ok(mPipeline.zincrby.calledWith(
+                'toppages:'+active_user.hostId, 1, active_user.url
+            ));
+
+            assert.ok(mPipeline.setex.calledOnce);
+            assert.ok(mPipeline.setex.calledAfter(mPipeline.zincrby));
+            assert.ok(mPipeline.setex.calledWith(
+                'expusr-'+active_user.uid, 300, 1
+            ));
+
+            assert.ok(mPipeline.exec.calledOnce);
+            assert.ok(mPipeline.exec.calledAfter(mPipeline.setex));
         });
 
         it('old user changed page', function() {
@@ -269,28 +340,38 @@ describe('Tests the redis ext module', function(){
                     'url': '/path0'
                 };
 
-            mockRedis
-                .expects('hgetall')
-                    .once()
-                    .withArgs(active_user.uid)
-                    .callsArgWith(1, undefined, old_user);
+            /* callbacks excutions */
+            mRedis.hgetall.callsArgWith(1, undefined, old_user);
 
-            mockRedis.expects('setex').once().withArgs(
-                'expusr-'+active_user.uid, 300, 1
-            );
-
-            mockRedis.expects('hmset').never();
-            mockRedis.expects('hincrby').never();
-            mockRedis.expects('zincrby').once().withArgs(
-                'toppages:'+old_user.hostId, -1, old_user.url
-            );
-            mockRedis.expects('zincrby').once().withArgs(
-                'toppages:'+active_user.hostId, 1, active_user.url
-            );
-
+            /* execute method */
             _redisApi.registerPageView(active_user);
 
-            mockRedis.verify();
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hgetall.calledOnce);
+            assert.ok(mRedis.hgetall.calledWith(active_user.uid));
+
+            assert.ok(mRedis.multi.calledOnce);
+
+            assert.ok(!mPipeline.hmset.called);
+            assert.ok(!mPipeline.hincrby.called);
+
+            assert.ok(mPipeline.zincrby.calledTwice);
+            assert.ok(mPipeline.zincrby.firstCall.args, [
+                'toppages:'+active_user.hostId, -1, active_user.url
+            ]);
+            assert.ok(mPipeline.zincrby.secondCall.args, [
+                'toppages:'+active_user.hostId, 1, active_user.url
+            ]);
+
+            assert.ok(mPipeline.setex.calledOnce);
+            assert.ok(mPipeline.setex.calledAfter(mPipeline.zincrby));
+            assert.ok(mPipeline.setex.calledWith(
+                'expusr-'+active_user.uid, 300, 1
+            ));
+
+            assert.ok(mPipeline.exec.calledOnce);
+            assert.ok(mPipeline.exec.calledAfter(mPipeline.setex));
         });
     });
 
@@ -302,23 +383,34 @@ describe('Tests the redis ext module', function(){
                 'url': '/path1'
             };
 
-            mockRedis
-                .expects('hgetall')
-                    .once()
-                    .withArgs(active_user.uid)
-                    .callsArgWith(1, undefined, active_user);
+            /* callbacks excutions */
+            mRedis.hgetall.callsArgWith(1, undefined, active_user);
 
-            mockRedis.expects('del').once().withArgs(active_user.uid);
-            mockRedis.expects('hincrby').once().withArgs(
-                active_user.hostId, 'curr_visits', -1
-            );
-            mockRedis.expects('zincrby').once().withArgs(
-                'toppages:'+active_user.hostId, -1, active_user.url
-            );
-
+            /* execute method */
             _redisApi.removePageView(active_user);
 
-            mockRedis.verify();
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hgetall.calledOnce);
+            assert.ok(mRedis.hgetall.calledWith(active_user.uid));
+
+            assert.ok(mRedis.multi.calledOnce);
+
+            assert.ok(mPipeline.del.calledOnce);
+            assert.ok(mPipeline.del.calledWith(active_user.uid));
+
+            assert.ok(mPipeline.hincrby.calledOnce);
+            assert.ok(mPipeline.hincrby.calledWith(
+                active_user.hostId, 'curr_visits', -1
+            ));
+
+            assert.ok(mPipeline.zincrby.calledOnce);
+            assert.ok(mPipeline.zincrby.calledWith(
+                'toppages:'+active_user.hostId, -1, active_user.url
+            ));
+
+            assert.ok(mPipeline.exec.calledOnce);
+            assert.ok(mPipeline.exec.calledAfter(mPipeline.zincrby));
         });
 
         it('old_usr doesnt exists', function() {
@@ -328,19 +420,22 @@ describe('Tests the redis ext module', function(){
                 'url': '/path1'
             };
 
-            mockRedis
-                .expects('hgetall')
-                    .once()
-                    .withArgs(active_user.uid)
-                    .callsArgWith(1, undefined, null);
+            /* callbacks excutions */
+            mRedis.hgetall.callsArgWith(1, undefined, null);
 
-            mockRedis.expects('del').never();
-            mockRedis.expects('hincrby').never();
-            mockRedis.expects('zincrby').never();
-
+            /* execute method */
             _redisApi.removePageView(active_user);
 
-            mockRedis.verify();
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hgetall.calledOnce);
+            assert.ok(mRedis.hgetall.calledWith(active_user.uid));
+
+            assert.ok(!mRedis.multi.called);
+            assert.ok(!mPipeline.del.called);
+            assert.ok(!mPipeline.hincrby.called);
+            assert.ok(!mPipeline.zincrby.called);
+            assert.ok(!mPipeline.exec.called);
         });
 
         it('old_usr different URL from active_usr', function() {
@@ -355,19 +450,22 @@ describe('Tests the redis ext module', function(){
                     'url': '/path2'
                 };
 
-            mockRedis
-                .expects('hgetall')
-                    .once()
-                    .withArgs(active_user.uid)
-                    .callsArgWith(1, undefined, old_usr);
+            /* callbacks excutions */
+            mRedis.hgetall.callsArgWith(1, undefined, old_usr);
 
-            mockRedis.expects('del').never();
-            mockRedis.expects('hincrby').never();
-            mockRedis.expects('zincrby').never();
-
+            /* execute method */
             _redisApi.removePageView(active_user);
 
-            mockRedis.verify();
+            /* MOCKs verifications */
+
+            assert.ok(mRedis.hgetall.calledOnce);
+            assert.ok(mRedis.hgetall.calledWith(active_user.uid));
+
+            assert.ok(!mRedis.multi.called);
+            assert.ok(!mPipeline.del.called);
+            assert.ok(!mPipeline.hincrby.called);
+            assert.ok(!mPipeline.zincrby.called);
+            assert.ok(!mPipeline.exec.called);
         });
     });
 });
