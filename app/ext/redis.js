@@ -79,7 +79,6 @@ var _api = {
 
             if (!old_usr) {
                 console.log('new active user', active_user);
-                multi.hmset(active_user.uid, active_user);
                 multi.hincrby(active_user.hostId, 'curr_visits', 1);
                 multi.zincrby(toppagesKey, 1, active_user.url);
             } else if (old_usr.url != active_user.url) {
@@ -87,6 +86,7 @@ var _api = {
                 multi.zincrby(toppagesKey, -1, old_usr.url);
                 multi.zincrby(toppagesKey, 1, active_user.url);
             }
+            multi.hmset(active_user.uid, active_user);
             multi.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
             multi.exec(console.log);
         });

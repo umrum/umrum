@@ -303,11 +303,6 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(mPipeline.hmset.calledOnce);
-            assert.ok(mPipeline.hmset.calledWith(
-                active_user.uid, active_user
-            ));
-
             assert.ok(mPipeline.hincrby.calledOnce);
             assert.ok(mPipeline.hincrby.calledWith(
                 active_user.hostId, 'curr_visits', 1
@@ -318,8 +313,13 @@ describe('app/ext/redis', function(){
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
+            assert.ok(mPipeline.hmset.calledOnce);
+            assert.ok(mPipeline.hmset.calledWith(
+                active_user.uid, active_user
+            ));
+
             assert.ok(mPipeline.setex.calledOnce);
-            assert.ok(mPipeline.setex.calledAfter(mPipeline.zincrby));
+            assert.ok(mPipeline.setex.calledAfter(mPipeline.hmset));
             assert.ok(mPipeline.setex.calledWith(
                 'expusr-'+active_user.uid, 300, 1
             ));
@@ -353,7 +353,6 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(!mPipeline.hmset.called);
             assert.ok(!mPipeline.hincrby.called);
 
             assert.ok(mPipeline.zincrby.calledTwice);
@@ -364,8 +363,13 @@ describe('app/ext/redis', function(){
                 'toppages:'+active_user.hostId, 1, active_user.url
             ]);
 
+            assert.ok(mPipeline.hmset.calledOnce);
+            assert.ok(mPipeline.hmset.calledWith(
+                active_user.uid, active_user
+            ));
+
             assert.ok(mPipeline.setex.calledOnce);
-            assert.ok(mPipeline.setex.calledAfter(mPipeline.zincrby));
+            assert.ok(mPipeline.setex.calledAfter(mPipeline.hmset));
             assert.ok(mPipeline.setex.calledWith(
                 'expusr-'+active_user.uid, 300, 1
             ));
