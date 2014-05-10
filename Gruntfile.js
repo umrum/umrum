@@ -23,8 +23,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'public/js/core.min.js': [
-                        'src/js/libs/modernizr-2.6.3.js',
-                        'src/js/libs/jquery-1.10.2.js',
+                        'bower_modules/modernizr/modernizr.js',
+                        'bower_modules/jquery/jquery.js',
                     ]
                 }
             },
@@ -49,8 +49,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'public/js/application.min.js': [
-                        'src/js/libs/handlebars.runtime-v1.3.0.js',
-                        'src/js/libs/ember.1.5.1.js',
+                        'bower_modules/handlebars/handlebars.runtime.js',
+                        'bower_modules/ember/ember.js',
                         'src/js/app.js',
                         'src/js/views/dashboard.js',
                     ]
@@ -229,7 +229,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
 
-    grunt.registerTask('minjs', ['uglify']);
+    grunt.registerTask('minjs', ['bower:install','uglify']);
     grunt.registerTask('mincss', ['less', 'autoprefixer']);
     grunt.registerTask('copy-static', ['copy:imgs', 'copy:fonts']);
 
