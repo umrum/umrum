@@ -132,6 +132,17 @@ module.exports = function(grunt) {
                 dest: 'public/fonts'
             }
         },
+        bower: {
+            install: {
+                options: {
+                    install: true,
+                    cleanup: true,
+                    verbose: true,
+                    layout: 'byType',
+                    targetDir: './bower_modules'
+                }
+            }
+        },
         mochacli: {
             files: 'tests/',
             options: {
@@ -216,6 +227,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-bower-installer');
 
     grunt.registerTask('minjs', ['uglify']);
     grunt.registerTask('mincss', ['less', 'autoprefixer']);

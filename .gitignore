@@ -5,3 +5,4 @@ dump.rdb
 deploy.conf
 start-umrum
 public
+bower_modules
