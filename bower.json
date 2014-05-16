@@ -10,9 +10,6 @@
   "exportsOverride": {
     "handlebars": {
       "./": "handlebars.runtime.js"
-    },
-    "modernizr": {
-      "./": "modernizr.js"
     }
   }
 }
