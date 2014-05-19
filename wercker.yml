@@ -25,7 +25,6 @@ deploy:
             content: |
                 [wercker]
                 key $PRIVATEKEY_PATH
-                forward-agent yes
                 user $DEPLOY_USER
                 host $PRODUCTION_HOST
                 repo git@github.com:frontendbahia/umrum.git
