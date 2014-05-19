@@ -5,11 +5,15 @@
     "jquery": "1.10.2",
     "ember": "1.5.1",
     "modernizr": "2.6.3",
-    "handlebars": "1.3.0"
+    "handlebars": "1.3.0",
+    "bootstrap": "3.0.2"
   },
   "exportsOverride": {
     "handlebars": {
       "./": "handlebars.runtime.js"
+    },
+    "bootstrap": {
+      "./": ["less/*.less", "js/*.js"]
     }
   }
 }

@@ -100,9 +100,9 @@ module.exports = function(grunt) {
                     compress: true,
                 },
                 files: {
-                    'public/css/main.min.css': ['src/less/bootstrap.less'],
-                    'public/css/site.min.css': ['src/less/site.less'],
-                    'public/css/admin.min.css': ['src/less/admin.less']
+                    'public/css/main.min.css': ['.less_compile/bootstrap.less'],
+                    'public/css/site.min.css': ['.less_compile/site.less'],
+                    'public/css/admin.min.css': ['.less_compile/admin.less']
                 }
             }
         },
@@ -130,7 +130,24 @@ module.exports = function(grunt) {
                 cwd: 'src/fonts/',
                 src: '**',
                 dest: 'public/fonts'
+            },
+            bootstrapLess: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'bower_modules/bootstrap/',
+                        src: '*.less',
+                        dest: '.less_compile'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'src/less/',
+                        src: '**',
+                        dest: '.less_compile'
+                    }
+                ]
             }
+
         },
         bower: {
             install: {
@@ -138,7 +155,6 @@ module.exports = function(grunt) {
                     install: true,
                     cleanup: true,
                     verbose: true,
-                    layout: 'byType',
                     targetDir: './bower_modules'
                 }
             }
@@ -230,7 +246,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bower-installer');
 
     grunt.registerTask('minjs', ['bower:install','uglify']);
-    grunt.registerTask('mincss', ['less', 'autoprefixer']);
+    grunt.registerTask('mincss', ['copy:bootstrapLess', 'less', 'autoprefixer']);
     grunt.registerTask('copy-static', ['copy:imgs', 'copy:fonts']);
 
     grunt.registerTask('compile', ['copy-static', 'mincss', 'minjs']);
