@@ -13,7 +13,7 @@
       "./": "handlebars.runtime.js"
     },
     "bootstrap": {
-      "./": ["less/*.less", "js/*.js"]
+      "./": ["less/*.less", "dist/js/bootstrap.js"]
     }
   }
 }

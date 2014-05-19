@@ -36,7 +36,7 @@ module.exports = function(grunt) {
                 files: {
                     'public/js/site.min.js': [
                         'src/js/plugins/*.js',
-                        'src/js/app/bootstrap.js',
+                        'bower_modules/bootstrap/bootstrap.js',
                         'src/js/app/landing-page.js',
                         'src/js/app/chart.js'
                     ]
