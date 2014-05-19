@@ -154,7 +154,7 @@ module.exports = function(grunt) {
                 options: {
                     install: true,
                     cleanup: true,
-                    verbose: true,
+                    verbose: false,
                     targetDir: './bower_modules'
                 }
             }
@@ -245,11 +245,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
 
-    grunt.registerTask('minjs', ['bower:install','uglify']);
-    grunt.registerTask('mincss', ['copy:bootstrapLess', 'less', 'autoprefixer']);
+    // private tasks
+    grunt.registerTask('_minjs', ['uglify']);
+    grunt.registerTask('_lessc', ['copy:bootstrapLess', 'less', 'autoprefixer']);
+
+    grunt.registerTask('minjs', ['bower:install', '_minjs']);
+    grunt.registerTask('mincss', ['bower:install', '_lessc']);
     grunt.registerTask('copy-static', ['copy:imgs', 'copy:fonts']);
 
-    grunt.registerTask('compile', ['copy-static', 'mincss', 'minjs']);
+    grunt.registerTask('compile', ['bower:install', 'copy-static', '_lessc', '_minjs']);
 
     grunt.registerTask('unittest', ['jshint', 'mochacli']);
 
