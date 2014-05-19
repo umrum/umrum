@@ -6,3 +6,4 @@ deploy.conf
 start-umrum
 public
 bower_modules
+.less_compile
