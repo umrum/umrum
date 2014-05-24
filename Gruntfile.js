@@ -125,11 +125,21 @@ module.exports = function(grunt) {
                 src: '**',
                 dest: 'public/img'
             },
-            fonts: {
-                expand: true,
-                cwd: 'src/fonts/',
-                src: '**',
-                dest: 'public/fonts'
+            fontawesome: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'bower_modules/fontawesome/fonts/',
+                        src: '*',
+                        dest: 'public/fonts'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_modules/fontawesome/less/',
+                        src: '*',
+                        dest: '.less_compile/font-awesome/'
+                    },
+                ]
             },
             bootstrapLess: {
                 files: [
@@ -251,7 +261,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('minjs', ['bower:install', '_minjs']);
     grunt.registerTask('mincss', ['bower:install', '_lessc']);
-    grunt.registerTask('copy-static', ['copy:imgs', 'copy:fonts']);
+    grunt.registerTask('copy-static', ['copy:imgs', 'copy:fontawesome']);
 
     grunt.registerTask('compile', ['bower:install', 'copy-static', '_lessc', '_minjs']);
 
