@@ -28,7 +28,7 @@ deploy:
                 user $DEPLOY_USER
                 host $PRODUCTION_HOST
                 port $PRODUCTION_SSH_PORT
-                repo git@github.com:frontendbahia/umrum.git
+                repo git@github.com:onerum/umrum.git
                 ref origin/master
                 path $DEPLOY_HOME
                 post-deploy npm install && ./node_modules/.bin/grunt compile && sv restart serverjs
