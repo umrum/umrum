@@ -7,10 +7,6 @@ module.exports.index = function(req, res) {
     res.renderMinified('index.html');
 };
 
-module.exports.tester = function(req, res) {
-    res.renderMinified('teste.html');
-};
-
 module.exports.gettingStarted = function(req, res) {
     res.renderMinified('getting-started.html');
 };
