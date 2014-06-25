@@ -4,7 +4,8 @@ var assert = require('assert'),
     sinon = require('sinon'),
     proxyquire = require('proxyquire'),
     env = require('../app/config/env'),
-    path = require('path')
+    path = require('path'),
+    renderMinified = require('../app/config/middlewares/render-minified')
 ;
 
 describe('server.js', function(){
@@ -39,6 +40,7 @@ describe('server.js', function(){
             'passport': {initialize: sinon.spy(), session: sinon.spy()},
             'socket.io': {listen: sinon.stub().returns(io)},
             'filewalker': sinon.stub().returns(walker),
+            'renderMinified': sinon.stub(renderMinified, 'htmlMinify'),
 
             './app/config/authentication': sinon.spy(),
 
@@ -104,6 +106,10 @@ describe('server.js', function(){
         assert(express_app.engine.calledWithExactly(
             'html', srv_requires.nunjucks.render
         ));
+    });
+
+    it ('ensure html minification is being called', function() {
+        assert( srv_requires['renderMinified'].called );
     });
 
     it('express configure method#use', function() {
