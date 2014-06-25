@@ -14,7 +14,6 @@
   "dependencies": {
     "nunjucks": "~1.0.0",
     "express": "~3.4.4",
-    "connect": "latest",
     "redis": "~0.10.1",
     "mongoose": "~3.8.3",
     "passport": "~0.2.0",
