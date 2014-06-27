@@ -4,25 +4,25 @@
 var mongoose = require('mongoose');
 
 module.exports.index = function(req, res) {
-    res.renderMinified('index.html');
+    res.render('index.html');
 };
 
 module.exports.gettingStarted = function(req, res) {
-    res.renderMinified('getting-started.html');
+    res.render('getting-started.html');
 };
 
 module.exports.documentation = function(req, res) {
-    res.renderMinified('documentation.html');
+    res.render('documentation.html');
 };
 
 module.exports.support = function(req, res) {
-    res.renderMinified('support.html');
+    res.render('support.html');
 };
 
 module.exports.termsOfService = function(req, res) {
-    res.renderMinified('terms-of-service.html');
+    res.render('terms-of-service.html');
 };
 
 module.exports.privacyPolicy = function(req, res) {
-    res.renderMinified('privacy-policy.html');
+    res.render('privacy-policy.html');
 };

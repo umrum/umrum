@@ -4,8 +4,7 @@ var assert = require('assert'),
     sinon = require('sinon'),
     proxyquire = require('proxyquire'),
     env = require('../app/config/env'),
-    path = require('path'),
-    renderMinified = require('../app/config/middlewares/render-minified')
+    path = require('path')
 ;
 
 describe('server.js', function(){
@@ -13,7 +12,8 @@ describe('server.js', function(){
         walker,
         express_app,
         srv_requires,
-        express_listening;
+        express_listening,
+        minifyMock;
 
     before(function() {
         express_listening = Math.random();
@@ -25,6 +25,9 @@ describe('server.js', function(){
             router: Math.random(),
             locals: {}
         };
+
+        minifyMock = sinon.spy();
+        minifyMock['@noCallThru'] = true;
 
         io = {set: sinon.spy()};
         walker = {
@@ -40,9 +43,9 @@ describe('server.js', function(){
             'passport': {initialize: sinon.spy(), session: sinon.spy()},
             'socket.io': {listen: sinon.stub().returns(io)},
             'filewalker': sinon.stub().returns(walker),
-            'renderMinified': sinon.stub(renderMinified, 'htmlMinify'),
 
             './app/config/authentication': sinon.spy(),
+            './app/config/middlewares/render-minified': minifyMock,
 
             './app/routes/api': sinon.spy(),
             './app/routes/index': sinon.spy(),
@@ -109,7 +112,8 @@ describe('server.js', function(){
     });
 
     it ('ensure html minification is being called', function() {
-        assert( srv_requires['renderMinified'].called );
+        //assert( express_app.use.calledWith(render_minified_spy) );
+        assert( express_app.use.calledWith(minifyMock) );
     });
 
     it('express configure method#use', function() {

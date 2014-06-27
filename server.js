@@ -68,7 +68,7 @@ app.use(passport.session());
 authConfig(passport, env);
 
 // new response render which passes html-minifier as callback to express render engine
-app.use(renderMinified.htmlMinify());
+app.use(renderMinified);
 
 // static routes
 app.use(app.locals.assetsURL, express.static(env.assetsPath, {maxAge: oneDay}));
