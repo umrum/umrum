@@ -112,7 +112,6 @@ describe('server.js', function(){
     });
 
     it ('ensure html minification is being called', function() {
-        //assert( express_app.use.calledWith(render_minified_spy) );
         assert( express_app.use.calledWith(minifyMock) );
     });
 
