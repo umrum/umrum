@@ -12,7 +12,8 @@ describe('server.js', function(){
         walker,
         express_app,
         srv_requires,
-        express_listening;
+        express_listening,
+        minifyMock;
 
     before(function() {
         express_listening = Math.random();
@@ -24,6 +25,9 @@ describe('server.js', function(){
             router: Math.random(),
             locals: {}
         };
+
+        minifyMock = sinon.spy();
+        minifyMock['@noCallThru'] = true;
 
         io = {set: sinon.spy()};
         walker = {
@@ -41,6 +45,7 @@ describe('server.js', function(){
             'filewalker': sinon.stub().returns(walker),
 
             './app/config/authentication': sinon.spy(),
+            './app/config/middlewares/render-minified': minifyMock,
 
             './app/routes/api': sinon.spy(),
             './app/routes/index': sinon.spy(),
@@ -104,6 +109,10 @@ describe('server.js', function(){
         assert(express_app.engine.calledWithExactly(
             'html', srv_requires.nunjucks.render
         ));
+    });
+
+    it ('ensure html minification is being called', function() {
+        assert( express_app.use.calledWith(minifyMock) );
     });
 
     it('express configure method#use', function() {

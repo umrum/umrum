@@ -23,7 +23,8 @@
     "newrelic": "~1.5.0",
     "hiredis": "~0.1.16",
     "socket.io": "~0.9.16",
-    "filewalker": "~0.1.2"
+    "filewalker": "~0.1.2",
+    "html-minifier": "0.6.2"
   },
   "engines": {
     "node": "0.10.x"

@@ -10,6 +10,7 @@ var express = require('express'),
     filewalker = require('filewalker'),
     mongoose = require('mongoose'),
     nunjucks = require('nunjucks'),
+    renderMinified = require('./app/config/middlewares/render-minified'),
     passport = require('passport'),
     authConfig = require('./app/config/authentication')
 ;
@@ -65,6 +66,9 @@ app.use(express.session({ secret: 'umrum-ftw' }));
 app.use(passport.initialize());
 app.use(passport.session());
 authConfig(passport, env);
+
+// new response render which passes html-minifier as callback to express render engine
+app.use(renderMinified);
 
 // static routes
 app.use(app.locals.assetsURL, express.static(env.assetsPath, {maxAge: oneDay}));
