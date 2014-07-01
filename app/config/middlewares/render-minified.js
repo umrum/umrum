@@ -12,10 +12,10 @@ var Minifier = require('html-minifier');
 * @param {Object} options
 */
 
-module.exports = exports = function(req, res, next) {
-    var render = res.render;
+module.exports = function(req, res, next) {
+    res.oldRender = res.render;
     res.render = function(view, options) {
-        render.call(this, view, options, function(err, html) {
+        this.oldRender(view, options, function(err, html) {
             if (err) throw err;
             html = Minifier.minify(html, {
                 removeComments: true,
