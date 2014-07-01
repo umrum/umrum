@@ -17,7 +17,7 @@ $ grunt server
 ### Running Grunt before commit
 
 ```
-$ echo "grunt || exit 1" > .git/hooks/pre-commit
+$ echo "grunt unittest || exit 1" > .git/hooks/pre-commit
 $ chmod +x .git/hooks/pre-commit
 ```
 
