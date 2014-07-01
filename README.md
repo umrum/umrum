@@ -4,7 +4,7 @@ An open source Real User Monitoring built using NodeJS.
 ### Install, configure and run
 
 ```
-$ git clone https://github.com/frontendbahia/umrum.git
+$ git clone https://github.com/umrum/umrum.git
 $ cd umrum
 $ npm install
 $ grunt server
@@ -28,5 +28,5 @@ $ grunt unittest
 ```
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/frontendbahia/umrum/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/umrum/umrum/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

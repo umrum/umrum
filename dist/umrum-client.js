@@ -26,7 +26,7 @@
 
     // def 1rum API
     var _1rumAPI = {
-        API_URL: 'http://umrum.frontendbahia.com/api',
+        API_URL: 'http://umrum.io/api',
         elementID: '__1rumAPI',
         element: null,
         init: function(){

@@ -16,7 +16,7 @@ describe('Tests the index route', function(){
 });
 
 describe('Tests api routes', function(){
-    var encodedUrl = 'https%3A%2F%2Fgithub.com%2Ffrontendbahia',
+    var encodedUrl = 'https%3A%2F%2Fgithub.com%2Fumrum',
         hostId = 'HOST_ID_3233',
         uid = 'UID-78946';
 

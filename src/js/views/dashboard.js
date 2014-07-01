@@ -1,4 +1,4 @@
 (function(view) {
-    var OneRumApp = window.OneRumApp;
-    OneRumApp.DashboardView = view.extend();
+    var UMRUMApp = window.UMRUMApp;
+    UMRUMApp.DashboardView = view.extend();
 })(Ember.View)

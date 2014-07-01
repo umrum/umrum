@@ -1,3 +1,3 @@
 (function(app){
-    window.OneRumApp = app.create();
+    window.UMRUMApp = app.create();
 })(Ember.Application);
