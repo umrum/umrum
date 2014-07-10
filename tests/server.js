@@ -51,31 +51,18 @@ describe('server.js', function(){
             './app/routes/index': sinon.spy(),
             './app/routes/errors': sinon.spy(),
             './app/routes/dashboard': sinon.spy(),
-            './app/routes/authentication': sinon.spy()
+            './app/routes/authentication': sinon.spy(),
+
+            'compression': sinon.stub().returns('compression'),
+            'morgan': sinon.stub().returns('morgan'),
+            'body-parser': {
+                json: sinon.stub().returns('body-parser-json'),
+                urlencoded: sinon.stub().returns('body-parser-urlencoded')
+            },
+            'cookie-parser': sinon.stub().returns('cookie-parser'),
+            'express-session': sinon.stub().returns('express-session'),
+            'serve-static': sinon.stub().returnsArg(0)
         };
-
-        var express_methods = [
-            'json',
-            'logger',
-            'static',
-            'session',
-            'favicon',
-            'compress',
-            'urlencoded',
-            'cookieParser',
-        ];
-        for (var idx in express_methods) {
-            var method = express_methods[idx];
-            var result = Math.random()+idx;
-            srv_requires.express[method+'-rs'] = result;
-            srv_requires.express[method] = sinon.stub().returns(result);
-        }
-
-        for (var key in srv_requires) {
-            if (srv_requires.hasOwnProperty(key)) {
-                srv_requires[key]['@noCallThru'] = true;
-            }
-        }
 
         // run server.js
         proxyquire('../server', srv_requires);
@@ -117,31 +104,59 @@ describe('server.js', function(){
 
     it('express configure method#use', function() {
 
+        var cookieParser = srv_requires['cookie-parser'],
+            serveStatic = srv_requires['serve-static'],
+            compression = srv_requires['compression'],
+            bodyParser = srv_requires['body-parser'],
+            session = srv_requires['express-session'],
+            morgan = srv_requires['morgan'];
+
         // ensure that first call of app.use is express.compress
-        express_app.use.getCall(0).calledWithExactly(
-            srv_requires.express['compress-rs']
-        );
+        assert(express_app.use.getCall(0).calledWithExactly('compression'));
+        assert(compression.calledWithExactly());
 
-        var simple_exp_methods = [
-            'json',
-            'logger',
-            'favicon',
-            'session',
-            'compress',
-            'urlencoded',
-            'cookieParser'
-        ];
-        for (var idx in simple_exp_methods) {
-            var method = simple_exp_methods[idx];
-            var use_method = express_app.use.withArgs(
-                srv_requires.express[method+'-rs']
-            );
-            assert(srv_requires.express[method].calledOnce);
-            assert(use_method.calledOnce);
-            assert(use_method.calledAfter(srv_requires.express[method]));
-        }
+        assert(express_app.use.withArgs('morgan').calledOnce);
+        assert(morgan.calledOnce);
+        assert.equal(morgan.firstCall.args.length, 1);
+        assert.deepEqual(Object.keys(morgan.firstCall.args[0]), [
+            'format',
+            'buffer',
+            'skip'
+        ]);
+        assert.equal(morgan.firstCall.args[0].format, [
+          ':date',
+          '(:req[X-Forwarded-For], :remote-addr)',
+          ':method | :url | :user-agent',
+          ':response-time ms'
+        ].join(' - '));
+        assert.equal(morgan.firstCall.args[0].buffer, 200);
+        assert(morgan.firstCall.args[0].skip instanceof Function);
 
-        assert(srv_requires.express.session.calledWith({secret: 'umrum-ftw'}));
+        assert(express_app.use.withArgs('body-parser-json').calledOnce);
+        assert(bodyParser.json.calledWithExactly());
+
+        assert(express_app.use.withArgs('body-parser-urlencoded').calledOnce);
+        assert(bodyParser.urlencoded.calledWithExactly({extended: false}));
+
+        assert(express_app.use.withArgs('cookie-parser').calledOnce);
+        assert(cookieParser.calledWithExactly('umrum-cookie-key'));
+
+        assert(express_app.use.withArgs('express-session').calledOnce);
+        assert(session.calledWithExactly({
+            saveUninitialized: true, resave: true, secret: 'umrum-session-key'
+        }));
+
+        assert(serveStatic.calledTwice);
+        assert(serveStatic.calledWithExactly(
+            env.assetsPath,
+            {maxAge: 24*60*60*1000}
+        ));
+        assert(serveStatic.calledWithExactly(
+            path.join(__dirname, '..', 'dist')
+        ));
+
+        assert(express_app.use.withArgs(env.assetsURL, env.assetsPath).calledOnce);
+        assert(express_app.use.withArgs('/dist/', path.join(__dirname, '..', 'dist')).calledOnce);
     });
 
     it('routes configurations', function() {
@@ -150,41 +165,11 @@ describe('server.js', function(){
             express_app, srv_requires.passport
         ));
 
-        var simple_routes = ['index', 'api', 'dashboard', 'errors'];
-        for (var idx in simple_routes) {
-            var route_mod = srv_requires['./app/routes/'+simple_routes[idx]];
+        ['index', 'api', 'dashboard', 'errors'].forEach(function(route){
+            var route_mod = srv_requires['./app/routes/' + route];
             assert(route_mod.calledOnce);
             assert(route_mod.calledWithExactly(express_app));
-        }
-    });
-
-    it('static routes configurations', function() {
-        var static_assets = srv_requires.express.static.withArgs(
-                env.assetsPath, {maxAge: 24*60*60*1000}
-            ),
-            static_dist = srv_requires.express.static.withArgs(
-                path.join(__dirname, '..', 'dist')
-            ),
-            route_assets = express_app.use.withArgs(
-                env.assetsURL, srv_requires.express['static-rs']
-            ),
-            route_dist = express_app.use.withArgs(
-                '/dist/', srv_requires.express['static-rs']
-            )
-        ;
-
-        assert(static_assets.calledOnce);
-        assert(static_assets.calledBefore(route_assets));
-        assert(route_assets.calledOnce);
-        assert(route_assets.calledBefore(route_dist));
-
-        assert(static_dist.calledOnce);
-        assert(static_dist.calledBefore(route_dist));
-        assert(route_dist.calledOnce);
-
-        assert(route_dist.calledBefore(
-            srv_requires['./app/routes/authentication']
-        ));
+        });
     });
 
     it('express listen', function() {

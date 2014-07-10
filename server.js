@@ -61,9 +61,9 @@ app.use(morgan({
       ':response-time ms'
     ].join(' - '),
     buffer: 200,
-    skip: function(req, res){
+    skip: function(req){
         // skip public/dist files from log
-        return /^\/(dist)|(public)/.test(req.originalUrl);
+        return (/^\/(dist)|(public)/).test(req.originalUrl);
     }
 }));
 
