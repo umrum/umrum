@@ -35,6 +35,7 @@ filewalker(
 var app = express(),
     oneDay = 1 * 24 * 60 * 60 * 1000;
 
+// used in templates to get assets URLs
 app.locals.assetsURL = env.assetsURL;
 
 app.set('views', env.views);
@@ -47,41 +48,60 @@ nunjucks.configure(env.views, {
 });
 
 // express compress to render result
-app.use(express.compress());
+var compression = require('compression');
+app.use(compression());
 
-app.use(express.logger());
-app.use(express.favicon());
+// logger config
+var morgan = require('morgan');
+app.use(morgan({
+    format: [
+      ':date',
+      '(:req[X-Forwarded-For], :remote-addr)',
+      ':method | :url | :user-agent',
+      ':response-time ms'
+    ].join(' - '),
+    buffer: 200,
+    skip: function(req, res){
+        // skip public/dist files from log
+        return /^\/(dist)|(public)/.test(req.originalUrl);
+    }
+}));
+
+// app.use(express.favicon());
 
 // parse request parameters
-app.use(express.json());
-app.use(express.urlencoded());
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 // parse cookies
-app.use(express.cookieParser());
+var cookieParser = require('cookie-parser');
+app.use(cookieParser('umrum-cookie-key'));
 
 // encrypt session
-app.use(express.session({ secret: 'umrum-ftw' }));
+var session = require('express-session');
+app.use(session({saveUninitialized: true, resave: true, secret: 'umrum-session-key' }));
+
+// new response render which passes html-minifier as callback to express render engine
+app.use(renderMinified);
 
 // config app session
 app.use(passport.initialize());
 app.use(passport.session());
 authConfig(passport, env);
 
-// new response render which passes html-minifier as callback to express render engine
-app.use(renderMinified);
-
 // static routes
-app.use(app.locals.assetsURL, express.static(env.assetsPath, {maxAge: oneDay}));
-app.use('/dist/', express.static(path.join(__dirname, 'dist')));
+var serveStatic = require('serve-static');
+app.use(env.assetsURL, serveStatic(env.assetsPath, { maxAge: oneDay}));
+app.use('/dist/', serveStatic(path.join(__dirname, 'dist')));
 
 // app auth route
 require('./app/routes/authentication')(app, passport);
 
 // app other routes
-var routes = ['index', 'api', 'dashboard', 'errors'];
-for (var i = routes.length - 1; i >= 0; i--) {
-    require('./app/routes/' + routes[i])(app);
-}
+['index', 'api', 'dashboard', 'errors'].forEach(function(route){
+    require('./app/routes/' + route)(app);
+});
 
 var server = app.listen(env.port, env.ipaddr, function(err) {
     if (err) {
