@@ -207,7 +207,7 @@ module.exports = function(grunt) {
             dev: {
                 script: 'server.js',
                 options: {
-                    ext: 'js,html,less',
+                    ext: '*',
                     watch: ['app', 'src'],
                     env: {
                         NODE_ENV: "dev",
@@ -227,7 +227,7 @@ module.exports = function(grunt) {
                             grunt.log.subhead('Running compile task ... ');
                             grunt.util.spawn({
                                 grunt: true,
-                                args: ['compile'],
+                                args: ['_compile'],
                             }, function(err, result) {
                                 grunt.log.debug(result.toString());
                                 if (err || result.code !== 0) {
@@ -258,12 +258,13 @@ module.exports = function(grunt) {
     // private tasks
     grunt.registerTask('_minjs', ['uglify']);
     grunt.registerTask('_lessc', ['copy:bootstrapLess', 'less', 'autoprefixer']);
+    grunt.registerTask('_compile', ['copy-static', '_lessc', '_minjs']);
 
     grunt.registerTask('minjs', ['bower:install', '_minjs']);
     grunt.registerTask('mincss', ['bower:install', '_lessc']);
     grunt.registerTask('copy-static', ['copy:imgs', 'copy:fontawesome']);
 
-    grunt.registerTask('compile', ['bower:install', 'copy-static', '_lessc', '_minjs']);
+    grunt.registerTask('compile', ['bower:install', '_compile']);
 
     grunt.registerTask('unittest', ['jshint', 'mochacli']);
 
