@@ -235,7 +235,7 @@ module.exports = function(grunt) {
                                              .error()
                                              .error(err);
                                 }
-                                grunt.log.subhead('Compile task: \u001b[32mOK');
+                                grunt.log.subhead('Compile task: \u001b[32mOK\u001B[0m');
                             });
                         });
                     }
