@@ -49,10 +49,6 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'public/js/application.min.js': [
-                        'bower_modules/handlebars/handlebars.runtime.js',
-                        'bower_modules/ember/ember.js',
-                        'src/js/app.js',
-                        'src/js/views/dashboard.js',
                     ]
                 }
             }
