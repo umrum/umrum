@@ -22,7 +22,7 @@ mongoose.connect(env.MONGO_URI, function (err) {
         console.error('ERROR connecting to MongoDB: ' + env.MONGO_URI, err);
         return;
     }
-    console.log ('MongoDB successfully connected to: ' + env.MONGO_URI);
+    console.log('MongoDB successfully connected to: ' + env.MONGO_URI);
 });
 
 // load mongo models
