@@ -49,6 +49,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'public/js/application.min.js': [
+                        'bower_modules/react/react.min.js',
+                        'src/js/react-app.js',
                     ]
                 }
             }
@@ -155,6 +157,16 @@ module.exports = function(grunt) {
             }
 
         },
+        react: {
+            combined_file_output: {
+                files: {
+                    'src/js/react-app.js': [
+                        'app/src/components/*.jsx',
+                        'app/src/app.jsx',
+                    ]
+                }
+            }
+        },
         bower: {
             install: {
                 options: {
@@ -193,6 +205,10 @@ module.exports = function(grunt) {
             less: {
                 files: ['src/less/*.less'],
                 tasks: ['mincss'],
+            },
+            jsx: {
+                files: ['app/src/**/*.jsx'],
+                tasks: ['react']
             },
             js: {
                 files: ['src/js/**/*.js'],
@@ -250,6 +266,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
+    grunt.loadNpmTasks('grunt-react');
 
     // private tasks
     grunt.registerTask('_minjs', ['uglify']);
