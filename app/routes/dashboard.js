@@ -1,6 +1,6 @@
 var api = require('../ext/redis'),
     Site = require('../models/site'),
-    auth = require('../config/middlewares/authorization');
+    auth = require('../../config/middlewares/authorization');
 
 module.exports = function(app){
     app.get('/dashboard', auth.redirectAnonymous, function(req, res) {

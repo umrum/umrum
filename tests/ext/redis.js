@@ -39,7 +39,7 @@ describe('app/ext/redis', function(){
         configRedis.init.onSecondCall().returns(mPubSub);
 
         _redisApi = proxyquire('../../app/ext/redis', {
-            '../config/redisclient': configRedis
+            '../../config/redisclient': configRedis
         });
     });
 

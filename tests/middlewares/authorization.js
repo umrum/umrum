@@ -9,7 +9,7 @@ describe('authorization.js', function(){
         _res,
         next_spy;
 
-    var auth_module = require('../../app/config/middlewares/authorization');
+    var auth_module = require('../../config/middlewares/authorization');
 
     beforeEach(function(){
         _req = {};

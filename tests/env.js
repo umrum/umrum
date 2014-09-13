@@ -1,6 +1,6 @@
 /* global describe, it, __dirname */
 
-var env = require('../app/config/env');
+var env = require('../config/env');
 var assert = require('assert');
 var path = require('path');
 
@@ -12,6 +12,10 @@ describe('Tests the env module', function(){
 
     it('should return the correct views variable', function() {
         assert.equal(env.views, path.join(__dirname, '../app/views/'));
+    });
+
+    it('should return the correct assetsPath variable', function() {
+        assert.equal(env.modelsPath, path.join(__dirname, '../app/models'));
     });
 
     it('should return the correct assetsPath variable', function() {

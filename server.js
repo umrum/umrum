@@ -6,13 +6,13 @@ if (process.env.NODE_ENV === 'production') {
 
 var express = require('express'),
     path = require('path'),
-    env = require('./app/config/env'),
+    env = require('./config/env'),
     filewalker = require('filewalker'),
     mongoose = require('mongoose'),
     nunjucks = require('nunjucks'),
-    renderMinified = require('./app/config/middlewares/render-minified'),
+    renderMinified = require('./config/middlewares/render-minified'),
     passport = require('passport'),
-    authConfig = require('./app/config/authentication')
+    authConfig = require('./config/authentication')
 ;
 
 // Makes connection asynchronously. Mongoose will queue up database

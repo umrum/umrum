@@ -1,5 +1,5 @@
 module.exports.init = function(){
-    var env = require('../config/env');
+    var env = require('./env');
 
     var client = require('redis').createClient(
         env.REDIS_PORT, env.REDIS_HOST, env.REDIS_OPTIONS

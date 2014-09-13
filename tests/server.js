@@ -3,7 +3,7 @@
 var assert = require('assert'),
     sinon = require('sinon'),
     proxyquire = require('proxyquire'),
-    env = require('../app/config/env'),
+    env = require('../config/env'),
     path = require('path')
 ;
 
@@ -44,8 +44,8 @@ describe('server.js', function(){
             'socket.io': {listen: sinon.stub().returns(io)},
             'filewalker': sinon.stub().returns(walker),
 
-            './app/config/authentication': sinon.spy(),
-            './app/config/middlewares/render-minified': minifyMock,
+            './config/authentication': sinon.spy(),
+            './config/middlewares/render-minified': minifyMock,
 
             './app/routes/api': sinon.spy(),
             './app/routes/index': sinon.spy(),

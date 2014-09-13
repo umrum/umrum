@@ -2,7 +2,7 @@
 
 var assert = require('assert'),
     mongoose = require('mongoose'),
-    env = require('../app/config/env'),
+    env = require('../config/env'),
     User = require('../app/models/user')
 ;
 
