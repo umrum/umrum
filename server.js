@@ -93,7 +93,7 @@ authConfig(passport, env);
 // static routes
 var serveStatic = require('serve-static');
 app.use(env.assetsURL, serveStatic(env.assetsPath, { maxAge: oneDay}));
-app.use('/dist/', serveStatic(path.join(__dirname, 'dist')));
+app.use('/dist/', serveStatic(path.join(__dirname, 'dist'), { maxAge: oneDay}));
 
 // app auth route
 require('./app/routes/authentication')(app, passport);

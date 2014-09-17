@@ -152,7 +152,8 @@ describe('server.js', function(){
             {maxAge: 24*60*60*1000}
         ));
         assert(serveStatic.calledWithExactly(
-            path.join(__dirname, '..', 'dist')
+            path.join(__dirname, '..', 'dist'),
+            {maxAge: 24*60*60*1000}
         ));
 
         assert(express_app.use.withArgs(env.assetsURL, env.assetsPath).calledOnce);
