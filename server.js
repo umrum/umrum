@@ -6,13 +6,13 @@ if (process.env.NODE_ENV === 'production') {
 
 var express = require('express'),
     path = require('path'),
-    env = require('./app/config/env'),
+    env = require('./config/env'),
     filewalker = require('filewalker'),
     mongoose = require('mongoose'),
     nunjucks = require('nunjucks'),
-    renderMinified = require('./app/config/middlewares/render-minified'),
+    renderMinified = require('./config/middlewares/render-minified'),
     passport = require('passport'),
-    authConfig = require('./app/config/authentication')
+    authConfig = require('./config/authentication')
 ;
 
 // Makes connection asynchronously. Mongoose will queue up database
@@ -22,7 +22,7 @@ mongoose.connect(env.MONGO_URI, function (err) {
         console.error('ERROR connecting to MongoDB: ' + env.MONGO_URI, err);
         return;
     }
-    console.log ('MongoDB successfully connected to: ' + env.MONGO_URI);
+    console.log('MongoDB successfully connected to: ' + env.MONGO_URI);
 });
 
 // load mongo models
@@ -93,7 +93,7 @@ authConfig(passport, env);
 // static routes
 var serveStatic = require('serve-static');
 app.use(env.assetsURL, serveStatic(env.assetsPath, { maxAge: oneDay}));
-app.use('/dist/', serveStatic(path.join(__dirname, 'dist')));
+app.use('/dist/', serveStatic(path.join(__dirname, 'dist'), { maxAge: oneDay}));
 
 // app auth route
 require('./app/routes/authentication')(app, passport);

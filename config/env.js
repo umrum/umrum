@@ -25,16 +25,19 @@ if ( process.env.OPENSHIFT_SECRET_TOKEN ) {
   _redisOptions.auth_pass = process.env.REDIS_PASSWORD;
 }
 
+var root_dir = path.join(__dirname, '..'),
+    app_dir = path.join(root_dir, 'app');
+
 module.exports = {
     env: _env,
     port: _port,
     ipaddr: _ipaddr,
-    views: path.join(__dirname, '..', 'views/'),
-    assetsPath: path.join(__dirname, '..', '..', 'public/'),
+    views: path.join(app_dir, 'views/'),
+    assetsPath: path.join(root_dir, 'public/'),
     assetsURL: '/public/',
     minifyOutput: true,
-    modelsPath: path.join(__dirname, '..', 'models'),
-    controllersPath: path.join(__dirname, '..', 'controllers'),
+    modelsPath: path.join(app_dir, 'models'),
+    controllersPath: path.join(app_dir, 'controllers'),
     github: _githubOptions,
     // external services configs
     MONGO_URI: _mongoUri,

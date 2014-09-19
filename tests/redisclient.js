@@ -27,9 +27,9 @@ describe('Tests the redisclient module', function(){
         var _redis_host = 'nohost';
         var _redis_opt = {'none': null};
 
-        var configRedis = proxyquire('../app/config/redisclient', {
+        var configRedis = proxyquire('../config/redisclient', {
             redis: mockRedis,
-            '../config/env': {
+            './env': {
                 REDIS_PORT: _redis_port,
                 REDIS_HOST: _redis_host,
                 REDIS_OPTIONS: _redis_opt

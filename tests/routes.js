@@ -92,3 +92,32 @@ describe('Tests the errors route', function(){
     });
 
 });
+
+describe('Tests /dashboard routes', function(){
+
+    it('Anonymous access to /create must return 401', function(done){
+        request(app)
+            .post('/dashboard/create')
+            .expect(401)
+            .end(done);
+    });
+
+    ['/dashboard', '/dashboard/myhost.com'].forEach(function(url){
+        it(
+            'Anonymous access to ' + url + ' must redirect to /signin',
+            function(done){
+                request(app)
+                    .get('/dashboard')
+                    .expect(302)
+                    .expect('location', '/signin')
+                    .expect(function(res){
+                        return (/github.com\/login\/oauth\/authorize/).test(
+                            res.headers.location
+                        );
+                    })
+                    .end(done);
+            }
+        );
+    });
+
+});

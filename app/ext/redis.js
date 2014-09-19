@@ -1,4 +1,4 @@
-var config_redis = require('../config/redisclient');
+var config_redis = require('../../config/redisclient');
 
 var MAX_TOPPAGES = 10,
     USER_TIMEOUT = 5 * 60, // 5 min

@@ -54,7 +54,7 @@
     "nodemon": "~1.0.17",
     "proxyquire": "~0.6.0",
     "sinon": "~1.9.1",
-    "supertest": "~0.8.1"
+    "supertest": "~0.13.0"
   },
   "author": "Frontend Bahia",
   "license": "BSD"

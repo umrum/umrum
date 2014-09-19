@@ -17,7 +17,7 @@ describe('render-minified.js', function(){
         htmlMinifierMock = sinon.stub();
         resMock = {render: renderSpy, send: sinon.spy()};
 
-        proxyquire('../../app/config/middlewares/render-minified', {
+        proxyquire('../../config/middlewares/render-minified', {
             'html-minifier': {minify: htmlMinifierMock, '@noCallThru': true}
         })({}, resMock, renderNextSpy);
     });

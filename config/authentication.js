@@ -1,4 +1,4 @@
-var User = require('../models/user'),
+var User = require('../app/models/user'),
     GitHubStrategy = require('passport-github').Strategy
 ;
 

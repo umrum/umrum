@@ -73,6 +73,7 @@ module.exports = function(grunt) {
                     jQuery: true,
                     require: true,
                     module: true,
+                    exports: true,
                     process: true,
                     console: true,
                     Ember: true
@@ -86,7 +87,7 @@ module.exports = function(grunt) {
                     'src/js/*.js',
                     'server.js',
                     'app/routes/*.js',
-                    'app/config/*.js',
+                    'config/**/*.js',
                     'tests/**/*.js'
                 ]
             }
