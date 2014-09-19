@@ -76,7 +76,7 @@ module.exports = function(grunt) {
                     exports: true,
                     process: true,
                     console: true,
-                    Ember: true
+                    React: true
                 }
             },
             gruntfile: {
