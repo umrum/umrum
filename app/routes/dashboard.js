@@ -37,8 +37,9 @@ module.exports = function(app){
                 return;
             }
 
+            var host = req.body.host;
             new Site({
-                host: req.body.host,
+                host: host,
                 creator: req.user.username,
                 created: Date.now()
             }).save(function(err, site){
@@ -46,7 +47,13 @@ module.exports = function(app){
                     res.json({code: 500, error: err});
                     return;
                 }
-                res.json({code: 200, siteCode: site._id});
+                res.json({
+                  code: 200,
+                  site: {
+                    code: site._id,
+                    host: host
+                  }
+                });
             });
         });
     });

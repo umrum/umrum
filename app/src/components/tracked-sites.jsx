@@ -3,17 +3,29 @@
 var TrackedSites = React.createClass({
   getInitialState: function() {
     return {
-      sites: []
-    }
+      sites: this.props.sites
+    };
+  },
+  saveNewSite: function(host) {
+    $.post('/dashboard/create', {host: host}, function(data){
+      if ( data.code !== 200 ) {
+        // TODO - Handler error
+        console.error(data.error);
+      } else {
+        var siteList = this.state.sites;
+        var newSiteList = siteList.concat(data.site);
+        this.setState({sites: newSiteList});
+      }
+    }.bind(this));
   },
   render: function() {
-    var siteItems = this.props.sites.map(function(site) {
+    var siteItems = this.state.sites.map(function(site) {
       return (
         <SiteItem
           host={site.host}
           code={site.code}
         />
-      )
+      );
     });
     return (
       <div className="panel panel-primary">
@@ -23,11 +35,8 @@ var TrackedSites = React.createClass({
         <div className="panel-body">
           {siteItems}
         </div>
-        <div className="panel-footer announcement-bottom clearfix">
-          <input type="text" className="new-site-host col-sm-10" />
-          <button className="btn-primary btn add-site col-sm-2 btn-sm">Create new</button>
-        </div>
+        <AddSiteForm onSiteSubmit={this.saveNewSite} />
       </div>
-    )
+    );
   }
 });

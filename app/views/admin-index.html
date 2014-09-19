@@ -23,30 +23,4 @@
       document.getElementById('content')
     );
   </script>
-
-  <script type="text/javascript">
-    var createSite = function(){
-      var host = $.trim(window.new_site.value);
-      $.post('/dashboard/create', {host: host}, function(data){
-        window.new_site.value = '';
-        if ( data.code != 200 ) {
-          console.error(data.error);
-          alert(data.error);
-        } else {
-          $('#sites_manager .panel-body').append(
-            '<div class="clearfix">'+
-              '<p class="col-md-6"><a href="/dashboard/'+host+'">'+host+'</a></p>' +
-              '<p class="col-md-6">'+data.siteCode+'</p>' +
-            '</div>'
-          );
-        }
-      });
-    };
-    $('.add-site').on('click', createSite);
-    $('#new_site').on('keydown', function(evt){
-      if ( evt.which == 13 ) {
-        createSite();
-      }
-    });
-  </script>
 {% endblock %}

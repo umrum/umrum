@@ -4,7 +4,7 @@ var SiteItem = React.createClass({
   getInitialState: function() {
     return {
       site: {}
-    }
+    };
   },
   render: function() {
     return (
@@ -18,6 +18,6 @@ var SiteItem = React.createClass({
           { this.props.code }
         </p>
       </div>
-    )
+    );
   }
 });
