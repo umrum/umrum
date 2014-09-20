@@ -7,10 +7,11 @@ var SiteItem = React.createClass({
     };
   },
   render: function() {
+    var href = "/dashboard/" + this.props.host;
     return (
       <div className="clearfix">
         <p className="col-md-6">
-          <a href="#">
+          <a href={href}>
             { this.props.host }
           </a>
         </p>
