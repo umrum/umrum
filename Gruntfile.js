@@ -50,7 +50,7 @@ module.exports = function(grunt) {
                 files: {
                     'public/js/application.min.js': [
                         'bower_modules/react/react.min.js',
-                        'src/js/react-app.js',
+                        'compiled_jsx/react-app.js',
                     ]
                 }
             }
@@ -161,7 +161,7 @@ module.exports = function(grunt) {
         react: {
             combined_file_output: {
                 files: {
-                    'src/js/react-app.js': [
+                    'compiled_jsx/react-app.js': [
                         'app/src/components/*.jsx',
                         'app/src/app.jsx',
                     ]
