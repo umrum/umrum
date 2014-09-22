@@ -6,7 +6,7 @@ var TrackedSites = React.createClass({
       sites: this.props.sites
     };
   },
-  saveNewSite: function(host) {
+  trackNewSite: function(host) {
     $.post('/dashboard/create', {host: host}, function(data){
       if ( data.code !== 200 ) {
         // TODO - Handler error
@@ -35,7 +35,7 @@ var TrackedSites = React.createClass({
         <div className="panel-body">
           {siteItems}
         </div>
-        <AddSiteForm onSiteSubmit={this.saveNewSite} />
+        <AddSiteForm onSiteSubmit={this.trackNewSite} />
       </div>
     );
   }
