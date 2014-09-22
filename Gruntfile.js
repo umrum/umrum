@@ -203,24 +203,6 @@ module.exports = function(grunt) {
             testPathPattern: /client-app\/.*.js/
           }
         },
-        watch: {
-            gruntfile: {
-                files: '<%= jshint.gruntfile.src %>',
-                tasks: ['jshint:gruntfile']
-            },
-            lib_test: {
-                files: '<%= jshint.lib_test.src %>',
-                tasks: ['jshint:lib_test']
-            },
-            less: {
-                files: ['src/less/*.less'],
-                tasks: ['mincss'],
-            },
-            js: {
-                files: ['src/js/**/*.js'],
-                tasks: ['minjs']
-            }
-        },
         nodemon: {
             dev: {
                 script: 'server.js',
@@ -266,7 +248,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-mocha-cli');
