@@ -50,7 +50,7 @@ module.exports = function(grunt) {
                 files: {
                     'public/js/application.min.js': [
                         'bower_modules/react/react.min.js',
-                        'compiled_jsx/react-app.js',
+                        'compiled_jsx/components/*.js',
                     ]
                 }
             }
@@ -159,13 +159,16 @@ module.exports = function(grunt) {
 
         },
         react: {
-            combined_file_output: {
-                files: {
-                    'compiled_jsx/react-app.js': [
-                        'app/src/components/*.jsx',
-                        'app/src/app.jsx',
-                    ]
-                }
+            compile: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'app/src',
+                        src: ['**/*.jsx'],
+                        dest: 'compiled_jsx',
+                        ext: '.js'
+                    }
+                ]
             }
         },
         bower: {
@@ -194,6 +197,12 @@ module.exports = function(grunt) {
                 }
             }
         },
+        jest: {
+          options: {
+            coverage: true,
+            testPathPattern: /client-app\/.*.js/
+          }
+        },
         watch: {
             gruntfile: {
                 files: '<%= jshint.gruntfile.src %>',
@@ -206,10 +215,6 @@ module.exports = function(grunt) {
             less: {
                 files: ['src/less/*.less'],
                 tasks: ['mincss'],
-            },
-            jsx: {
-                files: ['app/src/**/*.jsx'],
-                tasks: ['react']
             },
             js: {
                 files: ['src/js/**/*.js'],
@@ -268,9 +273,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
     grunt.loadNpmTasks('grunt-react');
+    grunt.loadNpmTasks('grunt-jest');
 
     // private tasks
-    grunt.registerTask('_minjs', ['uglify']);
+    grunt.registerTask('_minjs', ['react', 'uglify']);
     grunt.registerTask('_lessc', ['copy:bootstrapLess', 'less', 'autoprefixer']);
     grunt.registerTask('_compile', ['copy-static', '_lessc', '_minjs']);
 
