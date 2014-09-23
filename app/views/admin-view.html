@@ -49,7 +49,7 @@
                     <th>Views</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="toppages">
                   {% for item in data.topPages %}
                   <tr>
                     <td>{{ item[0] }}</td>
@@ -76,9 +76,14 @@
   <script>
     var socket = io.connect('ws://'+window.location.host);
     socket.on("{{ hostId }}", function (msg) {
-      if (msg && msg.currentVisits) {
-        // render it by component
+      if (!msg) return;
+      if (msg.currentVisits) {
         $('.announcement-heading').text(msg.currentVisits);
+      }
+      if (msg.topPages) {
+        $('.toppages').html(msg.topPages.map(function(page){
+          return "<tr><td>"+page[0]+"</td><td>"+page[1]+"</td></tr>";
+        }).join(''));
       }
     });
   </script>
