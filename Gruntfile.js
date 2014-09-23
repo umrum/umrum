@@ -198,10 +198,10 @@ module.exports = function(grunt) {
             }
         },
         jest: {
-          options: {
-            coverage: true,
-            testPathPattern: /client-app\/.*.js/
-          }
+            options: {
+                coverage: true,
+                testPathPattern: /.*-test.js/,
+            }
         },
         nodemon: {
             dev: {

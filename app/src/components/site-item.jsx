@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 
+var React = React || require('react/addons');
+
 var SiteItem = React.createClass({
   getInitialState: function() {
     return {
@@ -10,12 +12,12 @@ var SiteItem = React.createClass({
     var href = "/dashboard/" + this.props.host;
     return (
       <div className="clearfix">
-        <p className="col-md-6">
+        <p className="site-item-host col-md-6">
           <a href={href}>
             { this.props.host }
           </a>
         </p>
-        <p className="col-md-6">
+        <p className="site-item-code col-md-6">
           { this.props.code }
         </p>
       </div>
