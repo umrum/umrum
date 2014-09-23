@@ -40,3 +40,9 @@ deploy:
         - rafaelverger/newrelic-deployment:
             api_key: $NEWRELIC_API_KEY
             app_name: UMRUM
+        - sherzberg/slack-notify:
+            subdomain: frontendbahia
+            token: $SLACK_TOKEN
+            channel: "#umrum"
+            username: wercker
+            icon_url: https://avatars3.githubusercontent.com/u/1695193?s=140
