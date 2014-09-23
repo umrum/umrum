@@ -49,10 +49,8 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'public/js/application.min.js': [
-                        'bower_modules/handlebars/handlebars.runtime.js',
-                        'bower_modules/ember/ember.js',
-                        'src/js/app.js',
-                        'src/js/views/dashboard.js',
+                        'bower_modules/react/react.min.js',
+                        'compiled_jsx/components/*.js',
                     ]
                 }
             }
@@ -78,7 +76,7 @@ module.exports = function(grunt) {
                     exports: true,
                     process: true,
                     console: true,
-                    Ember: true
+                    React: true
                 }
             },
             gruntfile: {
@@ -160,6 +158,19 @@ module.exports = function(grunt) {
             }
 
         },
+        react: {
+            compile: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'app/src',
+                        src: ['**/*.jsx'],
+                        dest: 'compiled_jsx',
+                        ext: '.js'
+                    }
+                ]
+            }
+        },
         bower: {
             install: {
                 options: {
@@ -186,23 +197,11 @@ module.exports = function(grunt) {
                 }
             }
         },
-        watch: {
-            gruntfile: {
-                files: '<%= jshint.gruntfile.src %>',
-                tasks: ['jshint:gruntfile']
-            },
-            lib_test: {
-                files: '<%= jshint.lib_test.src %>',
-                tasks: ['jshint:lib_test']
-            },
-            less: {
-                files: ['src/less/*.less'],
-                tasks: ['mincss'],
-            },
-            js: {
-                files: ['src/js/**/*.js'],
-                tasks: ['minjs']
-            }
+        jest: {
+          options: {
+            coverage: true,
+            testPathPattern: /client-app\/.*.js/
+          }
         },
         nodemon: {
             dev: {
@@ -249,15 +248,16 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
+    grunt.loadNpmTasks('grunt-react');
+    grunt.loadNpmTasks('grunt-jest');
 
     // private tasks
-    grunt.registerTask('_minjs', ['uglify']);
+    grunt.registerTask('_minjs', ['react', 'uglify']);
     grunt.registerTask('_lessc', ['copy:bootstrapLess', 'less', 'autoprefixer']);
     grunt.registerTask('_compile', ['copy-static', '_lessc', '_minjs']);
 

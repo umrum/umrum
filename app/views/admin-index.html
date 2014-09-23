@@ -3,26 +3,11 @@
 {% block sidebar %} {% endblock %}
 
 {% block content %}
+
 <div class="page-wrap ">
   <div id="sites_manager" class="row">
     <div class="col-lg-6">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Your sites</h3>
-        </div>
-        <div class="panel-body">
-          {% for site in sites %}
-          <div class="clearfix">
-            <p class="col-md-6"><a href="/dashboard/{{ site.host }}">{{ site.host }}</a></p>
-            <p class="col-md-6">{{ site.code }}</p>
-          </div>
-          {% endfor %}
-        </div>
-        <div class="panel-footer announcement-bottom clearfix">
-          <input id="new_site" type="text" class="new-site-host col-sm-10"/>
-          <a href="#" class="add-site col-sm-2 btn-sm btn-primary">Create new</a>
-        </div>
-      </div>
+      <div id="content"></div>
     </div>
   </div><!-- /.row -->
 </div><!-- /#page-wrapper -->
@@ -30,29 +15,12 @@
 
 {% block scripts %}
   {{ super() }}
-  <script type="text/javascript">
-    var createSite = function(){
-      var host = $.trim(window.new_site.value);
-      $.post('/dashboard/create', {host: host}, function(data){
-        window.new_site.value = '';
-        if ( data.code != 200 ) {
-          console.error(data.error);
-          alert(data.error);
-        } else {
-          $('#sites_manager .panel-body').append(
-            '<div class="clearfix">'+
-              '<p class="col-md-6"><a href="/dashboard/'+host+'">'+host+'</a></p>' +
-              '<p class="col-md-6">'+data.siteCode+'</p>' +
-            '</div>'
-          );
-        }
-      });
-    };
-    $('.add-site').on('click', createSite);
-    $('#new_site').on('keydown', function(evt){
-      if ( evt.which == 13 ) {
-        createSite();
-      }
-    });
+
+  <script>
+    /** @jsx React.DOM */
+    React.renderComponent(
+        TrackedSites({sites: [{%for site in sites%} {"code": "{{site.code}}", "host": "{{site.host}}"}, {%endfor%}]}),
+      document.getElementById('content')
+    );
   </script>
 {% endblock %}
