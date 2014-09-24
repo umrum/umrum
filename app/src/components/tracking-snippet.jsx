@@ -30,7 +30,7 @@ var TrackingSnippet = React.createClass({
     return (
       <span className={codeClass}>
         <a href="#" onClick={this.showCode} className="tracking-snippet-link">
-          Show tracking snippet
+          show tracking snippet
         </a>
         <div className="tracking-snippet-code">
           <span className="tracking-snippet-code-close" onClick={this.hideCode}>x</span>
