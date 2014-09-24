@@ -14,14 +14,14 @@ var TrackingSnippet = React.createClass({
   },
   getCode: function() {
     return [
-            '  !function(a,b,c,d){',
-           '   b._mrm=b._mrm||{},',
-           '   b._mrm.hostId=a,',
-           '   d=c.createElement("script"),',
-           '   d.async=1,',
-           '   d.src="//umrum.io/dist/umrum-client.js"',
-           '   c.body.appendChild(d);',
-           ' }("' + this.props.code + '",window,document);'].join('\n');
+      '!function(a,b,c,d){',
+      '   b._mrm=b._mrm||{},',
+      '   b._mrm.hostId=a,',
+      '   d=c.createElement("script"),',
+      '   d.async=1,',
+      '   d.src="//umrum.io/dist/umrum-client.js"',
+      '   c.body.appendChild(d);',
+      ' }("' + this.props.code + '",window,document);'].join('\n');
   },
   render: function() {
     var code = this.getCode();
