@@ -15,9 +15,7 @@ var SiteItem = React.createClass({
             { this.props.host }
           </a>
         </p>
-        <p className="col-md-6">
-          { this.props.code }
-        </p>
+        <TrackingSnippet code={this.props.code} />
       </div>
     );
   }

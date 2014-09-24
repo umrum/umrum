@@ -34,6 +34,30 @@
 .announcement-text {
     margin: 0;
 }
+.tracking-snippet {
+    &-link {
+        font-size: 12px;
+    }
+    &-code {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 450px;
+        transform: translate(-50%, -50%);
+        &-close {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin-right: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .invisible-code & {
+            display: none;
+        }
+    }
+}
+
 
 @media (min-width:768px) {
 
