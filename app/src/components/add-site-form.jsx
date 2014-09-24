@@ -4,6 +4,7 @@ var AddSiteForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var host = this.refs.host.getDOMNode().value.trim();
+    host = host.replace(/(.*?:\/\/)|(\/$)/g, "");
     if (!host) {
       return;
     }
