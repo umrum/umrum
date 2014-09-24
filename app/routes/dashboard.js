@@ -22,7 +22,7 @@ module.exports = function(app){
                 //TODO add error handler
                 res.render('admin-view.html', {
                     user: req.user,
-                    title: req.params.host,
+                    host: req.params.host,
                     hostId: existent._id,
                     data: info
                 });
