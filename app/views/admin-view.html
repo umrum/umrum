@@ -16,7 +16,9 @@
         siteHost: "{{ host }}",
         hostID: "{{ hostId }}",
         initialVisitors: {{ data.currentVisits or 0 }},
-        initialTopPages: [{% for page in data.topPages %} {"url": "{{page.url}}", "counter": "{{page.counter}}"}, {% endfor %}]
+        initialTopPages: [{% for page in data.topPages %} {"url": "{{page.url}}", "counter": "{{page.counter}}"}, {% endfor %}],
+        initialServerTime: {{ data.serverTime or 0 }},
+        initialPageLoadTime: {{ data.pageLoadTime or 0 }}
       }),
       document.getElementById('content')
     );
