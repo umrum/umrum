@@ -1,38 +1,10 @@
 {% extends "admin-base.html" %}
 
 {% block content %}
+
   <div class="page-wrap">
 
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-xs-6">
-                <i class="fa fa-chart-o fa-5x"></i>
-              </div>
-              <div class="col-xs-6 text-right">
-                <p class="announcement-heading">{{ data.currentVisits }}</p>
-                <p class="announcement-text">Current visitors</p>
-              </div>
-            </div>
-          </div>
-          <a href="//{{host}}" target="_blank">
-            <div class="panel-footer announcement-bottom">
-              <div class="row">
-                <div class="col-xs-6">
-                  {{ host }}
-                </div>
-                <div class="col-xs-6 text-right">
-                  <i class="fa fa-arrow-circle-right"></i>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div><!-- /.row -->
-
+    <div id="content"></div>
 
     <div class="row">
       <div class="col-lg-12">
@@ -74,14 +46,24 @@
     var socket = io.connect('ws://'+window.location.host);
     socket.on("{{ hostId }}", function (msg) {
       if (!msg) return;
-      if (msg.currentVisits) {
-        $('.announcement-heading').text(msg.currentVisits);
-      }
+
       if (msg.topPages) {
         $('.toppages').html(msg.topPages.map(function(page){
           return "<tr><td>"+page[0]+"</td><td>"+page[1]+"</td></tr>";
         }).join(''));
       }
     });
+  </script>
+
+  <script>
+    /** @jsx React.DOM */
+    React.renderComponent(
+      Dashboard({
+        siteHost: "{{ host }}",
+        hostID: "{{ hostId }}",
+        initialVisitors: {{ data.currentVisits }}
+      }),
+      document.getElementById('content')
+    );
   </script>
 {% endblock %}
