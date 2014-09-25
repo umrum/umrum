@@ -127,5 +127,9 @@
     addEvent(win, 'beforeunload', function(){ API.exit(); });
 
     // init track
-    API.init();
+    if (document.readyState === "complete") {
+        API.init();
+    } else {
+        addEvent(win, 'load', function(){ API.init(); });
+    }
 })(window, document);
