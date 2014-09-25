@@ -1,66 +1,22 @@
 {% extends "admin-base.html" %}
 
 {% block content %}
-
   <div class="page-wrap">
-
     <div id="content"></div>
-
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> Top Pages</h3>
-          </div>
-          <div class="panel-body">
-            <div class="table-responsive">
-              <table class="table table-bordered table-hover table-striped">
-                <thead>
-                  <tr>
-                    <th>Page</th>
-                    <th>Views</th>
-                  </tr>
-                </thead>
-                <tbody class="toppages">
-                  {% for item in data.topPages %}
-                  <tr>
-                    <td>{{ item[0] }}</td>
-                    <td>{{ item[1] }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div><!-- /.row -->
-
-  </div><!-- /#page-wrapper -->
+  </div>
 {% endblock %}
 
 {% block scripts %}
   {{super()}}
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io.connect('ws://'+window.location.host);
-    socket.on("{{ hostId }}", function (msg) {
-      if (!msg) return;
-
-      if (msg.topPages) {
-        $('.toppages').html(msg.topPages.map(function(page){
-          return "<tr><td>"+page[0]+"</td><td>"+page[1]+"</td></tr>";
-        }).join(''));
-      }
-    });
-  </script>
 
   <script>
     React.renderComponent(
       Dashboard({
         siteHost: "{{ host }}",
         hostID: "{{ hostId }}",
-        initialVisitors: {{ data.currentVisits }}
+        initialVisitors: {{ data.currentVisits or 0 }},
+        initialTopPages: [{% for page in data.topPages %} {"url": "{{page.url}}", "counter": "{{page.counter}}"}, {% endfor %}]
       }),
       document.getElementById('content')
     );
