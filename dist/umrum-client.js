@@ -25,7 +25,7 @@
         doc.cookie = COOKIE_NAME + '=' + CONFIG.uid + ';expires=' + weekAhead;
     }
 
-    // def 1rum API
+    // def umrum API
     var API = {
         API_URL: 'http://umrum.io/api',
         elementID: 'umrumAPI',
@@ -49,14 +49,26 @@
             if (!this.element) {
                 this.init();
             }
-            CONFIG.url = encodeURIComponent(win.location.href);
-            CONFIG.title = encodeURIComponent(doc.title);
+            var url = encodeURIComponent(win.location.href),
+                title = encodeURIComponent(doc.title),
+                servertime = '',
+                pageload = '',
+                perf = win.performance;
+            if (perf && perf.timing) {
+                var t = perf.timing,
+                    start = t.redirectStart == 0 ? t.fetchStart : t.redirectStart;
+                servertime = t.loadEventStart - start;
+                pageload = t.responseStart - start;
+            }
+
             this.element.src = [
                 this.API_URL+route,
                 "?uid=", CONFIG.uid,
                 "&hostId=", CONFIG.hostId,
-                "&url=", CONFIG.url,
-                "&title=", CONFIG.title,
+                "&url=", url,
+                "&title=", title,
+                "&servertime=", servertime,
+                "&pageload=", pageload,
                 "&t=", (+new Date)
             ].join('');
         },
