@@ -46,19 +46,28 @@
             this.element = img;
         },
         send: function(route){
-            if (!this.element) {
-                this.init();
-            }
             var url = encodeURIComponent(win.location.href),
                 title = encodeURIComponent(doc.title),
                 servertime = '',
                 pageload = '',
                 perf = win.performance;
+
+            if (!this.element) {
+                this.init();
+            }
+
             if (perf && perf.timing) {
                 var t = perf.timing,
                     start = t.redirectStart == 0 ? t.fetchStart : t.redirectStart;
                 servertime = t.responseStart - start;
                 pageload = t.loadEventStart - start;
+
+                if ( pageload < 1 ) {
+                    var _api = this;
+                    return setTimeout(function(){
+                        _api.send(route);
+                    }, 5 * 1000);
+                }
             }
 
             this.element.src = [
