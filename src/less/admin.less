@@ -60,8 +60,8 @@
 }
 
 .current-visitors {
-  min-width: 350px;
-  max-width: 25%;
+  width: 25%;
+  display: inline-block;
   border: 1px solid #BCE8F1;
   border-radius: 4px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
@@ -84,6 +84,38 @@
 }
 .cv-counter {
   font-size: 50px;
+}
+
+.performance-metrics {
+  width: 25%;
+  display: inline-block;
+  margin-left: 20px;
+  border: 1px solid #BCE8F1;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  p {
+    margin: 0;
+  }
+}
+.pm-body {
+  padding: 10px 15px;
+}
+.pm-footer {
+  background-color: #F5F5F5;
+  padding: 10px 15px;
+}
+.server-time-meter, .page-load-time-meter {
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+  .fa-clock-o {
+    font-size: 27px;
+    margin-bottom: 16px;
+  }
+}
+.stm-counter, .pltm-counter {
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .top-pages {

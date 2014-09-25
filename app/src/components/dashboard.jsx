@@ -5,8 +5,8 @@ var Dashboard = React.createClass({
     return {
       currentVisitors: this.props.initialVisitors,
       topPages: this.props.initialTopPages,
-      serverTime: 0,
-      pageLoadTime: 0
+      serverTime: this.props.initialServerTime,
+      pageLoadTime: this.props.initialPageLoadTime
     }
   },
   componentDidMount: function() {
@@ -27,6 +27,15 @@ var Dashboard = React.createClass({
     return (
       <div className="dashboard-view">
         <CurrentVisitors siteHost={this.props.siteHost} currentVisitors={this.state.currentVisitors} />
+        <div className="performance-metrics">
+          <div className="pm-body">
+            <ServerTimerMeter serverTime={this.state.serverTime} />
+            <PageLoadTimeMeter pageLoadTime={this.state.pageLoadTime} />
+          </div>
+          <div className="pm-footer">
+            Performance Metrics
+          </div>
+        </div>
         <TopPages topPages={this.state.topPages} />
       </div>
     )
