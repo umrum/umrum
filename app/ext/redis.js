@@ -2,12 +2,26 @@ var config_redis = require('../../config/redisclient');
 
 var MAX_TOPPAGES = 10,
     USER_TIMEOUT = 5 * 60, // 5 min
+    MAX_SIZE_PERFORMANCE_LIST = 49, // 0 index
     EXP_USER_PREFIX = 'expusr-',
     redisclient = null,
     pubsub_cli = null;
 
 var _toppages_key = function(hostId) {
     return 'toppages:'+hostId;
+}
+var _servertime_key = function(hostId) {
+    return 'servertime:'+hostId;
+}
+var _pageload_key = function(hostId) {
+    return 'pageload:'+hostId;
+}
+
+var _list_average = function(list) {
+    var sum = list.reduce(function(prev, curr){
+        return prev + parseInt(curr, 10);
+    }, 0);
+    return sum ? Math.round(sum/list.length) : 0;
 }
 
 var _api = {
@@ -20,39 +34,66 @@ var _api = {
 
         hostinfo map: {
             currentVisits: 123,
-            topPages: [[path, currVisits], ...]
+            topPages: [[path, currVisits], ...],
+            serverTime: 444,
+            pageLoadTime: 2456
         }
         */
 
         hostinfo = {
             currentVisits: null,
-            topPages: null
+            topPages: null,
+            serverTime: -1,
+            pageLoadTime: -1
         };
         redisclient.hget(hostId, 'curr_visits', function(err, result){
             if ( err || !result ) {
                 return callback(err, hostinfo);
             }
 
+            var toppagesKey = _toppages_key(hostId),
+                servertimeKey = _servertime_key(hostId),
+                pageloadKey = _pageload_key(hostId);
+
             hostinfo.currentVisits = result;
             redisclient.zrevrangebyscore(
-                _toppages_key(hostId),
+                toppagesKey,
                 '+inf', '-inf',
                 'WITHSCORES',
                 'LIMIT', 0, MAX_TOPPAGES,
                 function(err, result) {
-                    if ( err || !result ) return callback(err, hostinfo);
+                    if ( err || !result ) {
+                        return callback(err, hostinfo);
+                    }
 
                     // result = [url, urlViwers, url2, url2Viewers...]
                     hostinfo.topPages = result.map(function(item, idx, arr){
-                        if (idx%2) {
-                            return null;
-                        }
+                        if (idx%2) return null;
                         return [item, parseInt(arr[idx+1], 10)];
                     }).filter(function(item){
                         return item && item[1];
                     });
 
-                    callback(err, hostinfo);
+                    redisclient.lrange(
+                        servertimeKey,
+                        0, MAX_SIZE_PERFORMANCE_LIST,
+                        function(err, result){
+                            if ( err || !result ) {
+                                return callback(err, hostinfo);
+                            }
+                            hostinfo.serverTime = _list_average(result);
+                            redisclient.lrange(
+                                pageloadKey,
+                                0, MAX_SIZE_PERFORMANCE_LIST,
+                                function(err, result){
+                                    if (!err && result) {
+                                        hostinfo.pageLoadTime = _list_average(result);
+                                    }
+                                    callback(err, hostinfo);
+                                }
+                            );
+                        }
+                    );
                 }
             );
         });
@@ -75,17 +116,29 @@ var _api = {
                 return;
             }
             var multi = redisclient.multi(),
-                toppagesKey = _toppages_key(active_user.hostId);
+                hostId = active_user.hostId,
+                toppagesKey = _toppages_key(active_user.hostId),
+                servertimeKey = _servertime_key(active_user.hostId),
+                pageloadKey = _pageload_key(active_user.hostId);
 
             if (!old_usr) {
                 console.log('new active user', active_user);
                 multi.hincrby(active_user.hostId, 'curr_visits', 1);
                 multi.zincrby(toppagesKey, 1, active_user.url);
+                if (active_user.servertime) {
+                    multi.rpush(servertimeKey, active_user.servertime);
+                    multi.ltrim(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                }
+                if (active_user.pageload) {
+                    multi.rpush(pageloadKey, active_user.pageload);
+                    multi.ltrim(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                }
             } else if (old_usr.url != active_user.url) {
                 console.log('old user update', old_usr, active_user);
                 multi.zincrby(toppagesKey, -1, old_usr.url);
                 multi.zincrby(toppagesKey, 1, active_user.url);
             }
+
             multi.hmset(active_user.uid, active_user);
             multi.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
             multi.exec(console.log);

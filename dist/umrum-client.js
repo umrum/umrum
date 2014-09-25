@@ -1,33 +1,34 @@
 /* UMRUM client library */
 
-(function(win, doc, undefined){
-    var _1rumObj = win._mrm || {},
-        _1rumCookieName = '__1rum';
+(function(win, doc){
+    var CONFIG = win._mrm || {},
+        COOKIE_NAME = 'umrum_uid',
+        USER_ACTIVE;
 
     // def user uid
     var cookies = doc.cookie.split(';'),
         cookieIdx = cookies.length;
     while (cookieIdx) {
         var cookie = cookies[--cookieIdx].replace(/^\s+/, '');
-        if (cookie.indexOf(_1rumCookieName) == 0) {
-            _1rumObj.uid = cookie.replace(_1rumCookieName+'=', '');
+        if (cookie.indexOf(COOKIE_NAME) == 0) {
+            CONFIG.uid = cookie.replace(COOKIE_NAME+'=', '');
         }
     }
-    if (!_1rumObj.uid) {
+    if (!CONFIG.uid) {
         var domain = '.'+win.location.host.replace('www.','');
         // http://stackoverflow.com/q/105034/1197796#answer-2117523
-        _1rumObj.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        CONFIG.uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
             return v.toString(16);
         });
         var weekAhead = new Date((+new Date)+7*24*60*60*1000).toUTCString();
-        doc.cookie = _1rumCookieName + '=' + _1rumObj.uid + ';expires=' + weekAhead;
+        doc.cookie = COOKIE_NAME + '=' + CONFIG.uid + ';expires=' + weekAhead;
     }
 
-    // def 1rum API
-    var _1rumAPI = {
+    // def umrum API
+    var API = {
         API_URL: 'http://umrum.io/api',
-        elementID: '__1rumAPI',
+        elementID: 'umrumAPI',
         element: null,
         init: function(){
             var img = doc.getElementById(this.elementID);
@@ -38,6 +39,9 @@
                 img.style.top = img.style.left = '-1px';
                 img.height = img.width = 1;
                 doc.body.appendChild(img);
+
+                USER_ACTIVE = true;
+                this.ping();
             }
             this.element = img;
         },
@@ -45,20 +49,32 @@
             if (!this.element) {
                 this.init();
             }
-            _1rumObj.url = encodeURIComponent(win.location.href);
-            _1rumObj.title = encodeURIComponent(doc.title);
+            var url = encodeURIComponent(win.location.href),
+                title = encodeURIComponent(doc.title),
+                servertime = '',
+                pageload = '',
+                perf = win.performance;
+            if (perf && perf.timing) {
+                var t = perf.timing,
+                    start = t.redirectStart == 0 ? t.fetchStart : t.redirectStart;
+                servertime = t.loadEventStart - start;
+                pageload = t.responseStart - start;
+            }
+
             this.element.src = [
                 this.API_URL+route,
-                "?uid=", _1rumObj.uid,
-                "&hostId=", _1rumObj.hostId,
-                "&url=", _1rumObj.url,
-                "&title=", _1rumObj.title,
+                "?uid=", CONFIG.uid,
+                "&hostId=", CONFIG.hostId,
+                "&url=", url,
+                "&title=", title,
+                "&servertime=", servertime,
+                "&pageload=", pageload,
                 "&t=", (+new Date)
             ].join('');
         },
         ping: function(){
-            if ( _1rumObj.interaction ) {
-                _1rumObj.interaction = false;
+            if ( USER_ACTIVE ) {
+                USER_ACTIVE = false;
                 this.send('/ping');
             }
             var _api = this;
@@ -67,7 +83,7 @@
             }, 30 * 1000);
         },
         exit: function(cancelPing){
-            _1rumObj.interaction = false;
+            USER_ACTIVE = false;
             this.send('/disconnect');
             clearTimeout(this.ping_timeout);
         }
@@ -76,13 +92,13 @@
     // utility function to concat functions
     var concatFunctions = function(fn1, fn2){
         return function(){
-          var args = Array.prototype.slice.call(arguments, 0);
-          if (fn1) {
-              try{
+            var args = Array.prototype.slice.call(arguments, 0);
+            if (fn1) {
+                try{
                 fn1.apply(this, args);
-              } catch(err) { console.error(err); }
-          }
-          fn2.apply(this, args);
+                } catch(err) { console.error(err); }
+            }
+            fn2.apply(this, args);
         };
     };
 
@@ -100,28 +116,16 @@
     }
 
     // adding page interaction interaction listeners
-    addEvent(win, 'scroll', function(){ _1rumObj.interaction = true; });
-    addEvent(doc.body, 'click', function(){ _1rumObj.interaction = true; });
-    var bodyChildren = Array.prototype.slice.call(doc.body.children, childIdx);
-    var childIdx = bodyChildren.length;
-    while (childIdx) {
-        addEvent(
-            bodyChildren[--childIdx],
-            'mouseover',
-            function(){ _1rumObj.interaction = true; }
-        );
-    }
+    var activate_user = function(){ USER_ACTIVE = true; };
+    addEvent(win, 'scroll', activate_user);
+    addEvent(doc.body, 'click', activate_user);
+    addEvent(doc.body, 'mouseover', activate_user);
 
     // adding leave page listeners
-    win.onblur = concatFunctions(window.onblur, function(){
-        _1rumObj.interaction = false;
-    });
-    addEvent(win, 'beforeunload', function(){
-        _1rumAPI.exit();
-    });
+    var inactivate_user = function(){ USER_ACTIVE = false; };
+    win.onblur = concatFunctions(win.onblur, inactivate_user);
+    addEvent(win, 'beforeunload', function(){ API.exit(); });
 
     // init track
-    _1rumObj.interaction = true;
-    _1rumAPI.init();
-    _1rumAPI.ping();
+    API.init();
 })(window, document);
