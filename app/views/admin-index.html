@@ -19,7 +19,7 @@
   <script>
     /** @jsx React.DOM */
     React.renderComponent(
-        TrackedSites({sites: [{%for site in sites%} {"code": "{{site.code}}", "host": "{{site.host}}"}, {%endfor%}]}),
+      TrackedSites({sites: [{%for site in sites%} {"code": "{{site.code}}", "host": "{{site.host}}"}, {%endfor%}]}),
       document.getElementById('content')
     );
   </script>
