@@ -57,8 +57,8 @@
             if (perf && perf.timing) {
                 var t = perf.timing,
                     start = t.redirectStart == 0 ? t.fetchStart : t.redirectStart;
-                servertime = t.loadEventStart - start;
-                pageload = t.responseStart - start;
+                servertime = t.responseStart - start;
+                pageload = t.loadEventStart - start;
             }
 
             this.element.src = [
