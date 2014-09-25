@@ -4,7 +4,7 @@ var Dashboard = React.createClass({
   getInitialState: function() {
     return {
       currentVisitors: this.props.initialVisitors,
-      topPages: [],
+      topPages: this.props.initialTopPages,
       serverTime: 0,
       pageLoadTime: 0
     }
@@ -27,6 +27,7 @@ var Dashboard = React.createClass({
     return (
       <div className="dashboard-view">
         <CurrentVisitors siteHost={this.props.siteHost} currentVisitors={this.state.currentVisitors} />
+        <TopPages topPages={this.state.topPages} />
       </div>
     )
   }
