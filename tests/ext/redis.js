@@ -101,9 +101,12 @@ describe('app/ext/redis', function(){
                     if (idx%2) {
                         return null;
                     }
-                    return [item, parseInt(arr[idx+1], 10)];
+                    return {
+                      url: item,
+                      counter: parseInt(arr[idx+1], 10)
+                    };
                 }).filter(function(item){
-                    return item && item[1];
+                    return item && item.counter;
                 });
             }
             return expectedHostInfo;
