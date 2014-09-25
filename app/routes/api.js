@@ -21,11 +21,15 @@ module.exports = function(app){
                 missing_attr.push(key);
             }
         }
+
         if (missing_attr.length) {
             var err_msg = 'Missing attributes: ' + missing_attr.join(', ');
             console.error(err_msg, active_user, req.query);
             throw new Error(err_msg);
         }
+
+        active_user.pageload = req.query.pageload || '';
+        active_user.servertime = req.query.servertime || '';
         return active_user;
     };
 

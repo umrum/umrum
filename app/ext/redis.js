@@ -124,15 +124,21 @@ var _api = {
             if (!old_usr) {
                 console.log('new active user', active_user);
                 multi.hincrby(active_user.hostId, 'curr_visits', 1);
-                multi.rpush(servertimeKey, active_user.servertime);
-                multi.rpush(pageloadKey, active_user.pageload);
-                multi.ltrim(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
-                multi.ltrim(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                multi.zincrby(toppagesKey, 1, active_user.url);
+                if (active_user.servertime) {
+                    multi.rpush(servertimeKey, active_user.servertime);
+                    multi.ltrim(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                }
+                if (active_user.pageload) {
+                    multi.rpush(pageloadKey, active_user.pageload);
+                    multi.ltrim(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                }
             } else if (old_usr.url != active_user.url) {
                 console.log('old user update', old_usr, active_user);
                 multi.zincrby(toppagesKey, -1, old_usr.url);
+                multi.zincrby(toppagesKey, 1, active_user.url);
             }
-            multi.zincrby(toppagesKey, 1, active_user.url);
+
             multi.hmset(active_user.uid, active_user);
             multi.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
             multi.exec(console.log);
