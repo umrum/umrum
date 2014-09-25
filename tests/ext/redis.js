@@ -18,7 +18,7 @@ describe('app/ext/redis', function(){
             setex: sinon.spy(),
             hincrby: sinon.spy(),
             zincrby: sinon.spy(),
-            rpush: sinon.spy(),
+            lpush: sinon.spy(),
             ltrim: sinon.spy(),
             exec: sinon.spy()
         };
@@ -362,11 +362,11 @@ describe('app/ext/redis', function(){
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
-            assert.ok(mPipeline.rpush.calledTwice);
-            assert.ok(mPipeline.rpush.calledWith(
+            assert.ok(mPipeline.lpush.calledTwice);
+            assert.ok(mPipeline.lpush.calledWith(
                 'servertime:'+active_user.hostId, active_user.servertime
             ));
-            assert.ok(mPipeline.rpush.calledWith(
+            assert.ok(mPipeline.lpush.calledWith(
                 'pageload:'+active_user.hostId, active_user.pageload
             ));
 
@@ -425,8 +425,8 @@ describe('app/ext/redis', function(){
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
-            assert.ok(mPipeline.rpush.calledOnce);
-            assert.ok(mPipeline.rpush.calledWith(
+            assert.ok(mPipeline.lpush.calledOnce);
+            assert.ok(mPipeline.lpush.calledWith(
                 'pageload:'+active_user.hostId, active_user.pageload
             ));
 
@@ -482,8 +482,8 @@ describe('app/ext/redis', function(){
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
-            assert.ok(mPipeline.rpush.calledOnce);
-            assert.ok(mPipeline.rpush.calledWith(
+            assert.ok(mPipeline.lpush.calledOnce);
+            assert.ok(mPipeline.lpush.calledWith(
                 'servertime:'+active_user.hostId, active_user.servertime
             ));
 

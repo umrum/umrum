@@ -126,11 +126,11 @@ var _api = {
                 multi.hincrby(active_user.hostId, 'curr_visits', 1);
                 multi.zincrby(toppagesKey, 1, active_user.url);
                 if (active_user.servertime) {
-                    multi.rpush(servertimeKey, active_user.servertime);
+                    multi.lpush(servertimeKey, active_user.servertime);
                     multi.ltrim(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
                 }
                 if (active_user.pageload) {
-                    multi.rpush(pageloadKey, active_user.pageload);
+                    multi.lpush(pageloadKey, active_user.pageload);
                     multi.ltrim(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
                 }
             } else if (old_usr.url != active_user.url) {
