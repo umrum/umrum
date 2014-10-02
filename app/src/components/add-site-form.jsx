@@ -16,7 +16,7 @@ var AddSiteForm = React.createClass({
     return (
       <form className="panel-footer clearfix" onSubmit={this.handleSubmit}>
         <input type="text" className="col-sm-8" ref="host" />
-        <button type="submit" className="btn-primary btn col-sm-3 btn-sm">+ Create new</button>
+        <button type="submit" className="btn-primary btn col-sm-3 btn-sm asf-button">+ Create new</button>
       </form>
     );
   }
