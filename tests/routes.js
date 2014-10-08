@@ -5,7 +5,7 @@ var request = require('supertest');
 
 describe('Tests the index route', function(){
 
-    it('should return 200 status code', function(done){
+    it('should return status code 200', function(done){
         request(app)
             .get('/')
             .expect(200)
@@ -15,27 +15,27 @@ describe('Tests the index route', function(){
 
 });
 
-describe('Tests api routes', function(){
+describe('Tests API routes', function(){
     var encodedUrl = 'https%3A%2F%2Fgithub.com%2Fumrum',
         hostId = 'HOST_ID_3233',
         uid = 'UID-78946';
 
     describe('api#ping', function(){
-        it('no hostId -> erro 500', function(done){
+        it('no hostId -> error 500', function(done){
             request(app)
                 .get('/api/ping?uid='+uid+'&url='+encodedUrl)
                 .expect(500)
                 .end(done);
         });
 
-        it('no url -> erro 500', function(done){
+        it('no url -> error 500', function(done){
             request(app)
                 .get('/api/ping?uid='+uid+'&hostId='+hostId)
                 .expect(500)
                 .end(done);
         });
 
-        it('no uid -> erro 500', function(done){
+        it('no uid -> error 500', function(done){
             request(app)
                 .get('/api/ping?url='+encodedUrl+'&hostId='+hostId)
                 .expect(500)
@@ -51,21 +51,21 @@ describe('Tests api routes', function(){
     });
 
     describe('api#disconnect', function(){
-        it('no hostId -> erro 500', function(done){
+        it('no hostId -> error 500', function(done){
             request(app)
                 .get('/api/disconnect?uid='+uid+'&url='+encodedUrl)
                 .expect(500)
                 .end(done);
         });
 
-        it('no url -> erro 500', function(done){
+        it('no url -> error 500', function(done){
             request(app)
                 .get('/api/disconnect?uid='+uid+'&hostId='+hostId)
                 .expect(500)
                 .end(done);
         });
 
-        it('no uid -> erro 500', function(done){
+        it('no uid -> error 500', function(done){
             request(app)
                 .get('/api/disconnect?url='+encodedUrl+'&hostId='+hostId)
                 .expect(500)
@@ -83,7 +83,7 @@ describe('Tests api routes', function(){
 
 describe('Tests the errors route', function(){
 
-    it('should return 404 status code', function(done){
+    it('should return status code 404', function(done){
         request(app)
             .get('/not-found')
             .expect(404)
