@@ -1,0 +1,8 @@
+[
+  {
+    "name"       : "umrum",
+    "script"     : "./server.js",
+    "instances"  : "max",
+    "merge_logs" : true,
+  }
+]
