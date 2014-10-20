@@ -4,8 +4,9 @@
   "description": "An open source Real User Monitoring in NodeJS",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "./node_modules/.bin/grunt unittest"
+    "test": "./node_modules/.bin/grunt unittest",
+    "compile": "npm install && ./node_modules/.bin/grunt compile",
+    "pm2-start": "pm2 startOrRestart pm2-start.json"
   },
   "repository": {
     "type": "git",
