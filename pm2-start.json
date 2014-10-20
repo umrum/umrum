@@ -3,6 +3,6 @@
     "name"       : "umrum",
     "script"     : "./server.js",
     "instances"  : "max",
-    "merge_logs" : true,
+    "merge_logs" : true
   }
 ]
