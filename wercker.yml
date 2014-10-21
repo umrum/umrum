@@ -32,7 +32,7 @@ deploy:
                 repo git@github.com:umrum/umrum.git
                 ref origin/master
                 path $DEPLOY_HOME
-                post-deploy npm run-script compile && npm run-script pm2-start
+                post-deploy source ~/.profile; npm run-script compile && npm run-script pm2-start
                 test sleep 5 && wget -qO /dev/null localhost
         - script:
             name: Deploy to $PRODUCTION_HOST
