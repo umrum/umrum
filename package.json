@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/grunt unittest",
     "compile": "npm install && ./node_modules/.bin/grunt compile",
-    "pm2-start": "pm2 startOrRestart pm2-start.json"
+    "pm2-start": "pm2 kill && pm2 start pm2-start.json"
   },
   "repository": {
     "type": "git",
