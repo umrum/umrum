@@ -139,14 +139,14 @@ describe('server.js', function(){
         assert(bodyParser.urlencoded.calledWithExactly({extended: false}));
 
         assert(express_app.use.withArgs('cookie-parser').calledOnce);
-        assert(cookieParser.calledWithExactly('umrum-cookie-key'));
+        assert(cookieParser.calledWithExactly('umrum-secret'));
 
         var oneDay = 24*60*60*1000,
             oneYear = 365 * oneDay;
 
         assert(express_app.use.withArgs('cookie-session').calledOnce);
         assert(session.calledWithExactly({
-            secret: 'umrum-session-key', maxAge: oneYear, overwrite: true
+            secret: 'umrum-secret', maxAge: oneYear, overwrite: true
         }));
 
         assert(serveStatic.calledTwice);
