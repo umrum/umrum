@@ -33,7 +33,8 @@ filewalker(
 }).walk();
 
 var app = express(),
-    oneDay = 1 * 24 * 60 * 60 * 1000;
+    oneDay = 1 * 24 * 60 * 60 * 1000,
+    oneYear = 365 * oneDay;
 
 // used in templates to get assets URLs
 app.locals.assetsURL = env.assetsURL;
@@ -79,8 +80,8 @@ var cookieParser = require('cookie-parser');
 app.use(cookieParser('umrum-cookie-key'));
 
 // encrypt session
-var session = require('express-session');
-app.use(session({saveUninitialized: true, resave: true, secret: 'umrum-session-key' }));
+var session = require('cookie-session');
+app.use(session({secret: 'umrum-session-key', maxAge: oneYear, overwrite: true}));
 
 // new response render which passes html-minifier as callback to express render engine
 app.use(renderMinified);
