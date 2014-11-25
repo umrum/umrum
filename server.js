@@ -26,9 +26,7 @@ mongoose.connect(env.MONGO_URI, function (err) {
 });
 
 // load mongo models
-filewalker(
-    env.modelsPath, {matchRegExp: /.*\.js/i}
-).on('file', function(file){
+filewalker(env.modelsPath, {matchRegExp: /.*\.js/i}).on('file', function(file){
     require(path.join(env.modelsPath, file));
 }).walk();
 
