@@ -60,7 +60,7 @@ describe('server.js', function(){
                 urlencoded: sinon.stub().returns('body-parser-urlencoded')
             },
             'cookie-parser': sinon.stub().returns('cookie-parser'),
-            'express-session': sinon.stub().returns('express-session'),
+            'cookie-session': sinon.stub().returns('cookie-session'),
             'serve-static': sinon.stub().returnsArg(0)
         };
 
@@ -108,7 +108,7 @@ describe('server.js', function(){
             serveStatic = srv_requires['serve-static'],
             compression = srv_requires['compression'],
             bodyParser = srv_requires['body-parser'],
-            session = srv_requires['express-session'],
+            session = srv_requires['cookie-session'],
             morgan = srv_requires['morgan'];
 
         // ensure that first call of app.use is express.compress
@@ -139,21 +139,20 @@ describe('server.js', function(){
         assert(bodyParser.urlencoded.calledWithExactly({extended: false}));
 
         assert(express_app.use.withArgs('cookie-parser').calledOnce);
-        assert(cookieParser.calledWithExactly('umrum-cookie-key'));
+        assert(cookieParser.calledWithExactly(env.sessionKey));
 
-        assert(express_app.use.withArgs('express-session').calledOnce);
+        var oneDay = 24*60*60*1000,
+            oneYear = 365 * oneDay;
+
+        assert(express_app.use.withArgs('cookie-session').calledOnce);
         assert(session.calledWithExactly({
-            saveUninitialized: true, resave: true, secret: 'umrum-session-key'
+            secret: env.sessionKey, maxAge: oneYear, overwrite: true
         }));
 
         assert(serveStatic.calledTwice);
+        assert(serveStatic.calledWithExactly(env.assetsPath, {maxAge: oneDay}));
         assert(serveStatic.calledWithExactly(
-            env.assetsPath,
-            {maxAge: 24*60*60*1000}
-        ));
-        assert(serveStatic.calledWithExactly(
-            path.join(__dirname, '..', 'dist'),
-            {maxAge: 24*60*60*1000}
+            path.join(__dirname, '..', 'dist'), {maxAge: oneDay}
         ));
 
         assert(express_app.use.withArgs(env.assetsURL, env.assetsPath).calledOnce);

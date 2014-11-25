@@ -26,14 +26,13 @@ mongoose.connect(env.MONGO_URI, function (err) {
 });
 
 // load mongo models
-filewalker(
-    env.modelsPath, {matchRegExp: /.*\.js/i}
-).on('file', function(file){
+filewalker(env.modelsPath, {matchRegExp: /.*\.js/i}).on('file', function(file){
     require(path.join(env.modelsPath, file));
 }).walk();
 
 var app = express(),
-    oneDay = 1 * 24 * 60 * 60 * 1000;
+    oneDay = 1 * 24 * 60 * 60 * 1000,
+    oneYear = 365 * oneDay;
 
 // used in templates to get assets URLs
 app.locals.assetsURL = env.assetsURL;
@@ -76,11 +75,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 // parse cookies
 var cookieParser = require('cookie-parser');
-app.use(cookieParser('umrum-cookie-key'));
+app.use(cookieParser(env.sessionKey));
 
 // encrypt session
-var session = require('express-session');
-app.use(session({saveUninitialized: true, resave: true, secret: 'umrum-session-key' }));
+var session = require('cookie-session');
+app.use(session({secret: env.sessionKey, maxAge: oneYear, overwrite: true}));
 
 // new response render which passes html-minifier as callback to express render engine
 app.use(renderMinified);

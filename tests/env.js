@@ -26,4 +26,8 @@ describe('Tests the env module', function(){
         assert.equal(env.assetsURL, '/public/');
     });
 
+    it('should return the default value for session variable', function() {
+        assert.equal(env.sessionKey, 'umrum-secret');
+    });
+
 });
