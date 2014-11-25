@@ -73,14 +73,13 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-var cookieParser = require('cookie-parser'),
-    session = require('cookie-session'),
-    secreKey = 'umrum-secret';
-
 // parse cookies
-app.use(cookieParser(secreKey));
+var cookieParser = require('cookie-parser');
+app.use(cookieParser(env.sessionKey));
+
 // encrypt session
-app.use(session({secret: secreKey, maxAge: oneYear, overwrite: true}));
+var session = require('cookie-session');
+app.use(session({secret: env.sessionKey, maxAge: oneYear, overwrite: true}));
 
 // new response render which passes html-minifier as callback to express render engine
 app.use(renderMinified);
