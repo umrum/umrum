@@ -1,10 +1,9 @@
-/* global describe, it */
+/* global describe, it, before, after */
 
 var app = require('../server').app;
 var request = require('supertest');
 
 describe('Tests the index route', function(){
-
     it('should return status code 200', function(done){
         request(app)
             .get('/')
@@ -12,7 +11,6 @@ describe('Tests the index route', function(){
             .expect('Content-Type', 'text/html; charset=utf-8')
             .end(done);
     });
-
 });
 
 describe('Tests API routes', function(){
@@ -82,7 +80,6 @@ describe('Tests API routes', function(){
 });
 
 describe('Tests the errors route', function(){
-
     it('should return status code 404', function(done){
         request(app)
             .get('/not-found')
@@ -90,11 +87,9 @@ describe('Tests the errors route', function(){
             .expect('Content-Type', 'text/html; charset=utf-8')
             .end(done);
     });
-
 });
 
 describe('Tests /dashboard routes', function(){
-
     it('Anonymous access to /create must return 401', function(done){
         request(app)
             .post('/dashboard/create')
@@ -103,21 +98,38 @@ describe('Tests /dashboard routes', function(){
     });
 
     ['/dashboard', '/dashboard/myhost.com'].forEach(function(url){
-        it(
-            'Anonymous access to ' + url + ' must redirect to /signin',
-            function(done){
-                request(app)
-                    .get('/dashboard')
-                    .expect(302)
-                    .expect('location', '/signin')
-                    .expect(function(res){
-                        return (/github.com\/login\/oauth\/authorize/).test(
-                            res.headers.location
-                        );
-                    })
-                    .end(done);
-            }
-        );
+        it('Ensure that ' + url + ' requires login', function(done){
+            request(app)
+                .get('/dashboard')
+                .expect(302)
+                .expect('location', '/signin')
+                .expect(function(res){
+                    return (/github.com\/login\/oauth\/authorize/).test(
+                        res.headers.location
+                    );
+                })
+                .end(done);
+        });
     });
 
+    describe('Error handlers', function() {
+        var _http, _original_req;
+        before(function() {
+            _http = require('http');
+            _original_req = _http.IncomingMessage.prototype;
+            _http.IncomingMessage.prototype.isAuthenticated = function() {
+                return true;
+            };
+        });
+        after(function() {
+            _http.IncomingMessage.prototype = _original_req;
+        });
+
+        it('404 when accessing non existent host', function(done) {
+            request(app)
+                .get('/dashboard/non-existent.host')
+                .expect(404)
+                .end(done);
+        });
+    });
 });
