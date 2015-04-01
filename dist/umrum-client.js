@@ -36,7 +36,7 @@
                 img = doc.createElement('img');
                 img.id = this.elementID;
                 img.style.position = 'absolute';
-                img.style.top = img.style.left = '-1px';
+                img.style.top = img.style.left = '-100px';
                 img.height = img.width = 1;
                 doc.body.appendChild(img);
 
