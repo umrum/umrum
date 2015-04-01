@@ -29,7 +29,7 @@ describe('server.js', function(){
         minifyMock = sinon.spy();
         minifyMock['@noCallThru'] = true;
 
-        io = {set: sinon.spy()};
+        io = sinon.spy();
         walker = {
             on: sinon.stub(),
             walk: sinon.spy(),
@@ -41,7 +41,7 @@ describe('server.js', function(){
             'mongoose': {connect: sinon.spy()},
             'nunjucks': {configure: sinon.spy(), render: 'render'},
             'passport': {initialize: sinon.spy(), session: sinon.spy()},
-            'socket.io': {listen: sinon.stub().returns(io)},
+            'socket.io': sinon.stub().returns(io),
             'filewalker': sinon.stub().returns(walker),
 
             './config/authentication': sinon.spy(),
@@ -178,10 +178,7 @@ describe('server.js', function(){
     });
 
     it('io listen', function() {
-        assert(srv_requires['socket.io'].listen.calledOnce);
-        assert(srv_requires['socket.io'].listen.calledWith(express_listening));
-
-        assert(io.set.calledOnce);
-        assert(io.set.calledWithExactly('log level', 2));
+        assert(srv_requires['socket.io'].calledOnce);
+        assert(srv_requires['socket.io'].calledWith(express_listening, {'log level': 2}));
     });
 });
