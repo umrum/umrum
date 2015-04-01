@@ -116,8 +116,7 @@ var server = app.listen(env.port, env.ipaddr, function(err) {
     );
 });
 
-var io = require('socket.io').listen(server);
-io.set('log level', 2);
+var io = require('socket.io')(server, {'log level': 2});
 
 module.exports = {
     'app': app,

@@ -40,7 +40,7 @@ module.exports = function(app){
 
         var io = require('../../server').io;
         api.getHostInfo(active_user.hostId, function(err, info){
-            io.sockets.emit(active_user.hostId, info);
+            io.emit(active_user.hostId, info);
         });
 
         return res.json(active_user);
@@ -53,7 +53,7 @@ module.exports = function(app){
 
         var io = require('../../server').io;
         api.getHostInfo(active_user.hostId, function(err, info){
-            io.sockets.emit(active_user.hostId, info);
+            io.emit(active_user.hostId, info);
         });
 
         return res.json(active_user);
