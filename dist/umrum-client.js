@@ -27,7 +27,7 @@
 
     // def umrum API
     var API = {
-        API_URL: 'http://umrum.io/api',
+        API_URL: '//umrum.io/api',
         elementID: 'umrumAPI',
         element: null,
         init: function(){
