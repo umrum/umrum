@@ -11,6 +11,7 @@ deploy:
         - add-to-known_hosts:
             hostname: $PRODUCTION_HOST
             port: $PRODUCTION_SSH_PORT
+            local: true
         - mktemp:
             envvar: PRIVATEKEY_PATH
         - create-file:
