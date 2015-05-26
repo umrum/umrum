@@ -1,7 +1,7 @@
-box: wercker/nodejs
+box: nodesource/trusty:0.12.0
 services:
-    - wercker/mongodb
-    - wercker/redis
+    - mongo
+    - redis
 build:
     steps:
         - npm-install
