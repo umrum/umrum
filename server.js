@@ -66,8 +66,6 @@ app.use(morgan({
     }
 }));
 
-// app.use(express.favicon());
-
 // parse request parameters
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
