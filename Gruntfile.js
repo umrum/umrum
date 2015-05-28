@@ -14,13 +14,11 @@ module.exports = function(grunt) {
         // Task configuration.
         uglify: {
             options: {
-                banner: '<%= banner %>'
+                banner: '<%= banner %>',
+                screwIE8: true,
+                sourceMap: false
             },
             core: {
-                options: {
-                    sourceMap: true,
-                    sourceMapName: 'public/js/core.js.map'
-                },
                 files: {
                     'public/js/core.min.js': [
                         'bower_modules/modernizr/modernizr.js',
@@ -29,10 +27,6 @@ module.exports = function(grunt) {
                 }
             },
             site: {
-                options: {
-                    sourceMap: true,
-                    sourceMapName: 'public/js/site.js.map'
-                },
                 files: {
                     'public/js/site.min.js': [
                         'src/js/plugins/*.js',
@@ -43,10 +37,6 @@ module.exports = function(grunt) {
                 }
             },
             application: {
-                options: {
-                    sourceMap: true,
-                    sourceMapName: 'public/js/application.js.map'
-                },
                 files: {
                     'public/js/application.min.js': [
                         'bower_modules/react/react.min.js',
