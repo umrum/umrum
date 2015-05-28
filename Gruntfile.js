@@ -105,6 +105,22 @@ module.exports = function(grunt) {
                 }
             }
         },
+        mochacli: {
+            files: 'tests/',
+            options: {
+                reporter: 'spec',
+                recursive: true,
+                env: {
+                    NODE_ENV: "test",
+                    MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
+                    NODE_PORT: "8000",
+                    NODE_IP: "0.0.0.0",
+                    GITHUB_ID: "SOME_GITHUB_ID",
+                    GITHUB_SECRET: "SOME_GITHU_SECRET",
+                    GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
+                }
+            }
+        },
         autoprefixer: {
             dist: {
                 options: {
@@ -124,39 +140,34 @@ module.exports = function(grunt) {
                 src: '**',
                 dest: 'public/img'
             },
-            fontawesome: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'bower_modules/fontawesome/fonts/',
-                        src: '*',
-                        dest: 'public/fonts'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_modules/fontawesome/less/',
-                        src: '*',
-                        dest: '.less_compile/font-awesome/'
-                    },
-                ]
+            fonts: {
+                expand: true,
+                cwd: 'bower_modules/fontawesome/fonts/',
+                src: '*',
+                dest: 'public/fonts'
             },
-            bootstrapLess: {
+            bowerLess: {
                 files: [
                     {
                         expand: true,
                         cwd: 'bower_modules/bootstrap/',
                         src: '*.less',
                         dest: '.less_compile'
-                    },
-                    {
+                     },
+                     {
                         expand: true,
-                        cwd: 'src/less/',
-                        src: '**',
-                        dest: '.less_compile'
+                        cwd: 'bower_modules/fontawesome/less/',
+                        src: '*',
+                        dest: '.less_compile/font-awesome/'
                     }
                 ]
+            },
+            srcLess: {
+                expand: true,
+                cwd: 'src/less/',
+                src: '**',
+                dest: '.less_compile'
             }
-
         },
         react: {
             compile: {
@@ -181,34 +192,38 @@ module.exports = function(grunt) {
                 }
             }
         },
-        mochacli: {
-            files: 'tests/',
-            options: {
-                reporter: 'spec',
-                recursive: true,
-                env: {
-                    NODE_ENV: "test",
-                    MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
-                    NODE_PORT: "8000",
-                    NODE_IP: "0.0.0.0",
-                    GITHUB_ID: "SOME_GITHUB_ID",
-                    GITHUB_SECRET: "SOME_GITHU_SECRET",
-                    GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
-                }
-            }
+        watch: {
+            less: {
+                files: ['src/less/**'],
+                tasks: ['_less'],
+            },
+            react: {
+                files: ['app/src/**'],
+                tasks: ['doReact'],
+            },
+            site: {
+                files: ['src/js/**'],
+                tasks: ['uglify:site'],
+            },
         },
-        jest: {
-          options: {
-            coverage: true,
-            testPathPattern: /client-app\/.*.js/
-          }
+        concurrent: {
+            server: {
+                tasks: ['watch:less', 'watch:react', 'watch:site', 'nodemon:dev'],
+                options: {
+                    logConcurrentOutput: true
+                }
+            },
+            build: {
+                tasks: ['doLess', 'doReact', 'uglify:site']
+            }
         },
         nodemon: {
             dev: {
                 script: 'server.js',
+                watch: ['app'],
+                ignore: ['app/src/**'],
+                ext: '*',
                 options: {
-                    ext: '*',
-                    watch: ['app', 'src'],
                     env: {
                         NODE_ENV: "dev",
                         MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
@@ -217,27 +232,6 @@ module.exports = function(grunt) {
                         GITHUB_ID: "50e4a60802b87028b98f",
                         GITHUB_SECRET: "59a86c98576017e0fe9d56b667f5748368595b7d",
                         GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
-                    },
-                    callback: function (nodemon) {
-                        nodemon.on('log', function (e) {
-                            grunt.log.writeln(e.colour);
-                        });
-
-                        nodemon.on('restart', function () {
-                            grunt.log.subhead('Running compile task ... ');
-                            grunt.util.spawn({
-                                grunt: true,
-                                args: ['_compile'],
-                            }, function(err, result) {
-                                grunt.log.debug(result.toString());
-                                if (err || result.code !== 0) {
-                                    grunt.log.write('Error while compiling')
-                                             .error()
-                                             .error(err);
-                                }
-                                grunt.log.subhead('Compile task: \u001b[32mOK\u001B[0m');
-                            });
-                        });
                     }
                 }
             }
@@ -249,25 +243,24 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
     grunt.loadNpmTasks('grunt-react');
-    grunt.loadNpmTasks('grunt-jest');
+    grunt.loadNpmTasks('grunt-concurrent');
 
     // private tasks
-    grunt.registerTask('_minjs', ['react', 'uglify']);
-    grunt.registerTask('_lessc', ['copy:bootstrapLess', 'less', 'autoprefixer']);
-    grunt.registerTask('_compile', ['copy-static', '_lessc', '_minjs']);
+    grunt.registerTask('_less', ['copy:srcLess', 'less', 'autoprefixer']);
+    grunt.registerTask('doLess', ['copy:bowerLess', '_less']);
+    grunt.registerTask('doReact', ['react:compile', 'uglify:application']);
 
-    grunt.registerTask('minjs', ['bower:install', '_minjs']);
-    grunt.registerTask('mincss', ['bower:install', '_lessc']);
-    grunt.registerTask('copy-static', ['copy:imgs', 'copy:fontawesome']);
-
-    grunt.registerTask('compile', ['bower:install', '_compile']);
 
     grunt.registerTask('unittest', ['jshint', 'mochacli']);
 
-    grunt.registerTask('server', ['compile', 'nodemon:dev']);
+    grunt.registerTask('install', ['bower:install', 'uglify:core', 'copy:imgs', 'copy:fonts']);
+    grunt.registerTask('build', 'concurrent:build');
+
+    grunt.registerTask('server', ['concurrent:server']);
 };
