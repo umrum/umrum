@@ -212,18 +212,7 @@ module.exports = function(grunt) {
                 script: 'server.js',
                 watch: ['app'],
                 ignore: ['app/src/**'],
-                ext: '*',
-                options: {
-                    env: {
-                        NODE_ENV: "dev",
-                        MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",
-                        NODE_PORT: "8000",
-                        NODE_IP: "0.0.0.0",
-                        GITHUB_ID: "50e4a60802b87028b98f",
-                        GITHUB_SECRET: "59a86c98576017e0fe9d56b667f5748368595b7d",
-                        GITHUB_CALLBACK: "http://localhost:8000/auth/github/callback"
-                    }
-                }
+                ext: '*'
             }
         }
     });
