@@ -17,15 +17,6 @@ var _env = process.env.NODE_ENV || 'dev',
     }
 ;
 
-if ( process.env.OPENSHIFT_SECRET_TOKEN ) {
-  _env = 'production';
-  _port = process.env.OPENSHIFT_NODEJS_PORT;
-  _ipaddr = process.env.OPENSHIFT_NODEJS_IP;
-  _redisHost = process.env.OPENSHIFT_REDIS_HOST;
-  _redisPort = process.env.OPENSHIFT_REDIS_PORT;
-  _redisOptions.auth_pass = process.env.REDIS_PASSWORD;
-}
-
 var root_dir = path.join(__dirname, '..'),
     app_dir = path.join(root_dir, 'app');
 
