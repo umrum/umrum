@@ -6,13 +6,24 @@ var sinon = require('sinon'),
 
 describe('app/ext/redis', function(){
     var configRedis = null,
-        mPipeline = null,
         mPubSub = null,
         mRedis = null,
         _redisApi = null;
 
+    var stub_returnsPromise = function(){
+        var m = sinon.stub();
+        m._ret_ = { then: sinon.stub(), catch: sinon.stub() };
+        m.returns(m._ret_);
+        return m;
+    };
+
     before(function(){
-        mPipeline = {
+        mRedis = {
+            hget: stub_returnsPromise(),
+            multi: stub_returnsPromise(),
+            hgetall: stub_returnsPromise(),
+            lrange: stub_returnsPromise(),
+            zrevrangebyscore: stub_returnsPromise(),
             del: sinon.spy(),
             hmset: sinon.spy(),
             setex: sinon.spy(),
@@ -20,16 +31,7 @@ describe('app/ext/redis', function(){
             zincrby: sinon.spy(),
             lpush: sinon.spy(),
             ltrim: sinon.spy(),
-            exec: sinon.spy()
-        };
-        mRedis = {
-            on: sinon.stub(),
-            hget: sinon.stub(),
-            multi: sinon.stub().returns(mPipeline),
-            hgetall: sinon.stub(),
-            lrange: sinon.stub(),
-            psubscribe: sinon.stub(),
-            zrevrangebyscore: sinon.stub()
+            exec: stub_returnsPromise()
         };
         mPubSub = {
             on: sinon.stub(),
@@ -47,10 +49,14 @@ describe('app/ext/redis', function(){
     });
 
     afterEach(function(){
-        [mPipeline, mPubSub, mRedis].forEach(function(mock){
+        [mPubSub, mRedis].forEach(function(mock){
             Object.keys(mock).forEach(function(method){
                 if ( mock.hasOwnProperty(method) ) {
-                    mock[method].reset();
+                    if ( mock[method]._ret_ ) {
+                        mock[method] = stub_returnsPromise();
+                    } else {
+                        mock[method].reset();
+                    }
                 }
             });
         });
@@ -78,50 +84,63 @@ describe('app/ext/redis', function(){
     });
 
     describe('#getHostInfo', function(){
-        var zrevrangeCallbackArgumentIndex = 7,
-            lrangeCallbackArgumentIndex = 3,
-            hgetCallbackArgumentIndex = 2,
-            host = 'IDforTesthost.com',
-            currentVisits = null,
-            serverTime = -1,
-            pageLoadTime = -1,
-            topPages = null,
-            err = null,
-            callback = null;
+        var host = 'IDforTesthost.com',
+            callback = null,
+            currentVisits,
+            topPages,
+            err,
+            serverTime,
+            pageLoadTime;
 
+        var sanitizeVariables = function(){
+                currentVisits = null;
+                topPages = null;
+                err = undefined;
+                serverTime = -1;
+                pageLoadTime = -1;
+            };
         var _calculate_hostInfo = function(){
-            var expectedHostInfo = {
+            return {
                 'currentVisits': currentVisits,
                 'serverTime': serverTime,
                 'pageLoadTime': pageLoadTime,
-                'topPages': null
-            };
-            if ( topPages ) {
-                expectedHostInfo.topPages = topPages.map(function(item, idx, arr){
-                    if (idx%2) {
-                        return null;
-                    }
-                    return {
+                'topPages': !topPages ? null : topPages.map(function(item, i, arr){
+                    return ( i%2 ) ? null : {
                       url: item,
-                      counter: parseInt(arr[idx+1], 10)
+                      counter: parseInt(arr[i+1], 10)
                     };
                 }).filter(function(item){
                     return item && item.counter;
-                });
-            }
-            return expectedHostInfo;
+                })
+            };
         };
 
         beforeEach(function(){
             callback = sinon.spy();
+            sanitizeVariables();
+
+            /* normal promises excutions */
+            mRedis.hget._ret_.then.returns(mRedis.zrevrangebyscore._ret_);
+            mRedis.zrevrangebyscore._ret_.then.returns(mRedis.lrange._ret_);
+            mRedis.lrange._ret_.then.returnsThis();
         });
 
-        afterEach(function(){
-            currentVisits = null;
-            topPages = null;
-            err = null;
-            serverTime = -1;
-            pageLoadTime = -1;
+        it('assert method flow', function() {
+            /* execute method */
+            _redisApi.getHostInfo(host, callback);
+
+            /* MOCKs verifications */
+            assert.ok(mRedis.hget.calledOnce);
+            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
+
+            assert.ok(!mRedis.zrevrangebyscore.calledOnce);
+            assert.ok(!mRedis.lrange.calledOnce);
+            assert.ok(!callback.calledOnce);
+
+            assert.ok(mRedis.hget._ret_.then.calledOnce);
+            assert.ok(mRedis.zrevrangebyscore._ret_.then.calledOnce);
+            assert.ok(mRedis.lrange._ret_.then.calledTwice);
+            assert.ok(mRedis.lrange._ret_.catch.calledOnce);
         });
 
         it('normal behavior', function() {
@@ -133,27 +152,18 @@ describe('app/ext/redis', function(){
             serverTime = 3; // Math.round(2.5)
             pageLoadTime = 25;
 
-            /* callbacks excutions */
-            mRedis.hget.callsArgWith(
-                hgetCallbackArgumentIndex, null, currentVisits
-            );
-            mRedis.zrevrangebyscore.callsArgWith(
-                zrevrangeCallbackArgumentIndex, null, topPages
-            );
-            mRedis.lrange.onFirstCall().callsArgWith(
-                lrangeCallbackArgumentIndex, null, serverTimeList
-            );
-            mRedis.lrange.onSecondCall().callsArgWith(
-                lrangeCallbackArgumentIndex, null, pageLoadList
-            );
+            /* promises excutions */
+            mRedis.hget._ret_.then.callsArgWith(0, currentVisits);
+            mRedis.zrevrangebyscore._ret_.then.callsArgWith(0, topPages);
+            mRedis.lrange._ret_.then.onFirstCall()
+                .callsArgWith(0, serverTimeList).returnsThis();
+            mRedis.lrange._ret_.then.onSecondCall()
+                .callsArgWith(0, pageLoadList).returnsThis();
 
             /* execute method */
             _redisApi.getHostInfo(host, callback);
 
             /* MOCKs verifications */
-
-            assert.ok(mRedis.hget.calledOnce);
-            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
 
             assert.ok(mRedis.zrevrangebyscore.calledOnce);
             assert.ok(mRedis.zrevrangebyscore.calledWith(
@@ -168,167 +178,47 @@ describe('app/ext/redis', function(){
             assert.ok(mRedis.lrange.calledWith('pageload:'+host, 0, 49));
 
             assert.ok(callback.calledOnce);
-            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
+            assert.ok(callback.calledWithMatch(err, _calculate_hostInfo()));
         });
 
-        it('no results hget', function() {
-            /* callbacks excutions */
-            mRedis.hget.callsArgWith(
-                hgetCallbackArgumentIndex, null, currentVisits
-            );
-
+        it('hget no-results threw', function() {
             /* execute method */
             _redisApi.getHostInfo(host, callback);
 
             /* MOCKs verifications */
-
-            assert.ok(mRedis.hget.calledOnce);
-            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
-
             assert.ok(!mRedis.zrevrangebyscore.called);
             assert.ok(!mRedis.lrange.called);
-
-            assert.ok(callback.calledOnce);
-            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
+            assert.throws(function() {
+                mRedis.hget._ret_.then.callArgWith(0, currentVisits);
+            }, function(err) {
+                return (err instanceof Error) && /No visitors/.test(err);
+            }, "unexpected error");
         });
 
-        it('error in hget', function() {
-            err = {error: 'some error'};
-
-            /* callbacks excutions */
-            mRedis.hget.callsArgWith(
-                hgetCallbackArgumentIndex, err, null
-            );
-
+        it('zrevrangebyscore no-result do not threw', function() {
             /* execute method */
             _redisApi.getHostInfo(host, callback);
 
             /* MOCKs verifications */
+            assert.doesNotThrow(function() {
+                mRedis.zrevrangebyscore._ret_.then.callArgWith(0, null);
+            });
 
-            assert.ok(mRedis.hget.calledOnce);
-            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
-
-            assert.ok(!mRedis.zrevrangebyscore.called);
-            assert.ok(!mRedis.lrange.called);
-
-            assert.ok(callback.calledOnce);
-            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
-
-        });
-
-        it('no result in zrevrangebyscore', function() {
-            currentVisits = '7';
-
-            /* callbacks excutions */
-            mRedis.hget.callsArgWith(
-                hgetCallbackArgumentIndex, null, currentVisits
-            );
-            mRedis.zrevrangebyscore.callsArgWith(
-                zrevrangeCallbackArgumentIndex, null, topPages
-            );
-
-            /* execute method */
-            _redisApi.getHostInfo(host, callback);
-
-            /* MOCKs verifications */
-
-            assert.ok(mRedis.hget.calledOnce);
-            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
-
-            assert.ok(!mRedis.lrange.called);
-
-            assert.ok(mRedis.zrevrangebyscore.calledOnce);
-            assert.ok(mRedis.zrevrangebyscore.calledWith(
-                'toppages:'+host,
-                '+inf', '-inf',
-                'WITHSCORES',
-                'LIMIT', 0, 10
-            ));
-
-            assert.ok(callback.calledOnce);
-            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
-        });
-
-        it('empty result in zrevrangebyscore', function() {
-            var serverTimeList = [],
-                pageLoadList = [];
-
-            currentVisits = '7';
-            topPages = [];
-            serverTime = 0; // Math.round(2.5)
-            pageLoadTime = 0;
-
-
-            /* callbacks excutions */
-            mRedis.hget.callsArgWith(
-                hgetCallbackArgumentIndex, null, currentVisits
-            );
-            mRedis.zrevrangebyscore.callsArgWith(
-                zrevrangeCallbackArgumentIndex, null, topPages
-            );
-            mRedis.lrange.onFirstCall().callsArgWith(
-                lrangeCallbackArgumentIndex, null, serverTimeList
-            );
-            mRedis.lrange.onSecondCall().callsArgWith(
-                lrangeCallbackArgumentIndex, null, pageLoadList
-            );
-
-            /* execute method */
-            _redisApi.getHostInfo(host, callback);
-
-            /* MOCKs verifications */
-
-            assert.ok(mRedis.hget.calledOnce);
-            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
-
-            assert.ok(mRedis.lrange.calledTwice);
+            assert.ok(mRedis.lrange.calledOnce);
             assert.ok(mRedis.lrange.calledWith('servertime:'+host, 0, 49));
-            assert.ok(mRedis.lrange.calledWith('pageload:'+host, 0, 49));
-
-            assert.ok(mRedis.zrevrangebyscore.calledOnce);
-            assert.ok(mRedis.zrevrangebyscore.calledWith(
-                'toppages:'+host,
-                '+inf', '-inf',
-                'WITHSCORES',
-                'LIMIT', 0, 10
-            ));
-
-            assert.ok(callback.calledOnce);
-            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
         });
 
-        it('error in zrevrangebyscore', function() {
-            err = {error: 'some error'};
-            currentVisits = '7';
-
-            /* callbacks excutions */
-            mRedis.hget.callsArgWith(
-                hgetCallbackArgumentIndex, null, currentVisits
-            );
-            mRedis.zrevrangebyscore.callsArgWith(
-                zrevrangeCallbackArgumentIndex, err, null
-            );
-
+        it('zrevrangebyscore empty array ', function() {
             /* execute method */
             _redisApi.getHostInfo(host, callback);
 
             /* MOCKs verifications */
+            assert.doesNotThrow(function() {
+                mRedis.zrevrangebyscore._ret_.then.callArgWith(0, []);
+            });
 
-            assert.ok(mRedis.hget.calledOnce);
-            assert.ok(mRedis.hget.calledWith(host, 'curr_visits'));
-
-            assert.ok(!mRedis.lrange.called);
-
-            assert.ok(mRedis.zrevrangebyscore.calledOnce);
-            assert.ok(mRedis.zrevrangebyscore.calledWith(
-                'toppages:'+host,
-                '+inf', '-inf',
-                'WITHSCORES',
-                'LIMIT', 0, 10
-            ));
-
-            assert.ok(callback.calledOnce);
-            assert.ok(callback.calledWith(err, _calculate_hostInfo()));
+            assert.ok(mRedis.lrange.calledOnce);
+            assert.ok(mRedis.lrange.calledWith('servertime:'+host, 0, 49));
         });
     });
 
@@ -343,7 +233,7 @@ describe('app/ext/redis', function(){
             };
 
             /* callbacks excutions */
-            mRedis.hgetall.callsArgWith(1, undefined, null);
+            mRedis.hgetall._ret_.then.callsArgWith(0, null);
 
             /* execute method */
             _redisApi.registerPageView(active_user);
@@ -355,45 +245,45 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(mPipeline.hincrby.calledOnce);
-            assert.ok(mPipeline.hincrby.calledWith(
+            assert.ok(mRedis.hincrby.calledOnce);
+            assert.ok(mRedis.hincrby.calledWith(
                 active_user.hostId, 'curr_visits', 1
             ));
 
-            assert.ok(mPipeline.zincrby.calledOnce);
-            assert.ok(mPipeline.zincrby.calledWith(
+            assert.ok(mRedis.zincrby.calledOnce);
+            assert.ok(mRedis.zincrby.calledWith(
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
-            assert.ok(mPipeline.lpush.calledTwice);
-            assert.ok(mPipeline.lpush.calledWith(
+            assert.ok(mRedis.lpush.calledTwice);
+            assert.ok(mRedis.lpush.calledWith(
                 'servertime:'+active_user.hostId, active_user.servertime
             ));
-            assert.ok(mPipeline.lpush.calledWith(
+            assert.ok(mRedis.lpush.calledWith(
                 'pageload:'+active_user.hostId, active_user.pageload
             ));
 
-            assert.ok(mPipeline.ltrim.calledTwice);
-            assert.ok(mPipeline.ltrim.calledWith(
+            assert.ok(mRedis.ltrim.calledTwice);
+            assert.ok(mRedis.ltrim.calledWith(
                 'servertime:'+active_user.hostId, 0, 49
             ));
-            assert.ok(mPipeline.ltrim.calledWith(
+            assert.ok(mRedis.ltrim.calledWith(
                 'pageload:'+active_user.hostId, 0, 49
             ));
 
-            assert.ok(mPipeline.hmset.calledOnce);
-            assert.ok(mPipeline.hmset.calledWith(
+            assert.ok(mRedis.hmset.calledOnce);
+            assert.ok(mRedis.hmset.calledWith(
                 active_user.uid, active_user
             ));
 
-            assert.ok(mPipeline.setex.calledOnce);
-            assert.ok(mPipeline.setex.calledAfter(mPipeline.hmset));
-            assert.ok(mPipeline.setex.calledWith(
+            assert.ok(mRedis.setex.calledOnce);
+            assert.ok(mRedis.setex.calledAfter(mRedis.hmset));
+            assert.ok(mRedis.setex.calledWith(
                 'expusr-'+active_user.uid, 300, 1
             ));
 
-            assert.ok(mPipeline.exec.calledOnce);
-            assert.ok(mPipeline.exec.calledAfter(mPipeline.setex));
+            assert.ok(mRedis.exec.calledOnce);
+            assert.ok(mRedis.exec.calledAfter(mRedis.setex));
         });
 
         it('new user without servertime', function() {
@@ -406,7 +296,7 @@ describe('app/ext/redis', function(){
             };
 
             /* callbacks excutions */
-            mRedis.hgetall.callsArgWith(1, undefined, null);
+            mRedis.hgetall._ret_.then.callsArgWith(0, null);
 
             /* execute method */
             _redisApi.registerPageView(active_user);
@@ -418,39 +308,39 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(mPipeline.hincrby.calledOnce);
-            assert.ok(mPipeline.hincrby.calledWith(
+            assert.ok(mRedis.hincrby.calledOnce);
+            assert.ok(mRedis.hincrby.calledWith(
                 active_user.hostId, 'curr_visits', 1
             ));
 
-            assert.ok(mPipeline.zincrby.calledOnce);
-            assert.ok(mPipeline.zincrby.calledWith(
+            assert.ok(mRedis.zincrby.calledOnce);
+            assert.ok(mRedis.zincrby.calledWith(
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
-            assert.ok(mPipeline.lpush.calledOnce);
-            assert.ok(mPipeline.lpush.calledWith(
+            assert.ok(mRedis.lpush.calledOnce);
+            assert.ok(mRedis.lpush.calledWith(
                 'pageload:'+active_user.hostId, active_user.pageload
             ));
 
-            assert.ok(mPipeline.ltrim.calledOnce);
-            assert.ok(mPipeline.ltrim.calledWith(
+            assert.ok(mRedis.ltrim.calledOnce);
+            assert.ok(mRedis.ltrim.calledWith(
                 'pageload:'+active_user.hostId, 0, 49
             ));
 
-            assert.ok(mPipeline.hmset.calledOnce);
-            assert.ok(mPipeline.hmset.calledWith(
+            assert.ok(mRedis.hmset.calledOnce);
+            assert.ok(mRedis.hmset.calledWith(
                 active_user.uid, active_user
             ));
 
-            assert.ok(mPipeline.setex.calledOnce);
-            assert.ok(mPipeline.setex.calledAfter(mPipeline.hmset));
-            assert.ok(mPipeline.setex.calledWith(
+            assert.ok(mRedis.setex.calledOnce);
+            assert.ok(mRedis.setex.calledAfter(mRedis.hmset));
+            assert.ok(mRedis.setex.calledWith(
                 'expusr-'+active_user.uid, 300, 1
             ));
 
-            assert.ok(mPipeline.exec.calledOnce);
-            assert.ok(mPipeline.exec.calledAfter(mPipeline.setex));
+            assert.ok(mRedis.exec.calledOnce);
+            assert.ok(mRedis.exec.calledAfter(mRedis.setex));
         });
 
         it('new user without pageload', function() {
@@ -463,7 +353,7 @@ describe('app/ext/redis', function(){
             };
 
             /* callbacks excutions */
-            mRedis.hgetall.callsArgWith(1, undefined, null);
+            mRedis.hgetall._ret_.then.callsArgWith(0, null);
 
             /* execute method */
             _redisApi.registerPageView(active_user);
@@ -475,39 +365,39 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(mPipeline.hincrby.calledOnce);
-            assert.ok(mPipeline.hincrby.calledWith(
+            assert.ok(mRedis.hincrby.calledOnce);
+            assert.ok(mRedis.hincrby.calledWith(
                 active_user.hostId, 'curr_visits', 1
             ));
 
-            assert.ok(mPipeline.zincrby.calledOnce);
-            assert.ok(mPipeline.zincrby.calledWith(
+            assert.ok(mRedis.zincrby.calledOnce);
+            assert.ok(mRedis.zincrby.calledWith(
                 'toppages:'+active_user.hostId, 1, active_user.url
             ));
 
-            assert.ok(mPipeline.lpush.calledOnce);
-            assert.ok(mPipeline.lpush.calledWith(
+            assert.ok(mRedis.lpush.calledOnce);
+            assert.ok(mRedis.lpush.calledWith(
                 'servertime:'+active_user.hostId, active_user.servertime
             ));
 
-            assert.ok(mPipeline.ltrim.calledOnce);
-            assert.ok(mPipeline.ltrim.calledWith(
+            assert.ok(mRedis.ltrim.calledOnce);
+            assert.ok(mRedis.ltrim.calledWith(
                 'servertime:'+active_user.hostId, 0, 49
             ));
 
-            assert.ok(mPipeline.hmset.calledOnce);
-            assert.ok(mPipeline.hmset.calledWith(
+            assert.ok(mRedis.hmset.calledOnce);
+            assert.ok(mRedis.hmset.calledWith(
                 active_user.uid, active_user
             ));
 
-            assert.ok(mPipeline.setex.calledOnce);
-            assert.ok(mPipeline.setex.calledAfter(mPipeline.hmset));
-            assert.ok(mPipeline.setex.calledWith(
+            assert.ok(mRedis.setex.calledOnce);
+            assert.ok(mRedis.setex.calledAfter(mRedis.hmset));
+            assert.ok(mRedis.setex.calledWith(
                 'expusr-'+active_user.uid, 300, 1
             ));
 
-            assert.ok(mPipeline.exec.calledOnce);
-            assert.ok(mPipeline.exec.calledAfter(mPipeline.setex));
+            assert.ok(mRedis.exec.calledOnce);
+            assert.ok(mRedis.exec.calledAfter(mRedis.setex));
         });
 
         it('old user changed page', function() {
@@ -523,7 +413,7 @@ describe('app/ext/redis', function(){
                 };
 
             /* callbacks excutions */
-            mRedis.hgetall.callsArgWith(1, undefined, old_user);
+            mRedis.hgetall._ret_.then.callsArgWith(0, old_user);
 
             /* execute method */
             _redisApi.registerPageView(active_user);
@@ -535,29 +425,29 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(!mPipeline.hincrby.called);
+            assert.ok(!mRedis.hincrby.called);
 
-            assert.ok(mPipeline.zincrby.calledTwice);
-            assert.ok(mPipeline.zincrby.firstCall.args, [
+            assert.ok(mRedis.zincrby.calledTwice);
+            assert.ok(mRedis.zincrby.firstCall.args, [
                 'toppages:'+active_user.hostId, -1, active_user.url
             ]);
-            assert.ok(mPipeline.zincrby.secondCall.args, [
+            assert.ok(mRedis.zincrby.secondCall.args, [
                 'toppages:'+active_user.hostId, 1, active_user.url
             ]);
 
-            assert.ok(mPipeline.hmset.calledOnce);
-            assert.ok(mPipeline.hmset.calledWith(
+            assert.ok(mRedis.hmset.calledOnce);
+            assert.ok(mRedis.hmset.calledWith(
                 active_user.uid, active_user
             ));
 
-            assert.ok(mPipeline.setex.calledOnce);
-            assert.ok(mPipeline.setex.calledAfter(mPipeline.hmset));
-            assert.ok(mPipeline.setex.calledWith(
+            assert.ok(mRedis.setex.calledOnce);
+            assert.ok(mRedis.setex.calledAfter(mRedis.hmset));
+            assert.ok(mRedis.setex.calledWith(
                 'expusr-'+active_user.uid, 300, 1
             ));
 
-            assert.ok(mPipeline.exec.calledOnce);
-            assert.ok(mPipeline.exec.calledAfter(mPipeline.setex));
+            assert.ok(mRedis.exec.calledOnce);
+            assert.ok(mRedis.exec.calledAfter(mRedis.setex));
         });
     });
 
@@ -570,7 +460,7 @@ describe('app/ext/redis', function(){
             };
 
             /* callbacks excutions */
-            mRedis.hgetall.callsArgWith(1, undefined, active_user);
+            mRedis.hgetall._ret_.then.callsArgWith(0, active_user);
 
             /* execute method */
             _redisApi.removePageView(active_user);
@@ -582,21 +472,21 @@ describe('app/ext/redis', function(){
 
             assert.ok(mRedis.multi.calledOnce);
 
-            assert.ok(mPipeline.del.calledOnce);
-            assert.ok(mPipeline.del.calledWith(active_user.uid));
+            assert.ok(mRedis.del.calledOnce);
+            assert.ok(mRedis.del.calledWith(active_user.uid));
 
-            assert.ok(mPipeline.hincrby.calledOnce);
-            assert.ok(mPipeline.hincrby.calledWith(
+            assert.ok(mRedis.hincrby.calledOnce);
+            assert.ok(mRedis.hincrby.calledWith(
                 active_user.hostId, 'curr_visits', -1
             ));
 
-            assert.ok(mPipeline.zincrby.calledOnce);
-            assert.ok(mPipeline.zincrby.calledWith(
+            assert.ok(mRedis.zincrby.calledOnce);
+            assert.ok(mRedis.zincrby.calledWith(
                 'toppages:'+active_user.hostId, -1, active_user.url
             ));
 
-            assert.ok(mPipeline.exec.calledOnce);
-            assert.ok(mPipeline.exec.calledAfter(mPipeline.zincrby));
+            assert.ok(mRedis.exec.calledOnce);
+            assert.ok(mRedis.exec.calledAfter(mRedis.zincrby));
         });
 
         it('old_usr doesnt exists', function() {
@@ -618,10 +508,10 @@ describe('app/ext/redis', function(){
             assert.ok(mRedis.hgetall.calledWith(active_user.uid));
 
             assert.ok(!mRedis.multi.called);
-            assert.ok(!mPipeline.del.called);
-            assert.ok(!mPipeline.hincrby.called);
-            assert.ok(!mPipeline.zincrby.called);
-            assert.ok(!mPipeline.exec.called);
+            assert.ok(!mRedis.del.called);
+            assert.ok(!mRedis.hincrby.called);
+            assert.ok(!mRedis.zincrby.called);
+            assert.ok(!mRedis.exec.called);
         });
 
         it('old_usr different URL from active_usr', function() {
@@ -648,10 +538,10 @@ describe('app/ext/redis', function(){
             assert.ok(mRedis.hgetall.calledWith(active_user.uid));
 
             assert.ok(!mRedis.multi.called);
-            assert.ok(!mPipeline.del.called);
-            assert.ok(!mPipeline.hincrby.called);
-            assert.ok(!mPipeline.zincrby.called);
-            assert.ok(!mPipeline.exec.called);
+            assert.ok(!mRedis.del.called);
+            assert.ok(!mRedis.hincrby.called);
+            assert.ok(!mRedis.zincrby.called);
+            assert.ok(!mRedis.exec.called);
         });
     });
 });

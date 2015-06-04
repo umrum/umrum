@@ -1,23 +1,21 @@
-module.exports.init = function(){
-    var env = require('./env');
+module.exports.init = function(name){
+    if ( !name ) {
+        name = 'default:' + parseInt(Math.random()*1000);
+    }
 
-    var client = require('redis').createClient(
-        env.REDIS_PORT, env.REDIS_HOST, env.REDIS_OPTIONS
-    );
+    var env = require('./env'),
+        _extend = require('util')._extend,
+        opts = _extend(env.REDIS_OPTIONS, {
+            port: env.REDIS_PORT,
+            host: env.REDIS_HOST
+        });
 
-    client.on('connect', function(){
-        console.log([
-            'Redis successfully connected to: ',
-            env.REDIS_HOST,
-            ':',
-            env.REDIS_PORT
-        ].join(''));
-        console.log('Redis connection options: ', env.REDIS_OPTIONS);
-    });
-
-    client.on('error', function(err) {
-        console.error('Error in redis connection', err);
-    });
+    var client = require('then-redis').createClient(opts);
+    client
+    .on('connect', function(){
+        console.log('redis-cli[%s] connected with options: ', name, opts);
+    })
+    .on('error', console.error);
 
     return client;
 };

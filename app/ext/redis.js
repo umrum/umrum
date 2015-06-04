@@ -40,65 +40,53 @@ var _api = {
         }
         */
 
-        hostinfo = {
-            currentVisits: null,
-            topPages: null,
-            serverTime: -1,
-            pageLoadTime: -1
-        };
-        redisclient.hget(hostId, 'curr_visits', function(err, result){
-            if ( err || !result ) {
-                return callback(err, hostinfo);
+        var hostinfo = {
+                currentVisits: null,
+                topPages: null,
+                serverTime: -1,
+                pageLoadTime: -1
+            },
+            toppagesKey = _toppages_key(hostId),
+            servertimeKey = _servertime_key(hostId),
+            pageloadKey = _pageload_key(hostId);
+
+        redisclient.hget(
+            hostId, 'curr_visits'
+        ).then(function(result){
+            if (!result) {
+                throw new Error('No visitors');
             }
 
-            var toppagesKey = _toppages_key(hostId),
-                servertimeKey = _servertime_key(hostId),
-                pageloadKey = _pageload_key(hostId);
-
             hostinfo.currentVisits = result;
-            redisclient.zrevrangebyscore(
+            return redisclient.zrevrangebyscore(
                 toppagesKey,
                 '+inf', '-inf',
                 'WITHSCORES',
-                'LIMIT', 0, MAX_TOPPAGES,
-                function(err, result) {
-                    if ( err || !result ) {
-                        return callback(err, hostinfo);
-                    }
-
-                    // result = [url, urlViwers, url2, url2Viewers...]
-                    hostinfo.topPages = result.map(function(item, idx, arr){
-                        if (idx%2) return null;
-                        return {
-                          url: item,
-                          counter: parseInt(arr[idx+1], 10)
-                        };
-                    }).filter(function(item){
-                        return item && item.counter;
-                    });
-
-                    redisclient.lrange(
-                        servertimeKey,
-                        0, MAX_SIZE_PERFORMANCE_LIST,
-                        function(err, result){
-                            if ( err || !result ) {
-                                return callback(err, hostinfo);
-                            }
-                            hostinfo.serverTime = _list_average(result);
-                            redisclient.lrange(
-                                pageloadKey,
-                                0, MAX_SIZE_PERFORMANCE_LIST,
-                                function(err, result){
-                                    if (!err && result) {
-                                        hostinfo.pageLoadTime = _list_average(result);
-                                    }
-                                    callback(err, hostinfo);
-                                }
-                            );
-                        }
-                    );
-                }
+                'LIMIT', 0, MAX_TOPPAGES
             );
+        }).then(function(result) {
+            // result = [url, urlViwers, url2, url2Viewers...]
+            hostinfo.topPages = !result ? null : result.map(function(item, idx, arr){
+                if (idx%2) return null;
+                return {
+                  url: item,
+                  counter: parseInt(arr[idx+1], 10)
+                };
+            }).filter(function(item){
+                return item && item.counter;
+            });
+
+            return redisclient.lrange(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+        }).then(function(result){
+            hostinfo.serverTime = _list_average(result);
+            return redisclient.lrange(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+        }).then(function(result){
+            hostinfo.pageLoadTime = _list_average(result);
+            callback(undefined, hostinfo);
+            return undefined;
+        }).catch(function(err){
+            console.error(err);
+            callback(err, hostinfo);
         });
     },
     registerPageView: function(active_user) {
@@ -113,38 +101,38 @@ var _api = {
           - uuid: user ID
         }
         */
-        redisclient.hgetall(active_user.uid, function(err, old_usr){
-            if (err) {
-                console.error('Error in registerPageView', active_user, err);
-                return;
-            }
-            var multi = redisclient.multi(),
-                hostId = active_user.hostId,
+        console.log('rediscli.regsiterPageView', active_user);
+        redisclient.hgetall(active_user.uid).then(function(old_usr){
+            console.log('rediscli.regsiterPageView', old_usr);
+            var hostId = active_user.hostId,
                 toppagesKey = _toppages_key(active_user.hostId),
                 servertimeKey = _servertime_key(active_user.hostId),
                 pageloadKey = _pageload_key(active_user.hostId);
 
+            redisclient.multi();
             if (!old_usr) {
                 console.log('new active user', active_user);
-                multi.hincrby(active_user.hostId, 'curr_visits', 1);
-                multi.zincrby(toppagesKey, 1, active_user.url);
+                redisclient.hincrby(active_user.hostId, 'curr_visits', 1);
+                redisclient.zincrby(toppagesKey, 1, active_user.url);
                 if (active_user.servertime) {
-                    multi.lpush(servertimeKey, active_user.servertime);
-                    multi.ltrim(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                    redisclient.lpush(servertimeKey, active_user.servertime);
+                    redisclient.ltrim(servertimeKey, 0, MAX_SIZE_PERFORMANCE_LIST);
                 }
                 if (active_user.pageload) {
-                    multi.lpush(pageloadKey, active_user.pageload);
-                    multi.ltrim(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
+                    redisclient.lpush(pageloadKey, active_user.pageload);
+                    redisclient.ltrim(pageloadKey, 0, MAX_SIZE_PERFORMANCE_LIST);
                 }
             } else if (old_usr.url != active_user.url) {
                 console.log('old user update', old_usr, active_user);
-                multi.zincrby(toppagesKey, -1, old_usr.url);
-                multi.zincrby(toppagesKey, 1, active_user.url);
+                redisclient.zincrby(toppagesKey, -1, old_usr.url);
+                redisclient.zincrby(toppagesKey, 1, active_user.url);
             }
 
-            multi.hmset(active_user.uid, active_user);
-            multi.setex(EXP_USER_PREFIX+active_user.uid, USER_TIMEOUT, 1);
-            multi.exec(console.log);
+            redisclient.hmset(active_user.uid, active_user);
+            redisclient.setex(EXP_USER_PREFIX + active_user.uid, USER_TIMEOUT, 1);
+            redisclient.exec().then(console.log);
+        }).catch(function(err){
+            console.error('Error in registerPageView', active_user, err);
         });
     },
     removePageView: function(active_user) {
@@ -160,23 +148,19 @@ var _api = {
         }
         */
 
-        redisclient.hgetall(active_user.uid, function(err, old_usr){
-            if (err) {
-                console.error('Error in removePageView', active_user, err);
-                return;
-            }
-
+        redisclient.hgetall(active_user.uid).then(function(old_usr){
             if (old_usr && old_usr.url === active_user.url) {
                 console.log('remove user', active_user);
-                var multi = redisclient.multi(),
-                    toppagesKey = _toppages_key(active_user.hostId);
+                var toppagesKey = _toppages_key(active_user.hostId);
 
-                multi.del(active_user.uid);
-                multi.hincrby(active_user.hostId, 'curr_visits', -1);
-                multi.zincrby(toppagesKey, -1, active_user.url);
-                multi.exec(console.log);
+                redisclient.multi();
+                redisclient.del(active_user.uid);
+                redisclient.hincrby(active_user.hostId, 'curr_visits', -1);
+                redisclient.zincrby(toppagesKey, -1, active_user.url);
+                redisclient.exec().then(console.log);
             }
-
+        }).catch(function(err){
+            console.error('Error in removePageView', active_user, err);
         });
     }
 }
@@ -185,10 +169,8 @@ var _api = {
 module.exports = (function(){
     var lazy_api = {
         __init__: function () {
-            // common client
-            redisclient = config_redis.init();
-            // pubsub client
-            pubsub_cli = config_redis.init();
+            redisclient = config_redis.init('default');
+            pubsub_cli = config_redis.init('pubsub');
             pubsub_cli.config('set', 'notify-keyspace-events', 'KEx');
 
             // listening to expired events
@@ -202,7 +184,7 @@ module.exports = (function(){
 
                 var uuid = msg.replace(EXP_USER_PREFIX, '');
                 console.log('expired user: ' + uuid);
-                redisclient.hgetall(uuid, function(err, active_usr){
+                redisclient.hgetall(uuid).then(function(err, active_usr){
                     if (!active_usr) {
                         console.error('Could not find user for ' + uuid);
                         return;

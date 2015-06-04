@@ -10,7 +10,7 @@ describe('Tests the redisclient module', function(){
 
     before(function(){
         fakeRedisClient = {
-            on: sinon.spy()
+            on: sinon.stub().returnsThis()
         };
         mockRedis = {
             createClient: sinon.stub().returns(fakeRedisClient),
@@ -28,7 +28,7 @@ describe('Tests the redisclient module', function(){
         var _redis_opt = {'none': null};
 
         var configRedis = proxyquire('../config/redisclient', {
-            redis: mockRedis,
+            'then-redis': mockRedis,
             './env': {
                 REDIS_PORT: _redis_port,
                 REDIS_HOST: _redis_host,
@@ -38,9 +38,11 @@ describe('Tests the redisclient module', function(){
         configRedis.init();
 
         assert.ok(mockRedis.createClient.calledOnce);
-        assert.ok(mockRedis.createClient.calledWithExactly(
-            _redis_port, _redis_host, _redis_opt
-        ));
+        var extended_opts = require('util')._extend(_redis_opt, {
+            port: _redis_port,
+            host: _redis_host
+        });
+        assert.ok(mockRedis.createClient.calledWithExactly(extended_opts));
 
         assert.ok(fakeRedisClient.on.calledTwice);
         assert.ok(fakeRedisClient.on.firstCall.args[0], 'connect');
