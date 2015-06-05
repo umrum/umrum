@@ -59,6 +59,7 @@ module.exports = function(grunt) {
                 boss: true,
                 eqnull: true,
                 browser: true,
+                esnext: true,
                 globals: {
                     jQuery: true,
                     require: true,
@@ -100,6 +101,7 @@ module.exports = function(grunt) {
             options: {
                 reporter: 'spec',
                 recursive: true,
+                compilers: ['js:mocha-traceur'],
                 env: {
                     NODE_ENV: "test",
                     MONGO_URI: "mongodb://test:test123@ds053778.mongolab.com:53778/umrum-test",

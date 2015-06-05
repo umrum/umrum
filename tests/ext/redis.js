@@ -106,8 +106,8 @@ describe('app/ext/redis', function(){
                 'pageLoadTime': pageLoadTime,
                 'topPages': !topPages ? null : topPages.map(function(item, i, arr){
                     return ( i%2 ) ? null : {
-                      url: item,
-                      counter: parseInt(arr[i+1], 10)
+                        url: item,
+                        counter: arr[i+1]
                     };
                 }).filter(function(item){
                     return item && item.counter;
@@ -149,7 +149,7 @@ describe('app/ext/redis', function(){
 
             currentVisits = '7';
             topPages = ['/', '5', '/d', '0', '/a', '2'];
-            serverTime = 3; // Math.round(2.5)
+            serverTime = 2.5;
             pageLoadTime = 25;
 
             /* promises excutions */
