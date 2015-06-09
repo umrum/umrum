@@ -1,3 +1,5 @@
+'use strict';
+
 var env = require('./env'),
     opts = require('util')._extend(env.REDIS_OPTIONS, {
         port: env.REDIS_PORT,

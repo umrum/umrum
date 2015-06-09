@@ -1,3 +1,5 @@
+'use strict';
+
 const MAX_TOPPAGES = 10,
       USER_TIMEOUT = 5 * 60, // 5 min
       MAX_SIZE_PERFORMANCE_LIST = 49, // 0 index
@@ -185,12 +187,13 @@ module.exports = (() => {
         }
     };
 
-    Object.keys(_api).forEach((method) => {
-        lazy_api[method] = (...args) => {
+    Object.keys(_api).forEach(method => {
+        lazy_api[method] = function() {
             try {
                 if ( !redisclient ) {
                     lazy_api.__init__();
                 }
+                let args = Array.prototype.slice.call(arguments, 0);
                 return _api[method].apply(_api, args);
             } catch(e) {
                 console.error('Error executing redis[' + method + ']', e);
