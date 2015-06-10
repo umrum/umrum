@@ -35,8 +35,8 @@ systems({
       NODE_PORT: "8000",
       NODE_IP: "0.0.0.0",
       UMRUM_SESSION_KEY: "umrum-secret",
-      GITHUB_ID: "d9f4d009c90281dc9794",
-      GITHUB_SECRET: "620a4c620fc24d47d46ae1dfb086a067635934d1",
+      GITHUB_ID: "50e4a60802b87028b98f",
+      GITHUB_SECRET: "59a86c98576017e0fe9d56b667f5748368595b7d",
       GITHUB_CALLBACK: "http://umrum.dev.azk.io/auth/github/callback"
     }
   },
