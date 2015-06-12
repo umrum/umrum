@@ -1,5 +1,7 @@
 /* globals module */
 
+var PRODUCTION = process.env.NODE_ENV === 'production';
+
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -29,14 +31,17 @@ module.exports = function(grunt) {
             site: {
                 files: {
                     'public/js/site.min.js': [
-                        'src/js/plugins/*.js',
                         'bower_modules/bootstrap/bootstrap.js',
+                        'src/js/plugins/*.js',
                         'src/js/app/landing-page.js',
                         'src/js/app/chart.js'
                     ]
                 }
             },
             application: {
+                options: {
+                    beautify: !PRODUCTION
+                },
                 files: {
                     'public/js/application.min.js': [
                         'bower_modules/react/react.min.js',
