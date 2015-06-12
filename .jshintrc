@@ -1,0 +1,24 @@
+{
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "unused": true,
+  "boss": true,
+  "eqnull": true,
+  "browser": true,
+  "esnext": true,
+  "globals": {
+    "jQuery": true,
+    "require": true,
+    "module": true,
+    "exports": true,
+    "process": true,
+    "console": true,
+    "React": true
+  }
+}

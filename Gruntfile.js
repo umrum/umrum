@@ -52,41 +52,16 @@ module.exports = function(grunt) {
         },
         jshint: {
             options: {
-                curly: true,
-                eqeqeq: true,
-                immed: true,
-                latedef: true,
-                newcap: true,
-                noarg: true,
-                sub: true,
-                undef: true,
-                unused: true,
-                boss: true,
-                eqnull: true,
-                browser: true,
-                esnext: true,
-                globals: {
-                    jQuery: true,
-                    require: true,
-                    module: true,
-                    exports: true,
-                    process: true,
-                    console: true,
-                    React: true
-                }
+                jshintrc: true
             },
-            gruntfile: {
-                src: 'Gruntfile.js'
-            },
-            lib_test: {
-                src: [
-                    'src/js/*.js',
-                    'server.js',
-                    'app/routes/*.js',
-                    'config/**/*.js',
-                    'tests/**/*.js'
-                ]
-            }
+            all: [
+                'Gruntfile.js',
+                'src/js/*.js',
+                'server.js',
+                'app/routes/*.js',
+                'config/**/*.js',
+                'tests/**/*.js'
+            ]
         },
         less: {
             production: {
