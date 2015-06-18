@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var TrackedSites = React.createClass({
   getInitialState: function() {
     return {
@@ -20,12 +18,7 @@ var TrackedSites = React.createClass({
   },
   render: function() {
     var siteItems = this.state.sites.map(function(site) {
-      return (
-        <SiteItem
-          host={site.host}
-          code={site.code}
-        />
-      );
+      return (<SiteItem host={site.host} code={site.code} />);
     });
     return (
       <div className="panel panel-primary">

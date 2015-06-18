@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var CurrentVisitors = React.createClass({
   render: function() {
     var siteLink = "//" + this.props.siteHost;

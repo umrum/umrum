@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var AddSiteForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();

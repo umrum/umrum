@@ -17,8 +17,9 @@
   {{ super() }}
 
   <script>
-    React.renderComponent(
-      TrackedSites({sites: [{%for site in sites%} {"code": "{{site.code}}", "host": "{{site.host}}"}, {%endfor%}]}),
+    React.render(
+      React.createElement(TrackedSites,
+        {sites: [{%for site in sites%} {"code": "{{site.code}}", "host": "{{site.host}}"}, {%endfor%}]}),
       document.getElementById('content')
     );
   </script>
