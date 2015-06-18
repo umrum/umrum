@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var TrackingSnippet = React.createClass({
   getInitialState: function() {
     return {

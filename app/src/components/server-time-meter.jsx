@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var ServerTimerMeter = React.createClass({
   render: function() {
     return (

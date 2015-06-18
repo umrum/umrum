@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var PageLoadTimeMeter = React.createClass({
   render: function() {
     return (

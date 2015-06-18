@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var SiteItem = React.createClass({
   getInitialState: function() {
     return {

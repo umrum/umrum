@@ -11,8 +11,8 @@
   <script src="/socket.io/socket.io.js"></script>
 
   <script>
-    React.renderComponent(
-      Dashboard({
+    React.render(
+      React.createElement(Dashboard, {
         siteHost: "{{ host }}",
         hostID: "{{ hostId }}",
         initialVisitors: {{ data.currentVisits or 0 }},

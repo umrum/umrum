@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var TopPages = React.createClass({
   render: function() {
     var pages = this.props.topPages.map(function(page) {

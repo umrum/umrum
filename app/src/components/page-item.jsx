@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var TopPageItem = React.createClass({
   render: function() {
     return (
