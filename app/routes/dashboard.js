@@ -4,7 +4,7 @@ var api = require('../ext/redis'),
 
 module.exports = function(app){
 
-    app.get('/v1/dashboard/*', auth.redirectAnonymous, function(req, res) {
+    app.get('/v1/dashboard', auth.redirectAnonymous, function(req, res) {
        res.render('dashboard.html');
     });
 
@@ -31,6 +31,28 @@ module.exports = function(app){
                 });
             }
             res.json(buildSitesMap(sites));
+        });
+    });
+
+    app.get('/api/dashboard/:host', auth.redirectAnonymous, function(req, res) {
+        Site.findOne({host: req.params.host}, function (err, existent) {
+            if (err || !existent) {
+                var code = err ? 500 : 404,
+                    msg = err ? err.message : 'Host do not exist: ' + req.params.host;
+                console[err ? 'error' : 'warn'](err || msg);
+                return res.status(code).render('error.html', {
+                    statusCode: code, statusMessage: msg
+                });
+            }
+            api.getHostInfo(existent._id, function(err, info){
+                //TODO add error handler
+                res.json({
+                    user: req.user,
+                    host: req.params.host,
+                    hostId: existent._id,
+                    data: info
+                });
+            });
         });
     });
 
