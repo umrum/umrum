@@ -16,7 +16,7 @@ module.exports = function(app){
       }
     });
 
-    app.get('/sites', auth.redirectAnonymous, function(req, res) {
+    app.get('/api/sites', auth.redirectAnonymous, function(req, res) {
         var buildSitesMap = function(sites) {
           return sites.map(function(e){
               if ( e.host ) { return {host: e.host, code:e._id}; }

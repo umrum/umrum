@@ -5,7 +5,7 @@ import TrackedSites from "../components/TrackedSites";
 
 export default class IndexPage extends React.Component {
   componentWillMount() {
-    console.log("[IndexPage] will mount with server response: ", this.props.data);
+    console.log("[IndexPage] will mount with server response: ", this.props.data.index);
   }
 
   render() {
@@ -19,5 +19,5 @@ export default class IndexPage extends React.Component {
 }
 
 IndexPage.fetchData = function(params) {
-  return getData(URL_PREFIX + "/sites");
+  return getData(URL_PREFIX + "/api/sites");
 }
