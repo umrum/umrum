@@ -3,6 +3,19 @@ var api = require('../ext/redis'),
     auth = require('../../config/middlewares/authorization');
 
 module.exports = function(app){
+    app.get('/v1/dashboard/*', auth.redirectAnonymous, function(req, res) {
+       res.render('dashboard.html');
+    });
+
+
+    app.get('/app.js', auth.redirectAnonymous, function(req, res) {
+      if (process.env.PRODUCTION) {
+        res.sendFile(__dirname + '../../build/app.js');
+      } else {
+        res.redirect('//localhost:8080/app.js');
+      }
+    });
+
     app.get('/dashboard', auth.redirectAnonymous, function(req, res) {
         Site.find({creator: req.user.username}, function(err, sites) {
             if (err) {
