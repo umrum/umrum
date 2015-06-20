@@ -3,10 +3,10 @@ var api = require('../ext/redis'),
     auth = require('../../config/middlewares/authorization');
 
 module.exports = function(app){
+
     app.get('/v1/dashboard/*', auth.redirectAnonymous, function(req, res) {
        res.render('dashboard.html');
     });
-
 
     app.get('/app.js', auth.redirectAnonymous, function(req, res) {
       if (process.env.PRODUCTION) {
@@ -14,6 +14,24 @@ module.exports = function(app){
       } else {
         res.redirect('//localhost:8080/app.js');
       }
+    });
+
+    app.get('/sites', auth.redirectAnonymous, function(req, res) {
+        var buildSitesMap = function(sites) {
+          return sites.map(function(e){
+              if ( e.host ) { return {host: e.host, code:e._id}; }
+          });
+        }
+
+        Site.find({creator: req.user.username}, function(err, sites) {
+            if (err) {
+                console.error(err);
+                return res.status(500).render('error.html', {
+                    statusCode: 500, statusMessage: err.message
+                });
+            }
+            res.json(buildSitesMap(sites));
+        });
     });
 
     app.get('/dashboard', auth.redirectAnonymous, function(req, res) {

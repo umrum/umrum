@@ -14,7 +14,8 @@ var _env = process.env.NODE_ENV || 'dev',
         clientID: process.env.GITHUB_ID,
         clientSecret: process.env.GITHUB_SECRET,
         callbackURL: process.env.GITHUB_CALLBACK
-    }
+    },
+    _urlPrefix = process.env.URL_PREFIX || ''
 ;
 
 var root_dir = path.join(__dirname, '..'),
@@ -36,5 +37,6 @@ module.exports = {
     MONGO_URI: _mongoUri,
     REDIS_HOST: _redisHost,
     REDIS_PORT: _redisPort,
-    REDIS_OPTIONS: _redisOptions
+    REDIS_OPTIONS: _redisOptions,
+    URL_PREFIX: _urlPrefix
 };

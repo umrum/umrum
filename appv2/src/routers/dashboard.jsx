@@ -7,18 +7,8 @@ import IndexPage from "../pages/index";
 export default class DashboardRouter extends React.Component {
   render() {
     return (
-      <div id="container">
-        <div id="navigation">
-          <header>
-            <ul>
-              <li><a href="#">Home</a></li>
-            </ul>
-          </header>
-        </div>
-
-        <div id="main">
-          <RouteHandler {...this.props} />
-        </div>
+      <div id="main">
+        <RouteHandler {...this.props} />
       </div>
     );
   }
