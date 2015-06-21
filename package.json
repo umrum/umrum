@@ -64,7 +64,6 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-mocha-cli": "~1.13.0",
     "grunt-nodemon": "~0.4.0",
-    "grunt-react": "~0.12.2",
     "grunt-concurrent": "1.0.0",
     "mocha": "~2.2.5",
     "mocha-traceur": "^2.1.0",
