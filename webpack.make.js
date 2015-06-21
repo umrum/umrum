@@ -41,7 +41,7 @@ module.exports = function makeWebpackConfig (options) {
     config.entry = {}
   } else {
     config.entry = {
-      app: './appv2/src/main'
+      app: './app/src/main'
     }
   }
 
