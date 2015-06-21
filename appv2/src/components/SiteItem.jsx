@@ -1,5 +1,7 @@
 import React from "react";
 import TrackingSnippet from "./TrackingSnippet";
+import Router from "react-router";
+let { Link } = Router;
 
 
 export default class SiteItem extends React.Component {
@@ -11,15 +13,15 @@ export default class SiteItem extends React.Component {
   }
 
   render() {
-    let href = "/dashboard/" + this.props.host;
+    let data = this.props;
     return (
       <div className="clearfix">
         <p className="col-md-6">
-          <a href={href}>
-            { this.props.host }
-          </a>
+          <Link to="view" params={{host: data.host}}>
+            { data.host }
+          </Link>
         </p>
-        <TrackingSnippet code={this.props.code} />
+        <TrackingSnippet code={data.code} />
       </div>
     );
   }

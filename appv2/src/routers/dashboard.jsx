@@ -2,6 +2,7 @@ import React from "react";
 import { Route, DefaultRoute, RouteHandler, Link } from "react-router";
 
 import IndexPage from "../pages/index";
+import DashboardViewPage from "../pages/dashboardView";
 
 
 export default class DashboardRouter extends React.Component {
@@ -18,6 +19,7 @@ DashboardRouter.getRoutes = function() {
   return (
     <Route name="dashboard" path="/" handler={DashboardRouter}>
       <DefaultRoute name="index" handler={IndexPage} />
+      <Route name="view" path=":host" handler={DashboardViewPage} />
     </Route>
   );
 }

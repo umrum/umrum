@@ -28,14 +28,18 @@ export default class TrackedSites extends React.Component {
     });
 
     return (
-      <div className="panel panel-primary">
-        <div className="panel-heading">
-          <h3 className="panel-title"><i className="fa fa-file-text-o"></i> Your sites</h3>
+      <div id="sites_manager" className="row">
+        <div className="col-lg-6">
+          <div className="panel panel-primary">
+            <div className="panel-heading">
+              <h3 className="panel-title"><i className="fa fa-file-text-o"></i> Your sites</h3>
+            </div>
+            <div className="panel-body">
+              {siteItems}
+            </div>
+            <AddSiteForm onSiteSubmit={this.trackNewSite.bind(this)} />
+          </div>
         </div>
-        <div className="panel-body">
-          {siteItems}
-        </div>
-        <AddSiteForm onSiteSubmit={this.trackNewSite.bind(this)} />
       </div>
     );
   }
