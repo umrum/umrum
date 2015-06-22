@@ -19,7 +19,7 @@ export default class TrackedSites extends React.Component {
   }
 
   trackNewSite(host) {
-    postData('/dashboard/create', {host: host}).then(data => this.updateState(data));
+    postData('/api/dashboard/create', {host: host}).then(data => this.updateState(data));
   }
 
   render() {
