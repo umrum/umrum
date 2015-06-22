@@ -16,7 +16,7 @@ module.exports = function(app){
     });
 
     app.get('/dashboard', auth.redirectAnonymous, function(req, res) {
-       res.render('dashboard.html');
+        res.render('dashboard.html');
     });
 
     app.get('/api/sites', auth.redirectAnonymous, function(req, res) {
