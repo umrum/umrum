@@ -1,7 +1,5 @@
 /* globals module */
 
-var PRODUCTION = process.env.NODE_ENV === 'production';
-
 module.exports = function(grunt) {
 
     // Project configuration.

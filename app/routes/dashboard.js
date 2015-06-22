@@ -21,7 +21,7 @@ module.exports = function(app){
           return sites.map(function(e){
               if ( e.host ) { return {host: e.host, code:e._id}; }
           });
-        }
+        };
 
         Site.find({creator: req.user.username}, function(err, sites) {
             if (err) {
