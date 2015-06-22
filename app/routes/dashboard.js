@@ -1,6 +1,8 @@
 var api = require('../ext/redis'),
     Site = require('../models/site'),
-    auth = require('../../config/middlewares/authorization');
+    auth = require('../../config/middlewares/authorization'),
+    env = require('../../config/env'),
+    path = require('path');
 
 module.exports = function(app){
 
@@ -10,7 +12,8 @@ module.exports = function(app){
 
     app.get('/app.js', auth.redirectAnonymous, function(req, res) {
       if (process.env.PRODUCTION) {
-        res.sendFile(__dirname + '../../build/app.js');
+        var rootPublicPath = path.join(__dirname, '../..', env.assetsURL);
+        res.sendfile('app.js', {root: rootPublicPath});
       } else {
         res.redirect('//localhost:8080/app.js');
       }
