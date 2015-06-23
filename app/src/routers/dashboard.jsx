@@ -45,13 +45,13 @@ export default class DashboardRouter extends React.Component {
       </div>
     );
   }
-}
 
-DashboardRouter.getRoutes = function() {
-  return (
-    <Route name="dashboard" path="/" handler={DashboardRouter}>
-      <DefaultRoute name="index" handler={IndexPage} />
-      <Route name="view" path=":host" handler={DashboardViewPage} />
-    </Route>
-  );
+  static getRoutes() {
+    return (
+      <Route name="dashboard" path="/" handler={DashboardRouter}>
+        <DefaultRoute name="index" handler={IndexPage} />
+        <Route name="view" path=":host" handler={DashboardViewPage} />
+      </Route>
+    );
+  }
 }

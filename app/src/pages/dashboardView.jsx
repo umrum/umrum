@@ -16,8 +16,8 @@ export default class DashboardViewPage extends React.Component {
       </div>
     );
   }
-}
 
-DashboardViewPage.fetchData = function(params) {
-  return getData(URL_PREFIX + "/api/dashboard/" + params.host);
+  static fetchData(params) {
+    return getData(URL_PREFIX + "/api/dashboard/" + params.host);
+  }
 }
