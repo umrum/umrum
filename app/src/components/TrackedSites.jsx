@@ -12,14 +12,14 @@ export default class TrackedSites extends React.Component {
     };
   }
 
-  updateState(data) {
+  addHost(data) {
     this.setState({
       sites: this.state.sites.concat(data.site)
     });
   }
 
   trackNewSite(host) {
-    postData('/api/dashboard/create', {host: host}).then(data => this.updateState(data));
+    postData('/api/dashboard/create', {host: host}).then(data => this.addHost(data));
   }
 
   render() {
