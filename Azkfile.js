@@ -19,7 +19,13 @@ systems({
     command: "./node_modules/.bin/grunt server",
     wait: {"retry": 20, "timeout": 10000},
     mounts: {
-      '/azk/#{manifest.dir}': path(".", { vbox: true } ),
+      '/azk/#{manifest.dir}': sync("."),
+      '/azk/#{manifest.dir}/public': persistent("umrum-public"),
+
+      '/azk/#{manifest.dir}/.less_compile': persistent("umrum-lessc"),
+      '/azk/#{manifest.dir}/compiled_jsx': persistent("umrum-jsxc"),
+
+      '/azk/#{manifest.dir}/bower_modules': persistent("umrum-bower_modules"),
       '/azk/#{manifest.dir}/node_modules': persistent("umrum-modules"),
     },
     scalable: {"default": 1},
@@ -42,7 +48,7 @@ systems({
   },
 
   redis: {
-    image: { docker: "redis" },
+    image: { docker: "redis:3.0" },
     scalable: false,
     ports: {
       data: "6379/tcp",
