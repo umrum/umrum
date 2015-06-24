@@ -1,16 +1,23 @@
-var TrackingSnippet = React.createClass({
-  getInitialState: function() {
-    return {
+import React from "react";
+
+
+export default class TrackingSnippet extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       showCode: false
     };
-  },
-  hideCode: function() {
+  }
+
+  hideCode() {
     this.setState({showCode: false});
-  },
-  showCode: function() {
+  }
+
+  showCode() {
     this.setState({showCode: true});
-  },
-  getCode: function() {
+  }
+
+  getCode() {
     return [
       '!function(a,b,c,d){',
       '   b._mrm=b._mrm||{},',
@@ -20,18 +27,20 @@ var TrackingSnippet = React.createClass({
       '   d.src="//umrum.io/dist/umrum-client.js"',
       '   c.body.appendChild(d);',
       ' }("' + this.props.code + '",window,document);'].join('\n');
-  },
-  render: function() {
-    var code = this.getCode();
-    var codeClass = 'tracking-snippet';
+  }
+
+  render() {
+    let code = this.getCode();
+    let codeClass = 'tracking-snippet';
     codeClass += this.state.showCode ? ' visible-code' : ' invisible-code';
+
     return (
       <span className={codeClass}>
-        <a href="#" onClick={this.showCode} className="tracking-snippet-link">
+        <a href="#" onClick={() => this.showCode()} className="tracking-snippet-link">
           show tracking snippet
         </a>
         <div className="tracking-snippet-code">
-          <span className="tracking-snippet-code-close" onClick={this.hideCode}>x</span>
+          <span className="tracking-snippet-code-close" onClick={() => this.hideCode()}>x</span>
           <pre>
             {code}
           </pre>
@@ -39,4 +48,5 @@ var TrackingSnippet = React.createClass({
       </span>
     );
   }
-});
+}
+

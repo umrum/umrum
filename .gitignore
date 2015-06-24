@@ -6,7 +6,6 @@ deploy.conf
 start-umrum
 public
 bower_modules
-compiled_jsx
 .less_compile
 .azk
 .nodemon-find-ref

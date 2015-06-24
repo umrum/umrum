@@ -19,6 +19,6 @@
     "exports": true,
     "process": true,
     "console": true,
-    "React": true
+    "__dirname": true
   }
 }

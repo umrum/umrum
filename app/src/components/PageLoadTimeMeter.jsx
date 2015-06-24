@@ -1,5 +1,8 @@
-var PageLoadTimeMeter = React.createClass({
-  render: function() {
+import React from "react";
+
+
+export default class PageLoadTimeMeter extends React.Component {
+  render() {
     return (
       <div className="page-load-time-meter">
         <i className="fa fa-clock-o"></i>
@@ -8,4 +11,4 @@ var PageLoadTimeMeter = React.createClass({
       </div>
     )
   }
-});
+}

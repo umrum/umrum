@@ -1,5 +1,8 @@
-var CurrentVisitors = React.createClass({
-  render: function() {
+import React from "react";
+
+
+export default class CurrentVisitors extends React.Component {
+  render() {
     var siteLink = "//" + this.props.siteHost;
     return (
       <div className="current-visitors">
@@ -10,11 +13,11 @@ var CurrentVisitors = React.createClass({
           <p>Current visitors</p>
         </div>
         <div className="cv-footer">
-          <a href={siteLink}>
+          <a href={siteLink} target="_blank">
             <span>{this.props.siteHost}</span>
           </a>
         </div>
       </div>
     );
   }
-});
+}

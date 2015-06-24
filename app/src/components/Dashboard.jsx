@@ -1,15 +1,24 @@
-var Dashboard = React.createClass({
-  getInitialState: function() {
-    return {
-      currentVisitors: this.props.initialVisitors,
-      topPages: this.props.initialTopPages,
-      serverTime: this.props.initialServerTime,
-      pageLoadTime: this.props.initialPageLoadTime
+import React from "react";
+import CurrentVisitors from "./CurrentVisitors";
+import ServerTimerMeter from "./ServerTimeMeter";
+import PageLoadTimeMeter from "./PageLoadTimeMeter";
+import TopPages from "./TopPages";
+
+
+export default class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentVisitors: 0,
+      topPages: [],
+      serverTime: 0,
+      pageLoadTime: 0
     }
-  },
-  componentDidMount: function() {
+  }
+
+  componentDidMount() {
     // open socket IO
-    var socket = io.connect('ws://' + window.location.host);
+    let socket = io.connect('ws://' + window.location.host);
     socket.on(this.props.hostID, function (msg) {
       if (!msg) return;
 
@@ -20,11 +29,12 @@ var Dashboard = React.createClass({
         pageLoadTime: msg.pageLoadTime
       });
     }.bind(this));
-  },
-  render: function() {
+  }
+
+  render() {
     return (
       <div className="dashboard-view">
-        <CurrentVisitors siteHost={this.props.siteHost} currentVisitors={this.state.currentVisitors} />
+        <CurrentVisitors siteHost={this.props.host} currentVisitors={this.state.currentVisitors} />
         <div className="performance-metrics">
           <div className="pm-body">
             <ServerTimerMeter serverTime={this.state.serverTime} />
@@ -38,4 +48,4 @@ var Dashboard = React.createClass({
       </div>
     )
   }
-});
+}

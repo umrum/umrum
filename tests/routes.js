@@ -89,10 +89,10 @@ describe('Tests the errors route', function(){
     });
 });
 
-describe('Tests /dashboard routes', function(){
+describe('Tests /api/dashboard routes', function(){
     it('Anonymous access to /create must return 401', function(done){
         request(app)
-            .post('/dashboard/create')
+            .post('/api/dashboard/create')
             .expect(401)
             .end(done);
     });

@@ -1,7 +1,5 @@
 /* globals module */
 
-var PRODUCTION = process.env.NODE_ENV === 'production';
-
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -35,17 +33,6 @@ module.exports = function(grunt) {
                         'src/js/plugins/*.js',
                         'src/js/app/landing-page.js',
                         'src/js/app/chart.js'
-                    ]
-                }
-            },
-            application: {
-                options: {
-                    beautify: !PRODUCTION
-                },
-                files: {
-                    'public/js/application.min.js': [
-                        'bower_modules/react/react.min.js',
-                        'compiled_jsx/components/*.js',
                     ]
                 }
             }
@@ -141,19 +128,6 @@ module.exports = function(grunt) {
                 dest: '.less_compile'
             }
         },
-        react: {
-            compile: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'app/src',
-                        src: ['**/*.jsx'],
-                        dest: 'compiled_jsx',
-                        ext: '.js'
-                    }
-                ]
-            }
-        },
         bower: {
             install: {
                 options: {
@@ -169,10 +143,6 @@ module.exports = function(grunt) {
                 files: ['src/less/**'],
                 tasks: ['_less'],
             },
-            react: {
-                files: ['app/src/**'],
-                tasks: ['doReact'],
-            },
             site: {
                 files: ['src/js/**'],
                 tasks: ['uglify:site'],
@@ -180,13 +150,13 @@ module.exports = function(grunt) {
         },
         concurrent: {
             server: {
-                tasks: ['watch:less', 'watch:react', 'watch:site', 'nodemon:dev'],
+                tasks: ['watch:less', 'watch:site', 'nodemon:dev'],
                 options: {
                     logConcurrentOutput: true
                 }
             },
             build: {
-                tasks: ['doLess', 'doReact', 'uglify:site']
+                tasks: ['doLess', 'uglify:site']
             }
         },
         nodemon: {
@@ -209,13 +179,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-bower-installer');
-    grunt.loadNpmTasks('grunt-react');
     grunt.loadNpmTasks('grunt-concurrent');
 
     // private tasks
     grunt.registerTask('_less', ['copy:srcLess', 'less', 'autoprefixer']);
     grunt.registerTask('doLess', ['copy:bowerLess', '_less']);
-    grunt.registerTask('doReact', ['react:compile', 'uglify:application']);
 
 
     grunt.registerTask('unittest', ['jshint', 'mochacli']);

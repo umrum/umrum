@@ -1,8 +1,13 @@
-var TopPages = React.createClass({
-  render: function() {
-    var pages = this.props.topPages.map(function(page) {
+import React from "react";
+import TopPageItem from "./TopPages";
+
+
+export default class TopPages extends React.Component {
+  render() {
+    let pages = this.props.topPages.map(function(page) {
       return <TopPageItem url={page.url} counter={page.counter} />
     });
+
     return (
       <div className="top-pages">
         <div className="tp-heading">
@@ -14,4 +19,4 @@ var TopPages = React.createClass({
       </div>
     );
   }
-});
+}

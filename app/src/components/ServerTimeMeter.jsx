@@ -1,5 +1,8 @@
-var ServerTimerMeter = React.createClass({
-  render: function() {
+import React from "react";
+
+
+export default class ServerTimerMeter extends React.Component {
+  render() {
     return (
       <div className="server-time-meter">
         <i className="fa fa-clock-o"></i>
@@ -8,4 +11,4 @@ var ServerTimerMeter = React.createClass({
       </div>
     )
   }
-});
+}
