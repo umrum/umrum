@@ -4,7 +4,7 @@ var auth = require('../../config/middlewares/authorization'),
 
 module.exports = function(app){
     app.get('/app.js', auth.redirectAnonymous, function(req, res) {
-      if (process.env.PRODUCTION) {
+      if (env.env === 'production') {
         var rootPublicPath = path.join(__dirname, '../..', env.assetsURL);
         res.sendfile('app.js', {root: rootPublicPath});
       } else {
