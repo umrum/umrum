@@ -16,7 +16,7 @@ systems({
     ],
     workdir: "/azk/#{manifest.dir}",
     shell: "/bin/bash",
-    command: "./node_modules/.bin/grunt server",
+    command: "npm start",
     wait: {"retry": 20, "timeout": 10000},
     mounts: {
       '/azk/#{manifest.dir}': sync("."),
@@ -69,6 +69,7 @@ systems({
     wait: {"retry": 20, "timeout": 5000},
     ports: {
       http: "28017",
+      data: "27017",
     },
     http: {
       domains: [ "#{manifest.dir}-#{system.name}.#{azk.default_domain}" ],
@@ -77,7 +78,7 @@ systems({
       '/data/db': persistent('mongodb'),
     },
     export_envs: {
-      MONGO_URI: "mongodb://#{net.host}:#{net.port[27017]}/umrum_development",
+      MONGO_URI: "mongodb://#{net.host}:#{net.port.data}/umrum_development",
     }
   }
 

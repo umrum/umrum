@@ -4,11 +4,14 @@
   "description": "An open source Real User Monitoring built with NodeJS",
   "main": "server.js",
   "scripts": {
-    "build": "webpack --config webpack.build.js --bail -p",
-    "compile": "npm install && ./node_modules/.bin/grunt install build",
-    "dev": "webpack-dev-server --history-api-fallback --hot --inline --progress",
-    "pm2-start": "pm2 kill && pm2 start pm2-start.json",
-    "test": "./node_modules/.bin/grunt unittest"
+    "build-webpack": "webpack --config webpack.build.js --bail -p",
+    "build-assets": "./node_modules/.bin/grunt install build",
+    "postinstall": "npm run build-webpack && npm run build-assets",
+    "start": "./node_modules/.bin/nodemon server.js",
+    "test": "./node_modules/.bin/grunt unittest",
+    "watch-assets": "./node_modules/.bin/grunt concurrent:assets",
+    "watch-webpack": "webpack-dev-server --history-api-fallback --hot --inline --progress",
+    "pm2": "pm2 kill && pm2 start pm2-start.json"
   },
   "repository": {
     "type": "git",

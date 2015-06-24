@@ -1,4 +1,7 @@
 {
+  "ignore": "app/src/**",
+  "watch": ["app"],
+  "ext": "*",
   "execMap": {
      "js": "node --harmony"
   }

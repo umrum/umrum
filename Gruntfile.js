@@ -149,22 +149,14 @@ module.exports = function(grunt) {
             },
         },
         concurrent: {
-            server: {
-                tasks: ['watch:less', 'watch:site', 'nodemon:dev'],
+            assets: {
+                tasks: ['watch:less', 'watch:site'],
                 options: {
                     logConcurrentOutput: true
                 }
             },
             build: {
                 tasks: ['doLess', 'uglify:site']
-            }
-        },
-        nodemon: {
-            dev: {
-                script: 'server.js',
-                watch: ['app'],
-                ignore: ['app/src/**'],
-                ext: '*'
             }
         }
     });
