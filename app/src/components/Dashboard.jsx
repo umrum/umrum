@@ -19,7 +19,7 @@ export default class Dashboard extends React.Component {
   componentDidMount() {
     // open socket IO
     let socket = io.connect('ws://' + window.location.host);
-    socket.on(this.props.hostID, function (msg) {
+    socket.on(this.props.hostId, function (msg) {
       if (!msg) return;
 
       this.setState({
