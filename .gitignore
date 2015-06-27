@@ -9,3 +9,4 @@ bower_modules
 .less_compile
 .azk
 .nodemon-find-ref
+npm-debug.log
