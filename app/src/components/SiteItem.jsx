@@ -5,23 +5,16 @@ let { Link } = Router;
 
 
 export default class SiteItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      site: {}
-    };
-  }
-
   render() {
-    let data = this.props;
+    let site = this.props.site;
     return (
       <div className="clearfix">
         <p className="col-md-6">
-          <Link to="view" params={{host: data.host}}>
-            { data.host }
+          <Link to="view" params={{host: site.host}}>
+            { site.host }
           </Link>
         </p>
-        <TrackingSnippet code={data.code} />
+        <TrackingSnippet code={site.code} />
       </div>
     );
   }

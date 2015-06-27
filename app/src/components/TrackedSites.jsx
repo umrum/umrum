@@ -24,7 +24,7 @@ export default class TrackedSites extends React.Component {
 
   render() {
     let siteItems = this.state.sites.map(function(site) {
-      return (<SiteItem host={site.host} code={site.code} />);
+      return (<SiteItem key={site.code} site={site} />);
     });
 
     return (
