@@ -64,15 +64,10 @@ systems({
 
   mongodb: {
     image: { docker: "mongo:3.0" },
-    command: 'mongod --rest --httpinterface --bind_ip 0.0.0.0',
+    command: ['mongod', '--port', '27017'],
     scalable: false,
-    wait: {"retry": 20, "timeout": 5000},
     ports: {
-      http: "28017",
       data: "27017",
-    },
-    http: {
-      domains: [ "#{manifest.dir}-#{system.name}.#{azk.default_domain}" ],
     },
     mounts: {
       '/data/db': persistent('mongodb'),
