@@ -3,6 +3,10 @@
  */
 
 // Adds the systems that shape your system
+var main_domain = "umrum.#{azk.default_domain}";
+var webpack_host = "webpack-" + main_domain;
+var webpack_port = "9999";
+
 systems({
   umrum: {
     // Dependent systems
@@ -17,7 +21,7 @@ systems({
     workdir: "/azk/#{manifest.dir}",
     shell: "/bin/bash",
     command: "npm start",
-    wait: {"retry": 20, "timeout": 10000},
+    wait: 30,
     mounts: {
       '/azk/#{manifest.dir}': sync("."),
       '/azk/#{manifest.dir}/public': persistent("umrum-public"),
@@ -30,10 +34,10 @@ systems({
     },
     scalable: {"default": 1},
     http: {
-      domains: [ "#{system.name}.#{azk.default_domain}" ]
+      domains: [ main_domain ]
     },
     ports: {
-      http: "8000"
+      http: "8000",
     },
     envs: {
       // set instances variables
@@ -43,7 +47,25 @@ systems({
       UMRUM_SESSION_KEY: "umrum-secret",
       GITHUB_ID: "50e4a60802b87028b98f",
       GITHUB_SECRET: "59a86c98576017e0fe9d56b667f5748368595b7d",
-      GITHUB_CALLBACK: "http://umrum.dev.azk.io/auth/github/callback"
+      GITHUB_CALLBACK: "http://umrum.dev.azk.io/auth/github/callback",
+      WEBPACK_HOST: webpack_host
+    }
+  },
+
+  webpack: {
+    // Dependent systems
+    extends: "umrum",
+    command: "npm run watch-webpack",
+    http: {
+      domains: [ webpack_host ]
+    },
+    ports: {
+      http: webpack_port
+    },
+    envs: {
+      NODE_ENV: "dev",
+      WEBPACK_HOST: '0.0.0.0',
+      WEBPACK_PORT: webpack_port
     }
   },
 
