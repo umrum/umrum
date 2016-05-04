@@ -10,7 +10,7 @@
     "start": "./node_modules/.bin/nodemon server.js",
     "test": "./node_modules/.bin/grunt unittest",
     "watch-assets": "./node_modules/.bin/grunt concurrent:assets",
-    "watch-webpack": "webpack-dev-server --history-api-fallback --hot --inline --progress",
+    "watch-webpack": "webpack-dev-server --history-api-fallback --hot --inline --progress --host $WEBPACK_HOST --port $WEBPACK_PORT",
     "pm2": "pm2 kill && pm2 start pm2-start.json"
   },
   "repository": {

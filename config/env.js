@@ -38,5 +38,7 @@ module.exports = {
     REDIS_HOST: _redisHost,
     REDIS_PORT: _redisPort,
     REDIS_OPTIONS: _redisOptions,
-    URL_PREFIX: _urlPrefix
+    URL_PREFIX: _urlPrefix,
+    WEBPACK_HOST: process.env.WEBPACK_HOST,
+    WEBPACK_PORT: process.env.WEBPACK_PORT
 };
