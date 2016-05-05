@@ -12,7 +12,7 @@ systems({
     // Dependent systems
     depends: ["redis", "mongodb"],
     // More images:  http://images.azk.io
-    image: {"docker": "node:0.12"},
+    image: {"docker": "node:6"},
     // Steps to execute before running instances
     provision: [
       "npm install",
@@ -94,6 +94,7 @@ systems({
     mounts: {
       '/data/db': persistent('mongodb'),
     },
+    wait: 30,
     export_envs: {
       MONGO_URI: "mongodb://#{net.host}:#{net.port.data}/umrum_development",
     }
